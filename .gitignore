@@ -1,0 +1,4 @@
+weights/*
+checkpoints/*
+*.pth
+__pycache__/

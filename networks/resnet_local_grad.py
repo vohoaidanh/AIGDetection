@@ -3,9 +3,8 @@ import torch.utils.model_zoo as model_zoo
 from torch.nn import functional as F
 from typing import Any, cast, Dict, List, Optional, Union
 import numpy as np
-
-__all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
-           'resnet152']
+from networks.local_grad import *
+__all__ = ['ResNet', 'resnet50_local_grad']
 
 
 model_urls = {
@@ -102,6 +101,7 @@ class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1, zero_init_residual=False):
         super(ResNet, self).__init__()
+        self.gradient_layer = gradient_filter  # Instantiate GradientLayer
         self.unfoldSize = 2
         self.unfoldIndex = 0
         assert self.unfoldSize > 1
@@ -164,8 +164,10 @@ class ResNet(nn.Module):
         # n,c,w,h = x.shape
         # if w%2 == 1 : x = x[:,:,:-1,:]
         # if h%2 == 1 : x = x[:,:,:,:-1]
-        NPR  = x - self.interpolate(x, 0.5)
-        x = self.conv1(NPR*2.0/3.0)
+        #NPR  = x - self.interpolate(x, 0.5)
+        NPR = self.gradient_layer(x)
+        x = self.conv1(NPR)
+        #x = self.conv1(NPR*2.0/3.0)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
@@ -202,7 +204,7 @@ def resnet34(pretrained=False, **kwargs):
     return model
 
 
-def resnet50(pretrained=False, **kwargs):
+def resnet50_local_grad(pretrained=False, **kwargs):
     """Constructs a ResNet-50 model.
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet

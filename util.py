@@ -1,7 +1,10 @@
 import sys
 import os
 import torch
-
+from torch import nn
+import torchvision
+from networks.resnet import resnet50
+from networks.resnet_local_grad import resnet50_local_grad
 
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
@@ -46,3 +49,32 @@ def printSet(set_str):
     print("="*num*3)
     print(" "*num + set_str)
     print("="*num*3)
+    
+    
+    
+    
+def get_model(opt):
+    if opt.detect_method in ["NPR"]:
+        model = resnet50(pretrained=False, num_classes=1)
+        return model
+        
+    elif opt.detect_method.lower() in ['local_grad']:
+        model = resnet50_local_grad(pretrained=False, num_classes=1)
+        return model
+    
+    else:
+        raise ValueError(f"Unsupported model_type: {opt.detect_method}")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

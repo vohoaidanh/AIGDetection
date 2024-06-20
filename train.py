@@ -12,7 +12,7 @@ from data import create_dataloader
 from networks.trainer import Trainer
 from options.train_options import TrainOptions
 from options.test_options import TestOptions
-from util import Logger
+from util import Logger, get_model
 
 import random
 def seed_torch(seed=1029):
@@ -39,11 +39,12 @@ def get_val_opt():
     val_opt.no_resize = False
     val_opt.no_crop = False
     val_opt.serial_batches = True
-
+    val_opt.classes = []
     return val_opt
 
 
 if __name__ == '__main__':
+    best_acc = 0
     opt = TrainOptions().parse()
     seed_torch(100)
     Testdataroot = os.path.join(opt.dataroot, 'test')
@@ -103,6 +104,12 @@ if __name__ == '__main__':
         val_writer.add_scalar('accuracy', acc, model.total_steps)
         val_writer.add_scalar('ap', ap, model.total_steps)
         print("(Val @ epoch {}) acc: {}; ap: {}".format(epoch, acc, ap))
+        
+        if acc>best_acc:
+            print(f'acc increate {best_acc} --> {acc}, saving best model')
+            best_acc = acc
+            model.save_networks('best')
+            
         # testmodel()
         model.train()
 
