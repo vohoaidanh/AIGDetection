@@ -1,0 +1,47 @@
+/workspace/AIGDetection
+Detect method local_grad
+Model_path checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_7_best.pth
+Detect method model local_grad
+================================================
+                GANGen-Detection
+================================================
+2024_06_20_11_21_45
+(0 AttGAN      ) acc: 97.0; ap: 99.8
+(1 BEGAN       ) acc: 71.0; ap: 94.1
+(2 CramerGAN   ) acc: 91.0; ap: 99.4
+(3 InfoMaxGAN  ) acc: 83.9; ap: 93.2
+(4 MMDGAN      ) acc: 91.0; ap: 99.2
+(5 RelGAN      ) acc: 99.4; ap: 100.0
+(6 S3GAN       ) acc: 79.3; ap: 90.7
+(7 SNGAN       ) acc: 89.1; ap: 95.9
+(8 STGAN       ) acc: 98.5; ap: 99.8
+(9 Mean      ) acc: 88.9; ap: 96.9
+*************************
+======================================================
+                  DiffusionForensics
+======================================================
+2024_06_20_11_23_20
+(0 adm         ) acc: 91.6; ap: 98.8
+(1 ddpm        ) acc: 96.8; ap: 100.0
+(2 iddpm       ) acc: 91.1; ap: 100.0
+(3 ldm         ) acc: 100.0; ap: 100.0
+(4 pndm        ) acc: 96.8; ap: 100.0
+(5 sdv1_new    ) acc: 94.3; ap: 99.6
+(6 sdv2        ) acc: 99.2; ap: 100.0
+(7 vqdiffusion ) acc: 100.0; ap: 100.0
+(8 Mean      ) acc: 96.2; ap: 99.8
+*************************
+=========================================================
+                   UniversalFakeDetect
+=========================================================
+2024_06_20_11_26_24
+(0 dalle       ) acc: 98.4; ap: 99.9
+(1 glide_100_10) acc: 92.0; ap: 98.7
+(2 glide_100_27) acc: 89.6; ap: 97.8
+(3 glide_50_27 ) acc: 92.3; ap: 98.2
+(4 guided      ) acc: 79.6; ap: 90.0
+(5 ldm_100     ) acc: 99.2; ap: 100.0
+(6 ldm_200     ) acc: 99.0; ap: 100.0
+(7 ldm_200_cfg ) acc: 99.2; ap: 100.0
+(8 Mean      ) acc: 93.7; ap: 98.1
+*************************

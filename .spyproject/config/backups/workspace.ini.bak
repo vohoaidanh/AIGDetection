@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['draf.py', 'train.py', 'util.py', '..\\AIGCDetectBenchmark\\util.py', 'networks\\resnet_local_grad.py', 'options\\base_options.py', 'options\\train_options.py', 'networks\\trainer.py', '.gitignore', 'README.md']
+recent_files = ['draf.py', 'train.py', 'util.py', 'networks\\resnet_local_grad.py', 'options\\train_options.py', 'networks\\trainer.py', 'validate.py', 'download_dataset.sh', '.gitignore']
 
 [main]
 version = 0.2.0

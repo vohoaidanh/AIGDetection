@@ -1,0 +1,300 @@
+----------------- Options ---------------
+                     arch: res50                         
+               batch_size: 32                            	[default: 64]
+                    beta1: 0.9                           
+                blur_prob: 0                             
+                 blur_sig: 0.5                           
+          checkpoints_dir: ./checkpoints                 
+                class_bal: False                         
+                  classes: car,cat,chair,horse           	[default: ]
+           continue_train: False                         
+                 cropSize: 224                           
+                 data_aug: False                         
+                 dataroot: /workspace/data_train/ForenSynths_train_val	[default: ./dataset/]
+                delr_freq: 10                            	[default: 20]
+            detect_method: local_grad                    	[default: NPR]
+          earlystop_epoch: 15                            
+                    epoch: latest                        
+              epoch_count: 1                             
+                  gpu_ids: 0                             
+                init_gain: 0.02                          
+                init_type: normal                        
+                  isTrain: True                          	[default: None]
+               jpg_method: cv2                           
+                 jpg_prob: 0                             
+                 jpg_qual: 75                            
+               last_epoch: -1                            
+                 loadSize: 256                           
+                loss_freq: 400                           
+                       lr: 0.0002                        	[default: 0.0001]
+                     mode: binary                        
+                     name: Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39	[default: experiment_name]
+                new_optim: False                         
+                    niter: 30                            	[default: 1000]
+                  no_flip: False                         
+              num_threads: 4                             
+                    optim: adam                          
+           resize_or_crop: scale_and_crop                
+                rz_interp: bilinear                      
+          save_epoch_freq: 20                            
+         save_latest_freq: 2000                          
+           serial_batches: False                         
+                   suffix:                               
+              train_split: train                         
+                val_split: val                           
+----------------- End -------------------
+train.py  --name  Gaussblur-4class-resnet-car-cat-chair-horse  --dataroot  /workspace/data_train/ForenSynths_train_val  --classes  car,cat,chair,horse  --batch_size  32  --delr_freq  10  --lr  0.0002  --niter  30  --detect_method  local_grad
+Detect method model local_grad
+cwd: /workspace/AIGDetection
+2024_06_20_08_13_42 Train loss: 0.1358448565006256 at step: 400 lr 0.0002
+2024_06_20_08_14_50 Train loss: 0.09341147541999817 at step: 800 lr 0.0002
+2024_06_20_08_16_01 Train loss: 0.07036414742469788 at step: 1200 lr 0.0002
+2024_06_20_08_17_11 Train loss: 0.17062637209892273 at step: 1600 lr 0.0002
+2024_06_20_08_18_21 Train loss: 0.04773280769586563 at step: 2000 lr 0.0002
+2024_06_20_08_19_30 Train loss: 0.08223778009414673 at step: 2400 lr 0.0002
+2024_06_20_08_20_40 Train loss: 0.006240045186132193 at step: 2800 lr 0.0002
+2024_06_20_08_21_48 Train loss: 0.05651605874300003 at step: 3200 lr 0.0002
+2024_06_20_08_22_57 Train loss: 0.020874328911304474 at step: 3600 lr 0.0002
+2024_06_20_08_24_05 Train loss: 0.05626643821597099 at step: 4000 lr 0.0002
+2024_06_20_08_25_14 Train loss: 0.09260591864585876 at step: 4400 lr 0.0002
+(Val @ epoch 0) acc: 0.975; ap: 0.9988868330339699
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+acc increate 0 --> 0.975, saving best model
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_0_best.pth
+2024_06_20_08_26_26 Train loss: 0.010777274146676064 at step: 4800 lr 0.0002
+2024_06_20_08_27_34 Train loss: 0.02128743752837181 at step: 5200 lr 0.0002
+2024_06_20_08_28_43 Train loss: 0.049237772822380066 at step: 5600 lr 0.0002
+2024_06_20_08_29_52 Train loss: 0.09308810532093048 at step: 6000 lr 0.0002
+2024_06_20_08_31_00 Train loss: 0.0003267934953328222 at step: 6400 lr 0.0002
+2024_06_20_08_32_09 Train loss: 0.25541195273399353 at step: 6800 lr 0.0002
+2024_06_20_08_33_17 Train loss: 0.00041746959323063493 at step: 7200 lr 0.0002
+2024_06_20_08_34_26 Train loss: 0.05022171884775162 at step: 7600 lr 0.0002
+2024_06_20_08_35_34 Train loss: 0.044265784323215485 at step: 8000 lr 0.0002
+2024_06_20_08_36_43 Train loss: 0.08190745115280151 at step: 8400 lr 0.0002
+2024_06_20_08_37_51 Train loss: 0.009948761202394962 at step: 8800 lr 0.0002
+(Val @ epoch 1) acc: 0.980625; ap: 0.9989412635145175
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+acc increate 0.975 --> 0.980625, saving best model
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_1_best.pth
+2024_06_20_08_39_03 Train loss: 0.005624251440167427 at step: 9200 lr 0.0002
+2024_06_20_08_40_12 Train loss: 0.0024409883189946413 at step: 9600 lr 0.0002
+2024_06_20_08_41_21 Train loss: 0.010250354185700417 at step: 10000 lr 0.0002
+2024_06_20_08_42_30 Train loss: 0.002638041041791439 at step: 10400 lr 0.0002
+2024_06_20_08_43_39 Train loss: 0.0016154976328834891 at step: 10800 lr 0.0002
+2024_06_20_08_44_48 Train loss: 0.03639909252524376 at step: 11200 lr 0.0002
+2024_06_20_08_45_56 Train loss: 0.011558507569134235 at step: 11600 lr 0.0002
+2024_06_20_08_47_05 Train loss: 0.010317408479750156 at step: 12000 lr 0.0002
+2024_06_20_08_48_14 Train loss: 0.038333646953105927 at step: 12400 lr 0.0002
+2024_06_20_08_49_23 Train loss: 0.0028879058081656694 at step: 12800 lr 0.0002
+2024_06_20_08_50_32 Train loss: 0.06129749119281769 at step: 13200 lr 0.0002
+(Val @ epoch 2) acc: 0.9925; ap: 0.9999167099311844
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+acc increate 0.980625 --> 0.9925, saving best model
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_2_best.pth
+2024_06_20_08_51_44 Train loss: 0.0003040405281353742 at step: 13600 lr 0.0002
+2024_06_20_08_52_53 Train loss: 0.0002183137839892879 at step: 14000 lr 0.0002
+2024_06_20_08_54_02 Train loss: 0.0049146865494549274 at step: 14400 lr 0.0002
+2024_06_20_08_55_12 Train loss: 0.009926812723279 at step: 14800 lr 0.0002
+2024_06_20_08_56_21 Train loss: 0.02979307435452938 at step: 15200 lr 0.0002
+2024_06_20_08_57_30 Train loss: 0.04800957441329956 at step: 15600 lr 0.0002
+2024_06_20_08_58_39 Train loss: 0.008363118395209312 at step: 16000 lr 0.0002
+2024_06_20_08_59_48 Train loss: 0.1073291003704071 at step: 16400 lr 0.0002
+2024_06_20_09_00_57 Train loss: 0.00307629257440567 at step: 16800 lr 0.0002
+2024_06_20_09_02_06 Train loss: 0.005040348507463932 at step: 17200 lr 0.0002
+2024_06_20_09_03_15 Train loss: 0.0007046941900625825 at step: 17600 lr 0.0002
+2024_06_20_09_04_23 Train loss: 0.17638568580150604 at step: 18000 lr 0.0002
+(Val @ epoch 3) acc: 0.99375; ap: 0.9999814831226881
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+acc increate 0.9925 --> 0.99375, saving best model
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_3_best.pth
+2024_06_20_09_05_36 Train loss: 0.052411071956157684 at step: 18400 lr 0.0002
+2024_06_20_09_06_45 Train loss: 0.0003689043805934489 at step: 18800 lr 0.0002
+2024_06_20_09_07_54 Train loss: 0.048663362860679626 at step: 19200 lr 0.0002
+2024_06_20_09_09_03 Train loss: 0.02164941281080246 at step: 19600 lr 0.0002
+2024_06_20_09_10_12 Train loss: 0.10473334044218063 at step: 20000 lr 0.0002
+2024_06_20_09_11_21 Train loss: 0.012834352441132069 at step: 20400 lr 0.0002
+2024_06_20_09_12_30 Train loss: 0.0021057594567537308 at step: 20800 lr 0.0002
+2024_06_20_09_13_39 Train loss: 0.2314734160900116 at step: 21200 lr 0.0002
+2024_06_20_09_14_48 Train loss: 0.022070562466979027 at step: 21600 lr 0.0002
+2024_06_20_09_15_57 Train loss: 0.00038977255462668836 at step: 22000 lr 0.0002
+2024_06_20_09_17_06 Train loss: 0.12397684156894684 at step: 22400 lr 0.0002
+(Val @ epoch 4) acc: 0.90125; ap: 0.9999578219562189
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_4.pth
+2024_06_20_09_18_18 Train loss: 0.0009437631815671921 at step: 22800 lr 0.0002
+2024_06_20_09_19_27 Train loss: 3.584581281756982e-05 at step: 23200 lr 0.0002
+2024_06_20_09_20_36 Train loss: 0.0006415602983906865 at step: 23600 lr 0.0002
+2024_06_20_09_21_45 Train loss: 0.00149336620233953 at step: 24000 lr 0.0002
+2024_06_20_09_22_54 Train loss: 0.005852540954947472 at step: 24400 lr 0.0002
+2024_06_20_09_24_03 Train loss: 0.0005419726367108524 at step: 24800 lr 0.0002
+2024_06_20_09_25_12 Train loss: 0.0013648923486471176 at step: 25200 lr 0.0002
+2024_06_20_09_26_21 Train loss: 0.0015718393260613084 at step: 25600 lr 0.0002
+2024_06_20_09_27_30 Train loss: 0.00031878496520221233 at step: 26000 lr 0.0002
+2024_06_20_09_28_39 Train loss: 0.23284977674484253 at step: 26400 lr 0.0002
+2024_06_20_09_29_48 Train loss: 0.0015759626403450966 at step: 26800 lr 0.0002
+(Val @ epoch 5) acc: 0.993125; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_5.pth
+2024_06_20_09_31_00 Train loss: 0.04407443851232529 at step: 27200 lr 0.0002
+2024_06_20_09_32_09 Train loss: 0.003090799553319812 at step: 27600 lr 0.0002
+2024_06_20_09_33_18 Train loss: 0.0032978050876408815 at step: 28000 lr 0.0002
+2024_06_20_09_34_27 Train loss: 0.012423427775502205 at step: 28400 lr 0.0002
+2024_06_20_09_35_36 Train loss: 9.543737178319134e-06 at step: 28800 lr 0.0002
+2024_06_20_09_36_44 Train loss: 0.00038134021451696754 at step: 29200 lr 0.0002
+2024_06_20_09_37_53 Train loss: 0.00030090377549640834 at step: 29600 lr 0.0002
+2024_06_20_09_39_02 Train loss: 0.0008874016348272562 at step: 30000 lr 0.0002
+2024_06_20_09_40_11 Train loss: 0.0011727556120604277 at step: 30400 lr 0.0002
+2024_06_20_09_41_20 Train loss: 0.003558429889380932 at step: 30800 lr 0.0002
+2024_06_20_09_42_29 Train loss: 0.00817505270242691 at step: 31200 lr 0.0002
+(Val @ epoch 6) acc: 0.991875; ap: 0.9999922089138266
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_6.pth
+2024_06_20_09_43_41 Train loss: 0.003991648089140654 at step: 31600 lr 0.0002
+2024_06_20_09_44_50 Train loss: 9.415249223820865e-05 at step: 32000 lr 0.0002
+2024_06_20_09_46_00 Train loss: 0.0023867504205554724 at step: 32400 lr 0.0002
+2024_06_20_09_47_09 Train loss: 0.0005949799669906497 at step: 32800 lr 0.0002
+2024_06_20_09_49_00 Train loss: 0.00013788291835226119 at step: 33200 lr 0.0002
+2024_06_20_09_51_10 Train loss: 0.009498604573309422 at step: 33600 lr 0.0002
+2024_06_20_09_53_19 Train loss: 0.004445003345608711 at step: 34000 lr 0.0002
+2024_06_20_09_55_13 Train loss: 0.0016742569860070944 at step: 34400 lr 0.0002
+2024_06_20_09_56_22 Train loss: 0.05637507885694504 at step: 34800 lr 0.0002
+2024_06_20_09_57_31 Train loss: 5.96624449826777e-05 at step: 35200 lr 0.0002
+2024_06_20_09_59_10 Train loss: 0.0010755333350971341 at step: 35600 lr 0.0002
+2024_06_20_10_01_21 Train loss: 0.005017233081161976 at step: 36000 lr 0.0002
+(Val @ epoch 7) acc: 0.999375; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+acc increate 0.99375 --> 0.999375, saving best model
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_7_best.pth
+2024_06_20_10_03_39 Train loss: 0.03924338147044182 at step: 36400 lr 0.0002
+2024_06_20_10_05_43 Train loss: 3.677279528346844e-05 at step: 36800 lr 0.0002
+2024_06_20_10_07_57 Train loss: 0.006463197525590658 at step: 37200 lr 0.0002
+2024_06_20_10_10_05 Train loss: 0.0021979142911732197 at step: 37600 lr 0.0002
+2024_06_20_10_12_14 Train loss: 0.00039847276639193296 at step: 38000 lr 0.0002
+2024_06_20_10_13_26 Train loss: 0.004340199753642082 at step: 38400 lr 0.0002
+2024_06_20_10_14_34 Train loss: 0.001941315596923232 at step: 38800 lr 0.0002
+2024_06_20_10_15_43 Train loss: 0.0013445524964481592 at step: 39200 lr 0.0002
+2024_06_20_10_16_51 Train loss: 0.011961625888943672 at step: 39600 lr 0.0002
+2024_06_20_10_18_00 Train loss: 0.018266653642058372 at step: 40000 lr 0.0002
+2024_06_20_10_19_08 Train loss: 0.0520254410803318 at step: 40400 lr 0.0002
+(Val @ epoch 8) acc: 0.999375; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_8.pth
+2024_06_20_10_20_20 Train loss: 0.000238522668951191 at step: 40800 lr 0.0002
+2024_06_20_10_21_29 Train loss: 0.00040724093560129404 at step: 41200 lr 0.0002
+2024_06_20_10_22_38 Train loss: 0.010877866297960281 at step: 41600 lr 0.0002
+2024_06_20_10_23_47 Train loss: 8.52303401188692e-06 at step: 42000 lr 0.0002
+2024_06_20_10_24_55 Train loss: 0.002122053876519203 at step: 42400 lr 0.0002
+2024_06_20_10_26_04 Train loss: 0.0014940507244318724 at step: 42800 lr 0.0002
+2024_06_20_10_27_13 Train loss: 0.01711313985288143 at step: 43200 lr 0.0002
+2024_06_20_10_28_22 Train loss: 0.0008446037536486983 at step: 43600 lr 0.0002
+2024_06_20_10_29_31 Train loss: 6.957117875572294e-05 at step: 44000 lr 0.0002
+2024_06_20_10_30_41 Train loss: 0.004453746136277914 at step: 44400 lr 0.0002
+2024_06_20_10_31_50 Train loss: 0.0001699927233858034 at step: 44800 lr 0.0002
+(Val @ epoch 9) acc: 0.999375; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_9.pth
+2024_06_20_10_33_02 Train loss: 1.4907509466866031e-05 at step: 45200 lr 0.0002
+2024_06_20_10_34_11 Train loss: 1.512458084107493e-06 at step: 45600 lr 0.0002
+2024_06_20_10_35_20 Train loss: 0.06339619308710098 at step: 46000 lr 0.0002
+2024_06_20_10_36_29 Train loss: 0.00022347638150677085 at step: 46400 lr 0.0002
+2024_06_20_10_37_38 Train loss: 0.024874407798051834 at step: 46800 lr 0.0002
+2024_06_20_10_38_48 Train loss: 0.0003813963267020881 at step: 47200 lr 0.0002
+2024_06_20_10_39_57 Train loss: 0.0007922335062175989 at step: 47600 lr 0.0002
+2024_06_20_10_41_06 Train loss: 4.9283986299997196e-05 at step: 48000 lr 0.0002
+2024_06_20_10_42_15 Train loss: 0.00017262031906284392 at step: 48400 lr 0.0002
+2024_06_20_10_43_24 Train loss: 0.0020299472380429506 at step: 48800 lr 0.0002
+2024_06_20_10_44_33 Train loss: 0.014810215681791306 at step: 49200 lr 0.0002
+2024_06_20_10_45_27 changing lr at the end of epoch 10, iters 49511
+*************************
+Changing lr from 0.0002 to 0.00018
+*************************
+(Val @ epoch 10) acc: 0.9975; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_10.pth
+2024_06_20_10_45_45 Train loss: 0.0015142926713451743 at step: 49600 lr 0.00018
+2024_06_20_10_46_54 Train loss: 0.013382947072386742 at step: 50000 lr 0.00018
+2024_06_20_10_48_03 Train loss: 0.008499234914779663 at step: 50400 lr 0.00018
+2024_06_20_10_49_12 Train loss: 0.010089480318129063 at step: 50800 lr 0.00018
+2024_06_20_10_50_21 Train loss: 0.002952601993456483 at step: 51200 lr 0.00018
+2024_06_20_10_51_30 Train loss: 0.013887140899896622 at step: 51600 lr 0.00018
+2024_06_20_10_52_39 Train loss: 0.00953761301934719 at step: 52000 lr 0.00018
+2024_06_20_10_53_48 Train loss: 0.011883571743965149 at step: 52400 lr 0.00018
+2024_06_20_10_54_57 Train loss: 3.342916170367971e-05 at step: 52800 lr 0.00018
+2024_06_20_10_56_06 Train loss: 0.023170512169599533 at step: 53200 lr 0.00018
+2024_06_20_10_57_15 Train loss: 0.011402740143239498 at step: 53600 lr 0.00018
+2024_06_20_10_58_23 Train loss: 0.0006496214773505926 at step: 54000 lr 0.00018
+(Val @ epoch 11) acc: 0.999375; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_11.pth
+2024_06_20_10_59_36 Train loss: 0.0010029166005551815 at step: 54400 lr 0.00018
+2024_06_20_11_00_45 Train loss: 0.010525858029723167 at step: 54800 lr 0.00018
+2024_06_20_11_01_53 Train loss: 2.5320616259705275e-05 at step: 55200 lr 0.00018
+2024_06_20_11_03_02 Train loss: 0.0014999803388491273 at step: 55600 lr 0.00018
+2024_06_20_11_04_11 Train loss: 0.0002720365591812879 at step: 56000 lr 0.00018
+2024_06_20_11_05_20 Train loss: 0.000492845952976495 at step: 56400 lr 0.00018
+2024_06_20_11_06_29 Train loss: 0.010090486146509647 at step: 56800 lr 0.00018
+2024_06_20_11_07_38 Train loss: 0.004291529767215252 at step: 57200 lr 0.00018
+2024_06_20_11_08_47 Train loss: 0.0001372933911625296 at step: 57600 lr 0.00018
+2024_06_20_11_09_57 Train loss: 8.109073678497225e-05 at step: 58000 lr 0.00018
+2024_06_20_11_11_06 Train loss: 4.1721259549376555e-06 at step: 58400 lr 0.00018
+(Val @ epoch 12) acc: 0.994375; ap: 0.9999797126397255
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_12.pth
+2024_06_20_11_12_18 Train loss: 0.00034070684341713786 at step: 58800 lr 0.00018
+2024_06_20_11_13_27 Train loss: 0.0004633993376046419 at step: 59200 lr 0.00018
+2024_06_20_11_14_36 Train loss: 3.155888043693267e-05 at step: 59600 lr 0.00018
+2024_06_20_11_15_45 Train loss: 0.018258297815918922 at step: 60000 lr 0.00018
+2024_06_20_11_16_54 Train loss: 0.003721211338415742 at step: 60400 lr 0.00018
+2024_06_20_11_18_03 Train loss: 0.002554624807089567 at step: 60800 lr 0.00018
+2024_06_20_11_19_12 Train loss: 0.009198669344186783 at step: 61200 lr 0.00018
+2024_06_20_11_20_21 Train loss: 0.0017961342819035053 at step: 61600 lr 0.00018
+2024_06_20_11_21_29 Train loss: 0.0005887699662707746 at step: 62000 lr 0.00018
+2024_06_20_11_23_27 Train loss: 0.004545850679278374 at step: 62400 lr 0.00018
+2024_06_20_11_25_43 Train loss: 0.0002870204043574631 at step: 62800 lr 0.00018
+(Val @ epoch 13) acc: 0.933125; ap: 0.9999278791618289
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_13.pth
+2024_06_20_11_27_49 Train loss: 2.3849801436881535e-05 at step: 63200 lr 0.00018
+2024_06_20_11_29_07 Train loss: 0.002248337958008051 at step: 63600 lr 0.00018
+2024_06_20_11_31_21 Train loss: 0.0032244648318737745 at step: 64000 lr 0.00018
+2024_06_20_11_33_33 Train loss: 0.05007936805486679 at step: 64400 lr 0.00018
+2024_06_20_11_35_14 Train loss: 5.8515535783953965e-05 at step: 64800 lr 0.00018
+2024_06_20_11_36_22 Train loss: 0.00026515277568250895 at step: 65200 lr 0.00018
+2024_06_20_11_37_31 Train loss: 3.162630946462741e-06 at step: 65600 lr 0.00018
+2024_06_20_11_39_17 Train loss: 0.000306446774629876 at step: 66000 lr 0.00018
+2024_06_20_11_41_31 Train loss: 0.013990025967359543 at step: 66400 lr 0.00018
+2024_06_20_11_43_31 Train loss: 0.0003593999135773629 at step: 66800 lr 0.00018
+2024_06_20_11_45_40 Train loss: 0.00036135720438323915 at step: 67200 lr 0.00018
+(Val @ epoch 14) acc: 1.0; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+acc increate 0.999375 --> 1.0, saving best model
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_14_best.pth
+2024_06_20_11_48_01 Train loss: 4.978834476787597e-05 at step: 67600 lr 0.00018
+2024_06_20_11_49_50 Train loss: 0.00012090137897757813 at step: 68000 lr 0.00018
+2024_06_20_11_50_59 Train loss: 0.0018219201592728496 at step: 68400 lr 0.00018
+2024_06_20_11_52_08 Train loss: 6.804844451835379e-05 at step: 68800 lr 0.00018
+2024_06_20_11_53_16 Train loss: 3.2297898542310577e-06 at step: 69200 lr 0.00018
+2024_06_20_11_54_25 Train loss: 0.0007972292951308191 at step: 69600 lr 0.00018
+2024_06_20_11_55_34 Train loss: 9.621651770430617e-06 at step: 70000 lr 0.00018
+2024_06_20_11_56_43 Train loss: 0.030706334859132767 at step: 70400 lr 0.00018
+2024_06_20_11_57_52 Train loss: 0.0002989398781210184 at step: 70800 lr 0.00018
+2024_06_20_11_59_01 Train loss: 0.002491686027497053 at step: 71200 lr 0.00018
+2024_06_20_12_00_10 Train loss: 0.00013994505570735782 at step: 71600 lr 0.00018
+2024_06_20_12_01_19 Train loss: 0.020699024200439453 at step: 72000 lr 0.00018
+(Val @ epoch 15) acc: 1.0; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_15.pth
+2024_06_20_12_02_31 Train loss: 0.009578880853950977 at step: 72400 lr 0.00018
+2024_06_20_12_03_40 Train loss: 0.000690953282173723 at step: 72800 lr 0.00018
+2024_06_20_12_04_49 Train loss: 0.01285067293792963 at step: 73200 lr 0.00018
+2024_06_20_12_05_58 Train loss: 0.0008815244073048234 at step: 73600 lr 0.00018
+2024_06_20_12_07_07 Train loss: 2.5399564037797973e-05 at step: 74000 lr 0.00018
+2024_06_20_12_08_16 Train loss: 0.00022557452030014247 at step: 74400 lr 0.00018
+2024_06_20_12_09_25 Train loss: 0.0006087297224439681 at step: 74800 lr 0.00018
+2024_06_20_12_10_34 Train loss: 8.46736365929246e-05 at step: 75200 lr 0.00018
+2024_06_20_12_11_44 Train loss: 0.0018353890627622604 at step: 75600 lr 0.00018
+2024_06_20_12_12_53 Train loss: 0.018190467730164528 at step: 76000 lr 0.00018
+2024_06_20_12_14_02 Train loss: 4.585822534863837e-05 at step: 76400 lr 0.00018
+(Val @ epoch 16) acc: 1.0; ap: 1.0
+Saving last model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_last.pth
+Saving model ./checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_16.pth

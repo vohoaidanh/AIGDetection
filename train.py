@@ -104,15 +104,17 @@ if __name__ == '__main__':
         val_writer.add_scalar('accuracy', acc, model.total_steps)
         val_writer.add_scalar('ap', ap, model.total_steps)
         print("(Val @ epoch {}) acc: {}; ap: {}".format(epoch, acc, ap))
-        
+        model.save_networks('last')
         if acc>best_acc:
             print(f'acc increate {best_acc} --> {acc}, saving best model')
             best_acc = acc
-            model.save_networks(f'epoch_{epoch}')
-            
+            model.save_networks(f'{epoch}_best')
+        else:
+            model.save_networks(f'{epoch}')
+
         # testmodel()
         model.train()
 
-    model.eval();testmodel()
+    #model.eval();testmodel()
     model.save_networks('last')
     

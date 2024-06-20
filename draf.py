@@ -200,16 +200,32 @@ torch.arctan(torch.tensor(-1.5708))
 imtensor.max()
 
 opt = TrainOptions().parse()
-opt.detect_method = 'local_grad'
+opt.detect_method = 'NPR'
 model = util.get_model(opt)
 
+model_dict = torch.load('model_epoch_last_3090.pth', map_location='cpu')
+
+model_dict = model_dict['model']
+model_dict.keys()
+
+model.load_state_dict(model_dict)
+
+
+
+# Giả sử model_dict là state_dict của model của bạn đã được lưu
+model_dict = torch.load('NPR.pth', map_location='cpu')
+
+# Tạo một dictionary mới để chứa state_dict đã được chỉnh sửa
+new_model_dict = {}
+for key, value in model_dict.items():
+    # Loại bỏ phần "module." ở đầu mỗi key
+    new_key = key.replace("module.", "", 1)
+    new_model_dict[new_key] = value
 
 
 
 
-
-
-
+model.load_state_dict(new_model_dict['model'])
 
 
 

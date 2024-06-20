@@ -1,4 +1,4 @@
-
+#sed -i 's/\r//' download_dataset.sh
 pwd=$(cd $(dirname $0); pwd)
 echo pwd: $pwd
 
