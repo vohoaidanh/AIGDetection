@@ -249,4 +249,4 @@ Train with sdv4 as the training set, using a random seed of 70.
 
 ## Acknowledgments
 
-This repository borrows partially from the [CNNDetection](https://github.com/peterwang512/CNNDetection).
+This repository copy from the [NPR-DeepfakeDetection](https://github.com/chuangchuangtan/NPR-DeepfakeDetection).
