@@ -28,8 +28,8 @@ def seed_torch(seed=1029):
 
 
 # test config
-vals = ['progan', 'stylegan', 'stylegan2', 'biggan', 'cyclegan', 'stargan', 'gaugan', 'deepfake']
-multiclass = [1, 1, 1, 0, 1, 0, 0, 0]
+vals = ['biggan']
+multiclass = [1]
 
 
 def get_val_opt():
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         if acc>best_acc:
             print(f'acc increate {best_acc} --> {acc}, saving best model')
             best_acc = acc
-            model.save_networks('best')
+            model.save_networks(f'epoch_{epoch}')
             
         # testmodel()
         model.train()

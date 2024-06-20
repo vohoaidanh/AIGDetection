@@ -55,10 +55,12 @@ def printSet(set_str):
     
 def get_model(opt):
     if opt.detect_method in ["NPR"]:
+        print(f'Detect method model {opt.detect_method}')
         model = resnet50(pretrained=False, num_classes=1)
         return model
         
     elif opt.detect_method.lower() in ['local_grad']:
+        print(f'Detect method model {opt.detect_method}')
         model = resnet50_local_grad(pretrained=False, num_classes=1)
         return model
     
