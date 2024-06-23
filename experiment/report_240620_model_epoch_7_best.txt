@@ -2,6 +2,20 @@
 Detect method local_grad
 Model_path checkpoints/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39/model_epoch_7_best.pth
 Detect method model local_grad
+=================================
+           ForenSynths
+=================================
+2024_06_20_15_44_08
+(0 biggan      ) acc: 85.8; ap: 93.4
+(1 cyclegan    ) acc: 87.7; ap: 92.5
+(2 deepfake    ) acc: 52.9; ap: 89.8
+(3 gaugan      ) acc: 71.8; ap: 75.1
+(4 progan      ) acc: 99.6; ap: 100.0
+(5 stargan     ) acc: 100.0; ap: 100.0
+(6 stylegan    ) acc: 98.3; ap: 100.0
+(7 stylegan2   ) acc: 97.5; ap: 100.0
+(8 Mean      ) acc: 86.7; ap: 93.8
+*************************
 ================================================
                 GANGen-Detection
 ================================================

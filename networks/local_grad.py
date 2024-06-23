@@ -36,37 +36,29 @@ class GradientLayer(nn.Module):
         return combined_grad
 
 def gradient_filter(input_tensor):
-    size = (input_tensor.shape[-2], input_tensor.shape[-1])
-    # Define the gradient filters for x and y directions
     device = input_tensor.device
-    kernel_x = torch.tensor([[0, 0, 0],[0, -1, 1],[0, 0, 0]], dtype=torch.float32).unsqueeze(0).unsqueeze(0)  # Kernel for x direction
-    kernel_y = kernel_x[0,0,:,:].t().unsqueeze(0).unsqueeze(0)  
-    kernel_x = kernel_x.to(device)
-    kernel_y = kernel_y.to(device)
-    # Expand the kernels to match the number of input channels (3)
-    #kernel_x = kernel_x.expand(-1, input_tensor.size(1), -1, -1)
-    #kernel_y = kernel_y.expand(-1, input_tensor.size(1), -1, -1)
+    batch_size, channels, height, width = input_tensor.size()
+
+    # Define the gradient filters for x and y directions
+    kernel_x = torch.tensor([[0, 0, 0], [0, -1, 1], [0, 0, 0]], dtype=torch.float32, device=device).unsqueeze(0).unsqueeze(0)
+    kernel_y = kernel_x.transpose(2, 3)  # Transpose kernel_x to get kernel_y
+
+    # Expand the kernels to match the number of input channels
+    kernel_x = kernel_x.expand(channels, 1, 3, 3)
+    kernel_y = kernel_y.expand(channels, 1, 3, 3)
 
     # Apply the filters
-    i=0
-    diff_x1 = F.conv2d(input_tensor[:,i:i+1], kernel_x, padding=(1, 1), stride=1)
-    diff_y1 = F.conv2d(input_tensor[:,i:i+1], kernel_y, padding=(1, 1))
-    i=1
-    diff_x2 = F.conv2d(input_tensor[:,i:i+1], kernel_x, padding=(1, 1))
-    diff_y2 = F.conv2d(input_tensor[:,i:i+1], kernel_y, padding=(1, 1))
+    diff_x = F.conv2d(input_tensor, kernel_x, padding=1, groups=channels)
+    diff_y = F.conv2d(input_tensor, kernel_y, padding=1, groups=channels)
 
-    i=2
-    diff_x3 = F.conv2d(input_tensor[:,i:i+1], kernel_x, padding=(1, 1))
-    diff_y3 = F.conv2d(input_tensor[:,i:i+1], kernel_y, padding=(1, 1))
+    # Add a small value to avoid division by zero
+    diff_x = diff_x + 1e-9
+    diff_y = diff_y + 1e-9
 
-    # Combine the gradients into a single tensor with 3 channels
-    #combined_grad = torch.cat((diff_x, diff_y), dim=1)
-    outx = torch.cat((diff_x1+1e-9, diff_x2+1e-9, diff_x3+1e-9), dim=1)
-    outy = torch.cat((diff_y1+1e-9, diff_y2+1e-9, diff_y3+1e-9), dim=1)
-    #outy = F.interpolate(outy, size)
-    #out = torch.sqrt(outx**2 + outy**2)
-    return (torch.arctan(outy/outx)/(torch.pi/2) + 1.0)/2.0     #torch.cat((diff_x1/diff_y1, diff_x2/diff_y2, diff_x3/diff_y1), dim=1)
+    # Calculate the final output
+    output = (torch.arctan(diff_y / diff_x) / (torch.pi / 2) + 1.0) / 2.0
 
+    return output
 
 def gauss_blur(input_tensor):
     blur = transforms.GaussianBlur(kernel_size=3, sigma=(0.5))

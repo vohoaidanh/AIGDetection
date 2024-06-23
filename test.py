@@ -3,7 +3,7 @@ import time
 import os
 import csv
 import torch
-from util import Logger, printSet
+from util import Logger, printSet, get_model
 from validate import validate
 from networks.resnet import resnet50
 from options.test_options import TestOptions
@@ -50,7 +50,8 @@ opt = TestOptions().parse(print_options=False)
 print(f'Model_path {opt.model_path}')
 
 # get model
-model = resnet50(num_classes=1)
+#model = resnet50(num_classes=1)
+model = get_model(opt)
 model.load_state_dict(torch.load(opt.model_path, map_location='cpu'), strict=True)
 model.cuda()
 model.eval()

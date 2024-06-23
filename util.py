@@ -5,6 +5,7 @@ from torch import nn
 import torchvision
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
+from networks.resnet_gauss import resnet50_gauss
 
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
@@ -62,6 +63,12 @@ def get_model(opt):
     elif opt.detect_method.lower() in ['local_grad']:
         print(f'Detect method model {opt.detect_method}')
         model = resnet50_local_grad(pretrained=False, num_classes=1)
+        return model
+    
+    elif opt.detect_method.lower() in ['gauss']:
+        print(f'Detect method model {opt.detect_method}')
+        model = resnet50_gauss(pretrained=False, num_classes=1)
+        opt.loss_fn = 'BCELoss'
         return model
     
     else:
