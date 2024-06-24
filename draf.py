@@ -176,9 +176,37 @@ plt.plot(x.detach().numpy())
 plt.plot(output.detach().numpy() )
 
 
+x = np.linspace(-10, 10, 20)
+#np.random.shuffle(x)
 
-import torch.nn as nn
 
-loss_name = 'BCELoss'
-loss_class = getattr(nn, loss_name)
+
+
+f_x = torch.tensor(x).sigmoid()
+
+plt.plot(f_x,'r.')
+plt.plot(x,f_x,'b.')
+
+plt.plot(x)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

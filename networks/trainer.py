@@ -22,7 +22,7 @@ class Trainer(BaseModel):
 
         if self.isTrain:
             #self.loss_fn = nn.BCEWithLogitsLoss()
-            self.loss_fn = getattr(nn, opt.loss_fn)
+            self.loss_fn = getattr(nn, opt.loss_fn)()
             # initialize optimizers
             if opt.optim == 'adam':
                 self.optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
