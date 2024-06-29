@@ -55,7 +55,7 @@ def gradient_filter(input_tensor):
     diff_x = diff_x + 1e-9
     diff_y = diff_y + 1e-9
 
-    # Calculate the final output
+    # Calculate the final output and normalize to [0..1]
     output = (torch.arctan(diff_y / diff_x) / (torch.pi / 2) + 1.0) / 2.0
 
     return output

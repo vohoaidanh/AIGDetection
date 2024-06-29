@@ -96,7 +96,6 @@ class Bottleneck(nn.Module):
 
         return out
 
-
 class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1, zero_init_residual=False):
@@ -107,7 +106,7 @@ class ResNet(nn.Module):
         assert self.unfoldSize > 1
         assert -1 < self.unfoldIndex and self.unfoldIndex < self.unfoldSize*self.unfoldSize
         self.inplanes = 64
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -154,19 +153,9 @@ class ResNet(nn.Module):
         return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
     
     def forward(self, x):
-        # n,c,w,h = x.shape
-        # if -1*w%2 != 0: x = x[:,:,:w%2*-1,:      ]
-        # if -1*h%2 != 0: x = x[:,:,:      ,:h%2*-1]
-        # factor = 0.5
-        # x_half = F.interpolate(x, scale_factor=factor, mode='nearest', recompute_scale_factor=True)
-        # x_re   = F.interpolate(x_half, scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
-        # NPR  = x - x_re
-        # n,c,w,h = x.shape
-        # if w%2 == 1 : x = x[:,:,:-1,:]
-        # if h%2 == 1 : x = x[:,:,:,:-1]
-        #NPR  = x - self.interpolate(x, 0.5)
-        NPR = self.gradient_layer(x)
-        x = self.conv1(NPR)
+
+        x = self.gradient_layer(x)
+        x = self.conv1(x)
         #x = self.conv1(NPR*2.0/3.0)
         x = self.bn1(x)
         x = self.relu(x)
@@ -211,7 +200,7 @@ def resnet50_local_grad(pretrained=False, **kwargs):
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
+        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']), strict=False)
     return model
 
 
@@ -237,3 +226,22 @@ def resnet152(pretrained=False, **kwargs):
     return model
 
 
+if __name__ == '__main__':
+    from options.train_options import TrainOptions
+    from util import get_model
+    import torch
+    opt = TrainOptions().parse()
+    opt.detect_method = 'local_grad'
+    model = get_model(opt)
+    intens = torch.rand(1,3,224,224)
+    model(intens)    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

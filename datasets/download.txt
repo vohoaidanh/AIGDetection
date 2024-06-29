@@ -1,0 +1,33 @@
+# Search and delete all folder start with "." linke .ipython...
+#!find /content/datasets -type d -name ".*" -exec rm -rf {} +
+
+
+
+
+#Unzip dataset.zip with random slelect from each
+#!/bin/bash
+
+# Đường dẫn đến tệp ZIP và thư mục đích
+ZIP_FILE="/content/drive/MyDrive/1DATASETS/progan_dataset/ForenSynths_train_val.zip"
+DEST_DIR="/content/datasets/ForenSynths_train_val_500"
+NUM_FILES=500
+
+# Lấy danh sách tên các tệp trong tệp ZIP và lưu vào một tệp tạm thời
+unzip -Z1 "$ZIP_FILE" > file_list.txt
+
+# Tạo một danh sách tạm thời để lưu các tệp được chọn
+TEMP_FILE=$(mktemp)
+
+# Lặp qua mỗi thư mục trong tệp ZIP
+grep -oE '.*/' file_list.txt | sort -u | while read -r dir; do
+    # Lấy danh sách các tệp trong thư mục hiện tại và chọn ngẫu nhiên số lượng tệp cần thiết
+    grep "^$dir" file_list.txt | shuf -n "$NUM_FILES" >> "$TEMP_FILE"
+done
+
+# Giải nén các tệp được chọn vào thư mục đích
+while read -r file; do
+    unzip -qq "$ZIP_FILE" "$file" -d "$DEST_DIR"
+done < "$TEMP_FILE"
+
+# Xóa các tệp tạm thời
+rm file_list.txt "$TEMP_FILE"

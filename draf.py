@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import torchvision.transforms.functional as TF
 from numpy.fft import fft2, fftshift
 import matplotlib.pyplot as plt
-
+from copy import deepcopy
 def center_crop(image, crop_size = (256,256)):
     # Calculate the coordinates for a center crop
     width, height = image.size
@@ -29,6 +29,11 @@ def slip_image(image_pil):
 
 
 NOISE = np.random.randint(0, 256, (256, 256), dtype=np.uint8)
+
+def interpolate(img, factor=0.5):
+    old_image = deepcopy(img)
+    return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
+   
 
 def gradient_filter_(input_tensor):
     input_tensor = TF.to_tensor(input_tensor).unsqueeze(0)
@@ -71,17 +76,17 @@ def calculate_spectrum(folder_path, size=(512, 512), channel=1):
           image_path = os.path.join(root, file)
           image = Image.open(image_path).convert('RGB')
           image = center_crop(image)
-          #image_odd, image_even = slip_image(image)
-          image_odd, image_even = image, image
+          image_odd, image_even = slip_image(image)
+          #image_odd, image_even = image, image
           #image_odd = TF.to_pil_image(image_odd) #TF.to_tensor(image_odd)
           #image_odd = image_odd.unsqueeze(0)
           
-          spectrum = calculate_fourier_spectrum(image_odd)
+          spectrum = interpolate(image_odd)
           spectra_odd.append(spectrum)
           
           #image_even =  TF.to_pil_image(image_even)#TF.to_tensor(image_even)
           #image_even = image_even.unsqueeze(0)
-          spectrum = calculate_fourier_spectrum(image_even)
+          spectrum = interpolate(image_even)
           spectra_even.append(spectrum)
           
           
@@ -131,76 +136,27 @@ plt.imshow(mean_spectrum_odd)
 mean_spectrum_odd.shape
 
 
+image = Image.open(r"D:\dataset\deepfake\0_real\794_0010.png").convert('RGB')
+width, height = image.size
+left = 0
+upper = 0
+right = width//2 * 2
+lower = height//2 * 2
 
-import numpy as np
-import matplotlib.pyplot as plt
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
+# Crop the image
+image = image.crop((left, upper, right, lower))
+im = image
+im = TF.to_tensor(im)
 
-class GaussianActivation(nn.Module):
-    def __init__(self, sigma=1):
-        super(GaussianActivation, self).__init__()
-        self.sigma = sigma
-
-    def forward(self, x):
-        return 1.0-torch.exp(-((x/self.sigma)**2)/2)
-
-# Test the custom activation function
-if __name__ == "__main__":
-    # Create an instance of the custom activation function
-    custom_activation = GaussianActivation(20)
-
-    # Generate some random input data
-    x = torch.tensor([[1.0, 2.0], [-1.0, -2.0]])
-    n = torch.linspace(-50, 50, 100)
-    #x = (torch.sigmoid(n)-0.5)*5
-    x=n
-    #x = torch.rand(100)
-    x.requires_grad=True
-    # Apply the custom activation function
-    
-    output = custom_activation(x)
-    grad_output = torch.ones(x.size())  # Example hypothetical gradients
-
-    output.backward(grad_output)
-    
-    print("Input:")
-    print(x)
-    print("Output after applying custom activation function:")
-    print(output)
+a = interpolate(im)
+a = interpolate(im.unsqueeze(0))
 
 
-plt.plot(x.detach().numpy())
-#plt.plot(x.grad.detach().numpy())
-plt.plot(output.detach().numpy() )
-
-
-x = np.linspace(-10, 10, 20)
-#np.random.shuffle(x)
+plt.imshow(torch.abs(((im-a.squeeze(0)+1e-9).log())).permute(1,2,0))
 
 
 
-
-f_x = torch.tensor(x).sigmoid()
-
-plt.plot(f_x,'r.')
-plt.plot(x,f_x,'b.')
-
-plt.plot(x)
-
-
-
-
-
-
-
-
-
-
-
-
-
+F.linear(torch.tensor([1,2,3,4],dtype=float), torch.tensor([1,1,1,1],dtype=float))
 
 
 
