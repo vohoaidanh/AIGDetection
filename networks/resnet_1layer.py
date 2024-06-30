@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
 from torch.nn import functional as F
+from torchvision import transforms
+
 from typing import Any, cast, Dict, List, Optional, Union
 import numpy as np
 from networks.local_grad import *
@@ -96,27 +98,56 @@ class Bottleneck(nn.Module):
 
         return out
 
+from functools import partial
+class Preprocess():
+    
+    @classmethod
+    def low_pass_filter(self,x , kernel_size=(5, 5), sigma=(2.0, 2.0)):
+        #sigma=50% kernelsize
+        return transforms.GaussianBlur(kernel_size, sigma)(x)
+    
+    @classmethod 
+    def high_pass_filter(self,x , kernel_size=(5, 5), sigma=(2.0, 2.0)):
+        #sigma=50% kernelsize
+        x =  x - transforms.GaussianBlur(kernel_size, sigma)(x)
+        
+        min_vals = x.min(dim=(2, 3), keepdim=True)[0]
+        max_vals = x.max(dim=(2, 3), keepdim=True)[0]
+        x_normalized = (x - min_vals) / (max_vals - min_vals + 1e-6)  # Add a small epsilon to avoid division by zero
+        
+        return x_normalized
+            
+    
+    def to_image(self,tensor):
+        from PIL import Image
+        image_np = tensor.cpu().clone().detach().numpy()
+        image_np = image_np.transpose(1, 2, 0)  # Change tensor from CxHxW to HxWxC
+        image_np = (image_np * 255).astype(np.uint8)
+        image = Image.fromarray(image_np)
 
+        return image
+    
 class ResNet(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1, zero_init_residual=False):
+    def __init__(self, block, layers, num_classes=1000, zero_init_residual=False):
         super(ResNet, self).__init__()
-        self.gradient_layer = gradient_filter  # Instantiate GradientLayer
-        self.unfoldSize = 2
-        self.unfoldIndex = 0
-        assert self.unfoldSize > 1
-        assert -1 < self.unfoldIndex and self.unfoldIndex < self.unfoldSize*self.unfoldSize
+        
+        #low pass filter
+        self.pre_process = partial(Preprocess.low_pass_filter, kernel_size=(5, 5), sigma=(2.0, 2.0))
+        
         self.inplanes = 64
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
+                               bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        self.layer1 = self._make_layer(block, 64 , layers[0])
-        #self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
+        self.layer1 = self._make_layer(block, 64, layers[0])
+        self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
+        self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
+        self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        # self.fc1 = nn.Linear(512 * block.expansion, 1)
-        self.fc1 = nn.Linear(256, num_classes)
-
+        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        # print(num_classes)
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
@@ -149,36 +180,23 @@ class ResNet(nn.Module):
             layers.append(block(self.inplanes, planes))
 
         return nn.Sequential(*layers)
-    
-    def interpolate(self, img, factor):
-        return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
-    
+
     def forward(self, x):
-        # n,c,w,h = x.shape
-        # if -1*w%2 != 0: x = x[:,:,:w%2*-1,:      ]
-        # if -1*h%2 != 0: x = x[:,:,:      ,:h%2*-1]
-        # factor = 0.5
-        # x_half = F.interpolate(x, scale_factor=factor, mode='nearest', recompute_scale_factor=True)
-        # x_re   = F.interpolate(x_half, scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
-        # NPR  = x - x_re
-        # n,c,w,h = x.shape
-        # if w%2 == 1 : x = x[:,:,:-1,:]
-        # if h%2 == 1 : x = x[:,:,:,:-1]
-        #NPR  = x - self.interpolate(x, 0.5)
-        NPR = self.gradient_layer(x)
-        x = self.conv1(NPR)
-        #x = self.conv1(NPR*2.0/3.0)
+        
+        x = self.pre_process(x)
+        x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
 
         x = self.layer1(x)
-        #x = self.layer2(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
 
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
-        x = self.fc1(x)
-
+        x = self.fc(x)
         return x
 
 
@@ -238,24 +256,31 @@ def resnet152(pretrained=False, **kwargs):
 
 if __name__ == '__main__':
     import torch
+    from PIL import Image
     model = resnet50_1layer()
     x = torch.rand((4,3,224,224))
-    pre = model(x)    
+    im = Image.open(r"D:\K32\do_an_tot_nghiep\data\real_gen_dataset\train\0_real\000609511.jpg")
+    im = transforms.ToTensor()(im)
+#    pre = model(x)    
+    process = Preprocess()
+    im_blur = process.high_pass_filter(im.unsqueeze(0),kernel_size=(7,7), sigma=(3,3))
+#    im_blur = im_blur - im_blur.min()
+    im_blur = process.to_image(im_blur.squeeze(0))
     
     
+    im_arr = np.asarray(im_blur)
     
+    im.min(dim=(2,3), keepdim=True)[0].shape
     
+im_arr.max()
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+im = torch.randn(3, 256, 256)  # Example tensor, replace with your tensor
+
+# Compute minimum values across dimensions 2 and 3, keeping dimensions
+min_vals = im.min(dim=(1, 2))[0]
+min_vals.shape
+
+
+
+
+

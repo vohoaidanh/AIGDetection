@@ -25,9 +25,10 @@ def validate(model, opt):
 
 
 if __name__ == '__main__':
+    from util import get_model
     opt = TestOptions().parse(print_options=False)
-
-    model = resnet50(num_classes=1)
+    opt.detect_method = 'local_grad'
+    model = get_model(opt)
     state_dict = torch.load(opt.model_path, map_location='cpu')
     model.load_state_dict(state_dict['model'])
     model.cuda()

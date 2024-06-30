@@ -52,7 +52,12 @@ print(f'Model_path {opt.model_path}')
 # get model
 #model = resnet50(num_classes=1)
 model = get_model(opt)
-model.load_state_dict(torch.load(opt.model_path, map_location='cpu'), strict=True)
+
+strict = False
+if opt.detect_method == 'NPR':
+    strict = True
+
+model.load_state_dict(torch.load(opt.model_path, map_location='cpu'), strict=strict)
 model.cuda()
 model.eval()
 
