@@ -3,8 +3,9 @@ import torch.utils.model_zoo as model_zoo
 from torchvision import transforms
 import numpy as np
 from PIL import Image
+import json
 
-__all__ = ['ResNet', 'resnet50_experiment_01']
+__all__ = ['ResNet', 'resnet50_experiment_01', 'Preprocess']
 
 
 model_urls = {
@@ -101,7 +102,14 @@ class Preprocess():
     config = {
         "kernel_size": (5,5),
         "sigma": (2.0, 2.0),     
+        "filter": "low_pass_filter",
         }
+    
+    @classmethod
+    def __repr__(cls):
+        s = f'Experiment config is \n {20*"*"} \n {json.dumps(cls.config, indent=4)}\n {20*"*"}'
+        return s
+    
     @classmethod
     def low_pass_filter(self,x , kernel_size, sigma):
         #sigma=50% kernelsize
@@ -120,7 +128,8 @@ class Preprocess():
             
     @classmethod 
     def filter(self):
-        return partial(self.low_pass_filter, 
+        _filter =  getattr(self, self.config['filter'])
+        return partial(_filter, 
                        kernel_size = self.config['kernel_size'], 
                        sigma = self.config['sigma'])
         
@@ -264,9 +273,11 @@ def resnet152(pretrained=False, **kwargs):
 if __name__ == '__main__':
     import torch
     from PIL import Image
-    model = resnet50_experiment_01()
-    x = torch.rand((4,3,224,224))
-    model(x)
+    #print(json.dumps(Preprocess.config, indent=4))
+    print(Preprocess())
+    #model = resnet50_experiment_01()
+    #x = torch.rand((4,3,224,224))
+    #model(x)
 # =============================================================================
 #     x = torch.rand((4,3,224,224))
 #     img = Image.open(r"D:\Downloads\dataset\progan_val_4_class\cat\0_real\17262.png")

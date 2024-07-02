@@ -1,12 +1,11 @@
 import sys
 import os
 import torch
-from torch import nn
-import torchvision
+#from torch import nn
+#import torchvision
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
 from networks.resnet_experiment import *
-
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
         for path in paths:
@@ -66,6 +65,9 @@ def get_model(opt):
     elif opt.detect_method.lower() in ['experiment_01']:
         print(f'Detect method model {opt.detect_method}')
         model = resnet50_experiment_01(pretrained=False, num_classes=1)
+        #Preprocess is contains the experiment configuration
+        print(Preprocess())
+
         return model
     
     else:
