@@ -136,7 +136,7 @@ plt.imshow(mean_spectrum_odd)
 mean_spectrum_odd.shape
 
 
-image = Image.open(r"D:\dataset\deepfake\0_real\794_0010.png").convert('RGB')
+image = Image.open(r"D:\Downloads\dataset\progan_val_4_class\car\0_real\03631.png").convert('RGB')
 width, height = image.size
 left = 0
 upper = 0

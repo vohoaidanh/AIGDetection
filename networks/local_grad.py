@@ -137,9 +137,47 @@ def high_pass_mask(input_tensor):
     return mask#out2 + out1
 
 
+if __name__ == '__main__':
+    import torch
+    from PIL import Image
+    import numpy as np
+    import matplotlib.pyplot as plt
+    img = Image.open(r"D:\Downloads\dataset\progan_val_4_class\cat\0_real\17262.png")
+    im = transforms.ToTensor()(img).unsqueeze(0)
 
+    out_put = gradient_filter(im)
+    out_put = out_put.squeeze(0)
+    
+    im_out = out_put.permute(1,2,0).numpy()
+    im_out = (im_out * 255).astype(np.uint8)
 
+    im_out = Image.fromarray(im_out)
 
+    plt.imshow(out_put.permute(1,2,0))
+    
+    
+    plt.figure(figsize=(7, 4))  # Thiết lập kích thước của figure
+    
+    # Vẽ hình ảnh thứ nhất
+    plt.subplot(1, 2, 1)  # Subplot đầu tiên trên 1 hàng, 3 cột
+    plt.imshow(img)
+    plt.axis('off')  # Tắt trục
+    plt.title('(a)')  # Tiêu đề của hình ảnh
+    
+    # Vẽ hình ảnh thứ hai
+    plt.subplot(1, 2, 2)  # Subplot thứ hai trên 1 hàng, 3 cột
+    plt.imshow(im_out)
+    plt.axis('off')  # Tắt trục
+    plt.title('(b)')  # Tiêu đề của hình ảnh
 
-
+    plt.subplots_adjust(wspace=0.0, hspace=0.0)  # Điều chỉnh khoảng cách giữa các subplot
+    
+    plt.tight_layout()  # Cân chỉnh layout
+    plt.show()
+    
+    
+    
+    
+    
+    
 

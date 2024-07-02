@@ -1,12 +1,10 @@
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
-from torch.nn import functional as F
 from torchvision import transforms
-
-from typing import Any, cast, Dict, List, Optional, Union
 import numpy as np
-from networks.local_grad import *
-__all__ = ['ResNet', 'resnet50_1layer']
+from PIL import Image
+
+__all__ = ['ResNet', 'resnet50_experiment_01']
 
 
 model_urls = {
@@ -100,26 +98,34 @@ class Bottleneck(nn.Module):
 
 from functools import partial
 class Preprocess():
-    
+    config = {
+        "kernel_size": (5,5),
+        "sigma": (2.0, 2.0),     
+        }
     @classmethod
-    def low_pass_filter(self,x , kernel_size=(5, 5), sigma=(2.0, 2.0)):
+    def low_pass_filter(self,x , kernel_size, sigma):
         #sigma=50% kernelsize
         return transforms.GaussianBlur(kernel_size, sigma)(x)
     
     @classmethod 
-    def high_pass_filter(self,x , kernel_size=(5, 5), sigma=(2.0, 2.0)):
+    def high_pass_filter(self,x , kernel_size, sigma):
         #sigma=50% kernelsize
         x =  x - transforms.GaussianBlur(kernel_size, sigma)(x)
         
-        min_vals = x.min(dim=(2, 3), keepdim=True)[0]
-        max_vals = x.max(dim=(2, 3), keepdim=True)[0]
+        min_vals = x.view(1,3,-1).min(dim=2, keepdim=True)[0].unsqueeze(-1)
+        max_vals = x.view(1,3,-1).max(dim=2, keepdim=True)[0].unsqueeze(-1)
         x_normalized = (x - min_vals) / (max_vals - min_vals + 1e-6)  # Add a small epsilon to avoid division by zero
-        
+    
         return x_normalized
             
+    @classmethod 
+    def filter(self):
+        return partial(self.low_pass_filter, 
+                       kernel_size = self.config['kernel_size'], 
+                       sigma = self.config['sigma'])
+        
     
     def to_image(self,tensor):
-        from PIL import Image
         image_np = tensor.cpu().clone().detach().numpy()
         image_np = image_np.transpose(1, 2, 0)  # Change tensor from CxHxW to HxWxC
         image_np = (image_np * 255).astype(np.uint8)
@@ -129,11 +135,11 @@ class Preprocess():
     
 class ResNet(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1000, zero_init_residual=False):
+    def __init__(self, block, layers, num_classes=1, zero_init_residual=False):
         super(ResNet, self).__init__()
         
         #low pass filter
-        self.pre_process = partial(Preprocess.low_pass_filter, kernel_size=(5, 5), sigma=(2.0, 2.0))
+        self.pre_process = Preprocess.filter()
         
         self.inplanes = 64
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
@@ -143,11 +149,12 @@ class ResNet(nn.Module):
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64, layers[0])
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
-        self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
-        self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
+        #self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
+        #self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
-        # print(num_classes)
+        #self.fc = nn.Linear(512 * block.expansion, num_classes)
+        self.fc = nn.Linear(512, num_classes)
+
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
@@ -191,8 +198,8 @@ class ResNet(nn.Module):
 
         x = self.layer1(x)
         x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
+        #x = self.layer3(x)
+        #x = self.layer4(x)
 
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
@@ -222,14 +229,14 @@ def resnet34(pretrained=False, **kwargs):
     return model
 
 
-def resnet50_1layer(pretrained=False, **kwargs):
+def resnet50_experiment_01(pretrained=False, **kwargs):
     """Constructs a ResNet-50 model.
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
+        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']),strict=False)
     return model
 
 
@@ -257,30 +264,72 @@ def resnet152(pretrained=False, **kwargs):
 if __name__ == '__main__':
     import torch
     from PIL import Image
-    model = resnet50_1layer()
+    model = resnet50_experiment_01()
     x = torch.rand((4,3,224,224))
-    im = Image.open(r"D:\K32\do_an_tot_nghiep\data\real_gen_dataset\train\0_real\000609511.jpg")
-    im = transforms.ToTensor()(im)
-#    pre = model(x)    
-    process = Preprocess()
-    im_blur = process.high_pass_filter(im.unsqueeze(0),kernel_size=(7,7), sigma=(3,3))
-#    im_blur = im_blur - im_blur.min()
-    im_blur = process.to_image(im_blur.squeeze(0))
+    model(x)
+# =============================================================================
+#     x = torch.rand((4,3,224,224))
+#     img = Image.open(r"D:\Downloads\dataset\progan_val_4_class\cat\0_real\17262.png")
+#     im = transforms.ToTensor()(img)
+# #    pre = model(x)    
+#     process = Preprocess()
+#     im_blur = process.low_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
+#     im_blur = process.to_image(im_blur.squeeze(0))
+#     
+#     im_blur_highpass = process.high_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
+#     im_blur_highpass = process.to_image(im_blur_highpass.squeeze(0))
+#     
+#     
+#     im_arr = np.asarray(im_blur_highpass)
+#     
+#     
+#     im_arr[:,:,0].max()
+#         
+#     im = torch.randn(3, 256, 256)  # Example tensor, replace with your tensor
+#     im = im.view(3, -1)
+#     # Compute minimum values across dimensions 2 and 3, keeping dimensions
+#     min_vals = im.min(dim=1)[0]
+#     im.shape
+#     
+#     im_blur.view(1,3,-1).min(dim=2)[0].squeeze(0)
+#     im_blur.view(1,3,-1).shape
+#     
+#     # Vẽ hình ảnh
+#     plt.figure(figsize=(10, 4))  # Thiết lập kích thước của figure
+#     
+#     # Vẽ hình ảnh thứ nhất
+#     plt.subplot(1, 3, 1)  # Subplot đầu tiên trên 1 hàng, 3 cột
+#     plt.imshow(img)
+#     plt.axis('off')  # Tắt trục
+#     plt.title('(a)')  # Tiêu đề của hình ảnh
+#     
+#     # Vẽ hình ảnh thứ hai
+#     plt.subplot(1, 3, 2)  # Subplot thứ hai trên 1 hàng, 3 cột
+#     plt.imshow(im_blur)
+#     plt.axis('off')  # Tắt trục
+#     plt.title('(b)')  # Tiêu đề của hình ảnh
+#     
+#     # Vẽ hình ảnh thứ ba
+#     plt.subplot(1, 3, 3)  # Subplot thứ ba trên 1 hàng, 3 cột
+#     plt.imshow(im_blur_highpass)
+#     plt.axis('off')  # Tắt trục
+#     plt.title('(c)')  # Tiêu đề của hình ảnh
+#     plt.subplots_adjust(wspace=0.0, hspace=0.0)  # Điều chỉnh khoảng cách giữa các subplot
+#     
+#     plt.tight_layout()  # Cân chỉnh layout
+#     plt.show()
+#     
+# =============================================================================
     
     
-    im_arr = np.asarray(im_blur)
     
-    im.min(dim=(2,3), keepdim=True)[0].shape
     
-im_arr.max()
     
-im = torch.randn(3, 256, 256)  # Example tensor, replace with your tensor
-
-# Compute minimum values across dimensions 2 and 3, keeping dimensions
-min_vals = im.min(dim=(1, 2))[0]
-min_vals.shape
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
+    

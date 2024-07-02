@@ -5,7 +5,7 @@ from torch import nn
 import torchvision
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
-from networks.resnet_1layer import resnet50_1layer
+from networks.resnet_experiment import *
 
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
@@ -63,9 +63,9 @@ def get_model(opt):
         model = resnet50_local_grad(pretrained=True, num_classes=1)
         return model
     
-    elif opt.detect_method.lower() in ['resnet_1layer']:
+    elif opt.detect_method.lower() in ['experiment_01']:
         print(f'Detect method model {opt.detect_method}')
-        model = resnet50_1layer(pretrained=False, num_classes=1)
+        model = resnet50_experiment_01(pretrained=False, num_classes=1)
         return model
     
     else:
