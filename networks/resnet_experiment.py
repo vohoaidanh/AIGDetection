@@ -102,7 +102,7 @@ class Preprocess():
     config = {
         "kernel_size": (5,5),
         "sigma": (2.0, 2.0),     
-        "filter": "low_pass_filter",
+        "filter": "no_filter",
         }
     
     @classmethod
@@ -125,6 +125,10 @@ class Preprocess():
         x_normalized = (x - min_vals) / (max_vals - min_vals + 1e-6)  # Add a small epsilon to avoid division by zero
     
         return x_normalized
+    
+    @classmethod 
+    def no_filter(self,x , kernel_size, sigma):
+        return x
             
     @classmethod 
     def filter(self):
@@ -245,7 +249,9 @@ def resnet50_experiment_01(pretrained=False, **kwargs):
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']),strict=False)
+        state_dict = model_zoo.load_url(model_urls['resnet50'])
+        new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['fc', 'layer3', 'layer4'])}
+        model.load_state_dict(new_state_dict,strict=False)
     return model
 
 
@@ -273,72 +279,68 @@ def resnet152(pretrained=False, **kwargs):
 if __name__ == '__main__':
     import torch
     from PIL import Image
+    import matplotlib.pyplot as plt
     #print(json.dumps(Preprocess.config, indent=4))
     print(Preprocess())
     #model = resnet50_experiment_01()
     #x = torch.rand((4,3,224,224))
     #model(x)
-# =============================================================================
-#     x = torch.rand((4,3,224,224))
-#     img = Image.open(r"D:\Downloads\dataset\progan_val_4_class\cat\0_real\17262.png")
-#     im = transforms.ToTensor()(img)
-# #    pre = model(x)    
-#     process = Preprocess()
-#     im_blur = process.low_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
-#     im_blur = process.to_image(im_blur.squeeze(0))
-#     
-#     im_blur_highpass = process.high_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
-#     im_blur_highpass = process.to_image(im_blur_highpass.squeeze(0))
-#     
-#     
-#     im_arr = np.asarray(im_blur_highpass)
-#     
-#     
-#     im_arr[:,:,0].max()
-#         
-#     im = torch.randn(3, 256, 256)  # Example tensor, replace with your tensor
-#     im = im.view(3, -1)
-#     # Compute minimum values across dimensions 2 and 3, keeping dimensions
-#     min_vals = im.min(dim=1)[0]
-#     im.shape
-#     
-#     im_blur.view(1,3,-1).min(dim=2)[0].squeeze(0)
-#     im_blur.view(1,3,-1).shape
-#     
-#     # Vẽ hình ảnh
-#     plt.figure(figsize=(10, 4))  # Thiết lập kích thước của figure
-#     
-#     # Vẽ hình ảnh thứ nhất
-#     plt.subplot(1, 3, 1)  # Subplot đầu tiên trên 1 hàng, 3 cột
-#     plt.imshow(img)
-#     plt.axis('off')  # Tắt trục
-#     plt.title('(a)')  # Tiêu đề của hình ảnh
-#     
-#     # Vẽ hình ảnh thứ hai
-#     plt.subplot(1, 3, 2)  # Subplot thứ hai trên 1 hàng, 3 cột
-#     plt.imshow(im_blur)
-#     plt.axis('off')  # Tắt trục
-#     plt.title('(b)')  # Tiêu đề của hình ảnh
-#     
-#     # Vẽ hình ảnh thứ ba
-#     plt.subplot(1, 3, 3)  # Subplot thứ ba trên 1 hàng, 3 cột
-#     plt.imshow(im_blur_highpass)
-#     plt.axis('off')  # Tắt trục
-#     plt.title('(c)')  # Tiêu đề của hình ảnh
-#     plt.subplots_adjust(wspace=0.0, hspace=0.0)  # Điều chỉnh khoảng cách giữa các subplot
-#     
-#     plt.tight_layout()  # Cân chỉnh layout
-#     plt.show()
-#     
-# =============================================================================
+    x = torch.rand((4,3,224,224))
+    img = Image.open(r"D:\Downloads\dataset\progan_val_4_class\cat\0_real\17262.png")
+    im = transforms.ToTensor()(img)
+#    pre = model(x)    
+    process = Preprocess()
+    im_blur = process.low_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
+    im_blur = process.to_image(im_blur.squeeze(0))
+    
+    im_blur_highpass = process.high_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
+    im_blur_highpass = process.to_image(im_blur_highpass.squeeze(0))
+    
+    
+    im_arr = np.asarray(im_blur_highpass)
+    
+    
+    im_arr[:,:,0].max()
+        
+    im = torch.randn(3, 256, 256)  # Example tensor, replace with your tensor
+    im = im.view(3, -1)
+    # Compute minimum values across dimensions 2 and 3, keeping dimensions
+    min_vals = im.min(dim=1)[0]
+    im.shape
+    
+    im_blur.view(1,3,-1).min(dim=2)[0].squeeze(0)
+    im_blur.view(1,3,-1).shape
+    
+    # Vẽ hình ảnh
+    plt.figure(figsize=(10, 4))  # Thiết lập kích thước của figure
+    
+    # Vẽ hình ảnh thứ nhất
+    plt.subplot(1, 3, 1)  # Subplot đầu tiên trên 1 hàng, 3 cột
+    plt.imshow(img)
+    plt.axis('off')  # Tắt trục
+    plt.title('(a)')  # Tiêu đề của hình ảnh
+    
+    # Vẽ hình ảnh thứ hai
+    plt.subplot(1, 3, 2)  # Subplot thứ hai trên 1 hàng, 3 cột
+    plt.imshow(im_blur)
+    plt.axis('off')  # Tắt trục
+    plt.title('(b)')  # Tiêu đề của hình ảnh
+    
+    # Vẽ hình ảnh thứ ba
+    plt.subplot(1, 3, 3)  # Subplot thứ ba trên 1 hàng, 3 cột
+    plt.imshow(im_blur_highpass)
+    plt.axis('off')  # Tắt trục
+    plt.title('(c)')  # Tiêu đề của hình ảnh
+    plt.subplots_adjust(wspace=0.0, hspace=0.0)  # Điều chỉnh khoảng cách giữa các subplot
+    
+    plt.tight_layout()  # Cân chỉnh layout
+    plt.show()
     
     
     
     
     
-    
-    
-    
+ 
     
     
     

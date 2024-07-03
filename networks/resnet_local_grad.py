@@ -153,10 +153,15 @@ class ResNet(nn.Module):
         return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
     
     def forward(self, x):
-
+        NPR = x.clone()
         x = self.gradient_layer(x)
-        x = self.conv1(x)
+        
         #x = self.conv1(NPR*2.0/3.0)
+        NPR = self.interpolate(NPR, 0.5)
+        NPR = self.gradient_layer(NPR)
+        x = x - NPR
+        
+        x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
@@ -199,8 +204,11 @@ def resnet50_local_grad(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
+
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']), strict=False)
+        state_dict = model_zoo.load_url(model_urls['resnet50'])
+        new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['fc', 'layer3', 'layer4'])}
+        model.load_state_dict(new_state_dict,strict=False)
     return model
 
 

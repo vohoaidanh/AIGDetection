@@ -1,0 +1,325 @@
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "filter": "low_pass_filter"
+}
+ ********************
+=================================
+           ForenSynths checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_1_best.pth
+=================================
+2024_07_02_02_50_55
+(0 biggan      ) acc: 63.5; ap: 63.1
+(1 crn         ) acc: 50.3; ap: 73.6
+(2 cyclegan    ) acc: 64.5; ap: 71.3
+(3 deepfake    ) acc: 69.5; ap: 90.6
+(4 gaugan      ) acc: 55.6; ap: 56.2
+(5 imle        ) acc: 50.3; ap: 73.5
+(6 progan      ) acc: 97.6; ap: 99.8
+(7 san         ) acc: 50.2; ap: 50.1
+(8 seeingdark  ) acc: 52.8; ap: 57.1
+(9 stargan     ) acc: 99.9; ap: 100.0
+(10 stylegan    ) acc: 84.7; ap: 93.6
+(11 stylegan2   ) acc: 95.3; ap: 99.5
+(12 whichfaceisreal) acc: 51.2; ap: 64.8
+(13 Mean      ) acc: 68.1; ap: 76.4
+*************************
+
+=================================
+           ForenSynths checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_2_best.pth
+=================================
+(0 biggan      ) acc: 66.7; ap: 63.3
+(1 crn         ) acc: 52.6; ap: 89.1
+(2 cyclegan    ) acc: 71.0; ap: 76.3
+(3 deepfake    ) acc: 59.3; ap: 79.6
+(4 gaugan      ) acc: 54.9; ap: 52.8
+(5 imle        ) acc: 52.6; ap: 92.1
+(6 progan      ) acc: 99.4; ap: 99.9
+(7 san         ) acc: 50.2; ap: 50.1
+(8 seeingdark  ) acc: 58.9; ap: 53.8
+(9 stargan     ) acc: 98.0; ap: 100.0
+(10 stylegan    ) acc: 83.0; ap: 94.0
+(11 Mean      ) acc: 67.9; ap: 77.4
+*************************
+=================================
+           ForenSynths checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_9_best.pth
+=================================
+2024_07_02_04_25_04
+(0 biggan      ) acc: 67.9; ap: 67.0
+(1 crn         ) acc: 50.1; ap: 67.2
+(2 cyclegan    ) acc: 68.0; ap: 73.8
+(3 deepfake    ) acc: 63.9; ap: 87.4
+(4 gaugan      ) acc: 56.4; ap: 55.9
+(5 imle        ) acc: 50.1; ap: 67.1
+(6 progan      ) acc: 99.4; ap: 100.0
+(7 san         ) acc: 49.8; ap: 50.0
+(8 seeingdark  ) acc: 52.2; ap: 53.3
+(9 stargan     ) acc: 99.4; ap: 100.0
+(10 stylegan    ) acc: 84.2; ap: 94.2
+(11 Mean      ) acc: 67.4; ap: 74.2
+*************************
+
+=================================
+           ForenSynths checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_10.pth (last)
+=================================
+2024_07_02_04_37_34
+(0 biggan      ) acc: 64.7; ap: 62.9
+(1 crn         ) acc: 50.1; ap: 71.6
+(2 cyclegan    ) acc: 67.6; ap: 74.4
+(3 deepfake    ) acc: 54.0; ap: 80.3
+(4 gaugan      ) acc: 55.9; ap: 53.7
+(5 imle        ) acc: 50.1; ap: 72.5
+(6 progan      ) acc: 99.2; ap: 99.9
+(7 san         ) acc: 49.1; ap: 49.8
+(8 seeingdark  ) acc: 51.9; ap: 52.1
+(9 stargan     ) acc: 98.1; ap: 100.0
+(10 stylegan    ) acc: 83.7; ap: 94.5
+(11 Mean      ) acc: 65.8; ap: 73.8
+*************************
+
+
+
+
+
+
+
+
+
+
+
+Training logs
+----------------- Options ---------------
+                     arch: res50                         
+               batch_size: 32                            	[default: 64]
+                    beta1: 0.9                           
+                blur_prob: 0                             
+                 blur_sig: 0.5                           
+          checkpoints_dir: ./checkpoints                 
+                class_bal: False                         
+                  classes: car,cat,chair,horse           	[default: ]
+           continue_train: False                         
+                 cropSize: 224                           
+                 data_aug: False                         
+                 dataroot: /workspace/datasets/ForenSynths_train_val	[default: ./dataset/]
+                delr_freq: 10                            	[default: 20]
+            detect_method: experiment_01                 	[default: NPR]
+          earlystop_epoch: 15                            
+                    epoch: latest                        
+              epoch_count: 1                             
+                  gpu_ids: 0                             
+                init_gain: 0.02                          
+                init_type: normal                        
+                  isTrain: True                          	[default: None]
+               jpg_method: cv2                           
+                 jpg_prob: 0                             
+                 jpg_qual: 75                            
+               last_epoch: -1                            
+                 loadSize: 256                           
+                  loss_fn: BCEWithLogitsLoss             
+                loss_freq: 400                           
+                       lr: 0.0002                        	[default: 0.0001]
+                     mode: binary                        
+                     name: experiment-01-no-filter-2024_07_02_02_20_09	[default: experiment_name]
+                new_optim: False                         
+                    niter: 20                            	[default: 1000]
+                  no_flip: False                         
+              num_threads: 8                             
+                    optim: adam                          
+           resize_or_crop: scale_and_crop                
+                rz_interp: bilinear                      
+          save_epoch_freq: 20                            
+         save_latest_freq: 2000                          
+           serial_batches: False                         
+                   suffix:                               
+              train_split: train                         
+                val_split: val                           
+----------------- End -------------------
+train.py  --name  experiment-01-no-filter-  --dataroot  /workspace/datasets/ForenSynths_train_val  --detect_method  experiment_01  --classes  car,cat,chair,horse  --batch_size  32  --delr_freq  10  --lr  0.0002  --niter  20
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "filter": "low_pass_filter"
+}
+ ********************
+cwd: /workspace/AIGDetection
+2024_07_02_02_21_12 Train loss: 0.27463066577911377 at step: 400 lr 0.0002
+2024_07_02_02_22_12 Train loss: 0.042676933109760284 at step: 800 lr 0.0002
+2024_07_02_02_23_11 Train loss: 0.09035487473011017 at step: 1200 lr 0.0002
+2024_07_02_02_24_11 Train loss: 0.006608322262763977 at step: 1600 lr 0.0002
+2024_07_02_02_25_11 Train loss: 0.1267794519662857 at step: 2000 lr 0.0002
+2024_07_02_02_26_10 Train loss: 0.020565543323755264 at step: 2400 lr 0.0002
+2024_07_02_02_27_10 Train loss: 0.003541200188919902 at step: 2800 lr 0.0002
+2024_07_02_02_28_10 Train loss: 0.04132727161049843 at step: 3200 lr 0.0002
+2024_07_02_02_29_10 Train loss: 0.003200874663889408 at step: 3600 lr 0.0002
+2024_07_02_02_30_11 Train loss: 0.02484147809445858 at step: 4000 lr 0.0002
+2024_07_02_02_31_10 Train loss: 0.01541971042752266 at step: 4400 lr 0.0002
+(Val @ epoch 0) acc: 0.890625; ap: 0.977933624421833
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+acc increate 0 --> 0.890625, saving best model
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_0_best.pth
+2024_07_02_02_32_15 Train loss: 0.03007391467690468 at step: 4800 lr 0.0002
+2024_07_02_02_33_15 Train loss: 0.16902188956737518 at step: 5200 lr 0.0002
+2024_07_02_02_34_15 Train loss: 0.0018762480467557907 at step: 5600 lr 0.0002
+2024_07_02_02_35_15 Train loss: 0.0011765764793381095 at step: 6000 lr 0.0002
+2024_07_02_02_36_15 Train loss: 0.08394374698400497 at step: 6400 lr 0.0002
+2024_07_02_02_37_16 Train loss: 0.012196677736938 at step: 6800 lr 0.0002
+2024_07_02_02_38_22 Train loss: 0.05084116756916046 at step: 7200 lr 0.0002
+2024_07_02_02_39_24 Train loss: 0.004765279591083527 at step: 7600 lr 0.0002
+2024_07_02_02_40_24 Train loss: 0.005405441392213106 at step: 8000 lr 0.0002
+2024_07_02_02_41_24 Train loss: 0.000897141289897263 at step: 8400 lr 0.0002
+2024_07_02_02_42_23 Train loss: 0.07888731360435486 at step: 8800 lr 0.0002
+(Val @ epoch 1) acc: 0.980625; ap: 0.9995752018926061
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+acc increate 0.890625 --> 0.980625, saving best model
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_1_best.pth
+2024_07_02_02_43_27 Train loss: 0.008689936250448227 at step: 9200 lr 0.0002
+2024_07_02_02_44_26 Train loss: 0.003222932107746601 at step: 9600 lr 0.0002
+2024_07_02_02_45_25 Train loss: 0.004482143558561802 at step: 10000 lr 0.0002
+2024_07_02_02_46_25 Train loss: 0.07297887653112411 at step: 10400 lr 0.0002
+2024_07_02_02_47_24 Train loss: 0.02372150309383869 at step: 10800 lr 0.0002
+2024_07_02_02_48_24 Train loss: 0.008555253967642784 at step: 11200 lr 0.0002
+2024_07_02_02_49_23 Train loss: 0.0014147047186270356 at step: 11600 lr 0.0002
+2024_07_02_02_50_22 Train loss: 0.019930891692638397 at step: 12000 lr 0.0002
+2024_07_02_02_51_28 Train loss: 0.015044964849948883 at step: 12400 lr 0.0002
+2024_07_02_02_52_43 Train loss: 0.004861175082623959 at step: 12800 lr 0.0002
+2024_07_02_02_53_58 Train loss: 0.0038649116177111864 at step: 13200 lr 0.0002
+(Val @ epoch 2) acc: 0.998125; ap: 0.999993755837448
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+acc increate 0.980625 --> 0.998125, saving best model
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_2_best.pth
+2024_07_02_02_55_17 Train loss: 0.0028320634737610817 at step: 13600 lr 0.0002
+2024_07_02_02_56_31 Train loss: 0.0012545903446152806 at step: 14000 lr 0.0002
+2024_07_02_02_57_46 Train loss: 0.010132471099495888 at step: 14400 lr 0.0002
+2024_07_02_02_59_00 Train loss: 0.017641063779592514 at step: 14800 lr 0.0002
+2024_07_02_03_00_15 Train loss: 0.0002179267758037895 at step: 15200 lr 0.0002
+2024_07_02_03_01_29 Train loss: 0.001322054537013173 at step: 15600 lr 0.0002
+2024_07_02_03_02_44 Train loss: 0.0020449997391551733 at step: 16000 lr 0.0002
+2024_07_02_03_03_48 Train loss: 0.07533962279558182 at step: 16400 lr 0.0002
+2024_07_02_03_05_01 Train loss: 0.0020040730014443398 at step: 16800 lr 0.0002
+2024_07_02_03_06_14 Train loss: 0.006117450073361397 at step: 17200 lr 0.0002
+2024_07_02_03_07_27 Train loss: 0.004795442335307598 at step: 17600 lr 0.0002
+2024_07_02_03_08_41 Train loss: 0.0003792144125327468 at step: 18000 lr 0.0002
+(Val @ epoch 3) acc: 0.993125; ap: 0.9999706118719353
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_3.pth
+2024_07_02_03_09_59 Train loss: 0.001575092552229762 at step: 18400 lr 0.0002
+2024_07_02_03_11_09 Train loss: 0.00046429262147285044 at step: 18800 lr 0.0002
+2024_07_02_03_12_08 Train loss: 0.009255935437977314 at step: 19200 lr 0.0002
+2024_07_02_03_13_08 Train loss: 0.005223558284342289 at step: 19600 lr 0.0002
+2024_07_02_03_14_07 Train loss: 0.015409205108880997 at step: 20000 lr 0.0002
+2024_07_02_03_15_06 Train loss: 0.005397086497396231 at step: 20400 lr 0.0002
+2024_07_02_03_16_06 Train loss: 0.0032526382710784674 at step: 20800 lr 0.0002
+2024_07_02_03_17_05 Train loss: 0.00039595822454430163 at step: 21200 lr 0.0002
+2024_07_02_03_18_05 Train loss: 4.163825360592455e-05 at step: 21600 lr 0.0002
+2024_07_02_03_19_04 Train loss: 0.0216930340975523 at step: 22000 lr 0.0002
+2024_07_02_03_20_04 Train loss: 0.00015851121861487627 at step: 22400 lr 0.0002
+(Val @ epoch 4) acc: 0.990625; ap: 0.9993306789652008
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_4.pth
+2024_07_02_03_21_07 Train loss: 0.012471466325223446 at step: 22800 lr 0.0002
+2024_07_02_03_22_07 Train loss: 0.005918088369071484 at step: 23200 lr 0.0002
+2024_07_02_03_23_06 Train loss: 0.0006769457831978798 at step: 23600 lr 0.0002
+2024_07_02_03_24_06 Train loss: 0.001592664630152285 at step: 24000 lr 0.0002
+2024_07_02_03_25_05 Train loss: 0.00015554660058114678 at step: 24400 lr 0.0002
+2024_07_02_03_26_05 Train loss: 0.00023109294124878943 at step: 24800 lr 0.0002
+2024_07_02_03_27_04 Train loss: 0.033617615699768066 at step: 25200 lr 0.0002
+2024_07_02_03_28_04 Train loss: 0.00023917938233353198 at step: 25600 lr 0.0002
+2024_07_02_03_29_04 Train loss: 0.04844285920262337 at step: 26000 lr 0.0002
+2024_07_02_03_30_03 Train loss: 0.01674358732998371 at step: 26400 lr 0.0002
+2024_07_02_03_31_03 Train loss: 0.2501460611820221 at step: 26800 lr 0.0002
+(Val @ epoch 5) acc: 0.88125; ap: 0.993475431293883
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_5.pth
+2024_07_02_03_32_07 Train loss: 0.002572586527094245 at step: 27200 lr 0.0002
+2024_07_02_03_33_06 Train loss: 0.004346507601439953 at step: 27600 lr 0.0002
+2024_07_02_03_34_06 Train loss: 0.0001345553173450753 at step: 28000 lr 0.0002
+2024_07_02_03_35_05 Train loss: 0.0016720666317269206 at step: 28400 lr 0.0002
+2024_07_02_03_36_05 Train loss: 0.009944749064743519 at step: 28800 lr 0.0002
+2024_07_02_03_37_04 Train loss: 0.0028579304926097393 at step: 29200 lr 0.0002
+2024_07_02_03_38_04 Train loss: 0.005371526349335909 at step: 29600 lr 0.0002
+2024_07_02_03_39_03 Train loss: 0.0006725390558131039 at step: 30000 lr 0.0002
+2024_07_02_03_40_03 Train loss: 0.0006740355747751892 at step: 30400 lr 0.0002
+2024_07_02_03_41_25 Train loss: 0.00022472371347248554 at step: 30800 lr 0.0002
+2024_07_02_03_43_11 Train loss: 2.773237429209985e-05 at step: 31200 lr 0.0002
+(Val @ epoch 6) acc: 0.99625; ap: 0.999943415873746
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_6.pth
+2024_07_02_03_44_58 Train loss: 0.001733983401209116 at step: 31600 lr 0.0002
+2024_07_02_03_46_15 Train loss: 0.06622286885976791 at step: 32000 lr 0.0002
+2024_07_02_03_47_29 Train loss: 0.002210855484008789 at step: 32400 lr 0.0002
+2024_07_02_03_48_29 Train loss: 0.015694357454776764 at step: 32800 lr 0.0002
+2024_07_02_03_49_28 Train loss: 0.007386136334389448 at step: 33200 lr 0.0002
+2024_07_02_03_50_28 Train loss: 0.05325939506292343 at step: 33600 lr 0.0002
+2024_07_02_03_51_27 Train loss: 0.05219089612364769 at step: 34000 lr 0.0002
+2024_07_02_03_52_27 Train loss: 0.22366048395633698 at step: 34400 lr 0.0002
+2024_07_02_03_53_26 Train loss: 0.008977215737104416 at step: 34800 lr 0.0002
+2024_07_02_03_54_26 Train loss: 0.0008894523489288986 at step: 35200 lr 0.0002
+2024_07_02_03_55_25 Train loss: 0.0007412268896587193 at step: 35600 lr 0.0002
+2024_07_02_03_56_25 Train loss: 0.00011175552208442241 at step: 36000 lr 0.0002
+(Val @ epoch 7) acc: 0.998125; ap: 1.0
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_7.pth
+2024_07_02_03_57_28 Train loss: 9.540204700897448e-06 at step: 36400 lr 0.0002
+2024_07_02_03_58_27 Train loss: 8.996247743198182e-06 at step: 36800 lr 0.0002
+2024_07_02_03_59_27 Train loss: 0.0002467689337208867 at step: 37200 lr 0.0002
+2024_07_02_04_00_26 Train loss: 0.0012743265833705664 at step: 37600 lr 0.0002
+2024_07_02_04_01_26 Train loss: 0.00047222274588420987 at step: 38000 lr 0.0002
+2024_07_02_04_02_25 Train loss: 3.118048334727064e-05 at step: 38400 lr 0.0002
+2024_07_02_04_03_24 Train loss: 0.00016647830489091575 at step: 38800 lr 0.0002
+2024_07_02_04_04_24 Train loss: 0.0003683519607875496 at step: 39200 lr 0.0002
+2024_07_02_04_05_23 Train loss: 0.004390085116028786 at step: 39600 lr 0.0002
+2024_07_02_04_06_22 Train loss: 0.00048521163989789784 at step: 40000 lr 0.0002
+2024_07_02_04_07_51 Train loss: 3.111820842605084e-05 at step: 40400 lr 0.0002
+(Val @ epoch 8) acc: 0.99375; ap: 0.9999239865240465
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_8.pth
+2024_07_02_04_09_44 Train loss: 2.731931090238504e-05 at step: 40800 lr 0.0002
+2024_07_02_04_11_15 Train loss: 0.022533085197210312 at step: 41200 lr 0.0002
+2024_07_02_04_12_43 Train loss: 0.00276435655541718 at step: 41600 lr 0.0002
+2024_07_02_04_13_45 Train loss: 0.003901752410456538 at step: 42000 lr 0.0002
+2024_07_02_04_14_44 Train loss: 0.0002938878897111863 at step: 42400 lr 0.0002
+2024_07_02_04_15_44 Train loss: 0.00035544822458177805 at step: 42800 lr 0.0002
+2024_07_02_04_16_43 Train loss: 0.0005219551385380328 at step: 43200 lr 0.0002
+2024_07_02_04_17_43 Train loss: 0.0005927914753556252 at step: 43600 lr 0.0002
+2024_07_02_04_18_42 Train loss: 0.0006426619947887957 at step: 44000 lr 0.0002
+2024_07_02_04_19_41 Train loss: 0.19096717238426208 at step: 44400 lr 0.0002
+2024_07_02_04_20_41 Train loss: 0.00042265639058314264 at step: 44800 lr 0.0002
+(Val @ epoch 9) acc: 0.999375; ap: 1.0
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+acc increate 0.998125 --> 0.999375, saving best model
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_9_best.pth
+2024_07_02_04_21_44 Train loss: 0.00010846481018234044 at step: 45200 lr 0.0002
+2024_07_02_04_22_44 Train loss: 0.005384258925914764 at step: 45600 lr 0.0002
+2024_07_02_04_23_43 Train loss: 1.1994239685009234e-05 at step: 46000 lr 0.0002
+2024_07_02_04_24_43 Train loss: 1.020976014842745e-05 at step: 46400 lr 0.0002
+2024_07_02_04_26_14 Train loss: 0.0010053565492853522 at step: 46800 lr 0.0002
+2024_07_02_04_28_00 Train loss: 0.021112816408276558 at step: 47200 lr 0.0002
+2024_07_02_04_29_33 Train loss: 0.000797184300608933 at step: 47600 lr 0.0002
+2024_07_02_04_30_59 Train loss: 0.0016885499935597181 at step: 48000 lr 0.0002
+2024_07_02_04_32_05 Train loss: 0.0005180756561458111 at step: 48400 lr 0.0002
+2024_07_02_04_33_04 Train loss: 0.0001181862608063966 at step: 48800 lr 0.0002
+2024_07_02_04_34_04 Train loss: 0.00016939151100814342 at step: 49200 lr 0.0002
+2024_07_02_04_34_50 changing lr at the end of epoch 10, iters 49511
+*************************
+Changing lr from 0.0002 to 0.00018
+*************************
+(Val @ epoch 10) acc: 0.998125; ap: 0.9999921776976467
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-no-filter-2024_07_02_02_20_09/model_epoch_10.pth

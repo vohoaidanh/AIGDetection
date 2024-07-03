@@ -64,7 +64,7 @@ def get_model(opt):
     
     elif opt.detect_method.lower() in ['experiment_01']:
         print(f'Detect method model {opt.detect_method}')
-        model = resnet50_experiment_01(pretrained=False, num_classes=1)
+        model = resnet50_experiment_01(pretrained=True, num_classes=1)
         #Preprocess is contains the experiment configuration
         print(Preprocess())
 

@@ -160,6 +160,21 @@ F.linear(torch.tensor([1,2,3,4],dtype=float), torch.tensor([1,1,1,1],dtype=float
 
 
 
+A = np.array([
+    [.5, .5, .25],
+    [.25, 0., .25],
+    [.25, .5, .5]
+    ])
+
+print(A)
+
+result = A
+for i in range(50):
+    result = np.dot(result,A)
+
+print(result)
+
+np.dot(result, np.array([0.15,0.3,0.55]))
 
 
 

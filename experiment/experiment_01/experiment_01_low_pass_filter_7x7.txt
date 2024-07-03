@@ -1,0 +1,409 @@
+
+Model_path checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_86_best.pth
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        7,
+        7
+    ],
+    "sigma": [
+        3.0,
+        3.0
+    ],
+    "filter": "low_pass_filter"
+}
+ ********************
+=================================
+           ForenSynths
+=================================
+2024_07_02_14_17_21
+(0 biggan      ) acc: 53.0; ap: 55.6
+(1 crn         ) acc: 54.5; ap: 47.6
+(2 cyclegan    ) acc: 54.9; ap: 58.2
+(3 deepfake    ) acc: 51.2; ap: 51.0
+(4 gaugan      ) acc: 54.3; ap: 55.1
+(5 imle        ) acc: 55.0; ap: 51.2
+(6 progan      ) acc: 73.9; ap: 80.4
+(7 san         ) acc: 50.0; ap: 50.3
+(8 seeingdark  ) acc: 58.3; ap: 64.3
+(9 stargan     ) acc: 50.9; ap: 51.0
+(10 stylegan    ) acc: 50.5; ap: 50.4
+(11 Mean      ) acc: 55.1; ap: 55.9
+*************************
+
+
+
+
+----------------- Options ---------------
+                     arch: res50                         
+               batch_size: 32                            	[default: 64]
+                    beta1: 0.9                           
+                blur_prob: 0                             
+                 blur_sig: 0.5                           
+          checkpoints_dir: ./checkpoints                 
+                class_bal: False                         
+                  classes: car,cat,chair,horse           	[default: ]
+           continue_train: False                         
+                 cropSize: 224                           
+                 data_aug: False                         
+                 dataroot: /workspace/datasets/ForenSynths_mini	[default: ./dataset/]
+                delr_freq: 10                            	[default: 20]
+            detect_method: experiment_01                 	[default: NPR]
+          earlystop_epoch: 15                            
+                    epoch: latest                        
+              epoch_count: 1                             
+                  gpu_ids: 0                             
+                init_gain: 0.02                          
+                init_type: normal                        
+                  isTrain: True                          	[default: None]
+               jpg_method: cv2                           
+                 jpg_prob: 0                             
+                 jpg_qual: 75                            
+               last_epoch: -1                            
+                 loadSize: 256                           
+                  loss_fn: BCEWithLogitsLoss             
+                loss_freq: 400                           
+                       lr: 0.0002                        	[default: 0.0001]
+                     mode: binary                        
+                     name: experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18	[default: experiment_name]
+                new_optim: False                         
+                    niter: 100                           	[default: 1000]
+                  no_flip: False                         
+              num_threads: 8                             
+                    optim: adam                          
+           resize_or_crop: scale_and_crop                
+                rz_interp: bilinear                      
+          save_epoch_freq: 20                            
+         save_latest_freq: 2000                          
+           serial_batches: False                         
+                   suffix:                               
+              train_split: train                         
+                val_split: val                           
+----------------- End -------------------
+train.py  --name  experiment-01-scratch-low-pass-filter-7x7-  --dataroot  /workspace/datasets/ForenSynths_mini  --detect_method  experiment_01  --classes  car,cat,chair,horse  --batch_size  32  --delr_freq  10  --lr  0.0002  --niter  100
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        7,
+        7
+    ],
+    "sigma": [
+        3.0,
+        3.0
+    ],
+    "filter": "low_pass_filter"
+}
+ ********************
+cwd: /workspace/AIGDetection
+(Val @ epoch 0) acc: 0.50125; ap: 0.5369068129274014
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0 --> 0.50125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_0_best.pth
+(Val @ epoch 1) acc: 0.491875; ap: 0.5116049630685706
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 2) acc: 0.54125; ap: 0.5628850452983718
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.50125 --> 0.54125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_2_best.pth
+2024_07_02_13_37_26 Train loss: 0.6298346519470215 at step: 400 lr 0.0002
+(Val @ epoch 3) acc: 0.526875; ap: 0.5762467613384212
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 4) acc: 0.52125; ap: 0.4993760000718718
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 5) acc: 0.548125; ap: 0.5408329712815788
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.54125 --> 0.548125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_5_best.pth
+2024_07_02_13_39_12 Train loss: 0.7266595363616943 at step: 800 lr 0.0002
+(Val @ epoch 6) acc: 0.525; ap: 0.5323332326920722
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 7) acc: 0.559375; ap: 0.566011568668602
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.548125 --> 0.559375, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_7_best.pth
+(Val @ epoch 8) acc: 0.506875; ap: 0.522792055236819
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_40_56 Train loss: 0.7286574840545654 at step: 1200 lr 0.0002
+(Val @ epoch 9) acc: 0.526875; ap: 0.5456859196405265
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_41_26 changing lr at the end of epoch 10, iters 1375
+*************************
+Changing lr from 0.0002 to 0.00018
+*************************
+(Val @ epoch 10) acc: 0.601875; ap: 0.6325897067794206
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.559375 --> 0.601875, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_10_best.pth
+(Val @ epoch 11) acc: 0.616875; ap: 0.6370974156822761
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.601875 --> 0.616875, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_11_best.pth
+2024_07_02_13_42_08 Train loss: 0.6263542175292969 at step: 1600 lr 0.00018
+(Val @ epoch 12) acc: 0.596875; ap: 0.6338604457140941
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 13) acc: 0.62375; ap: 0.6329397471176417
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.616875 --> 0.62375, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_13_best.pth
+(Val @ epoch 14) acc: 0.57625; ap: 0.6246845221533514
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_43_20 Train loss: 0.5826144814491272 at step: 2000 lr 0.00018
+(Val @ epoch 15) acc: 0.58; ap: 0.6238308213314212
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 16) acc: 0.64375; ap: 0.6868477618158173
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.62375 --> 0.64375, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_16_best.pth
+(Val @ epoch 17) acc: 0.563125; ap: 0.5879940123475418
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 18) acc: 0.635; ap: 0.663936073217928
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_44_37 Train loss: 0.6837863922119141 at step: 2400 lr 0.00018
+(Val @ epoch 19) acc: 0.630625; ap: 0.6695869540178185
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_45_15 changing lr at the end of epoch 20, iters 2625
+*************************
+Changing lr from 0.00018 to 0.000162
+*************************
+(Val @ epoch 20) acc: 0.66125; ap: 0.6932751299797886
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.64375 --> 0.66125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_20_best.pth
+(Val @ epoch 21) acc: 0.545; ap: 0.5896279803834954
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_45_50 Train loss: 0.6414942741394043 at step: 2800 lr 0.000162
+(Val @ epoch 22) acc: 0.63625; ap: 0.6828770180504402
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 23) acc: 0.643125; ap: 0.6808867171404127
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 24) acc: 0.60875; ap: 0.6464281101032564
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_47_02 Train loss: 0.5584646463394165 at step: 3200 lr 0.000162
+(Val @ epoch 25) acc: 0.5725; ap: 0.6137589555896978
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 26) acc: 0.620625; ap: 0.6738623008540787
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 27) acc: 0.583125; ap: 0.6249230253231526
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_48_15 Train loss: 0.502189040184021 at step: 3600 lr 0.000162
+(Val @ epoch 28) acc: 0.705; ap: 0.7495526507593748
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.66125 --> 0.705, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_28_best.pth
+(Val @ epoch 29) acc: 0.65; ap: 0.6866030389042803
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_49_04 changing lr at the end of epoch 30, iters 3875
+*************************
+Changing lr from 0.000162 to 0.00014580000000000002
+*************************
+(Val @ epoch 30) acc: 0.563125; ap: 0.6410296955111097
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_49_27 Train loss: 0.7567931413650513 at step: 4000 lr 0.00014580000000000002
+(Val @ epoch 31) acc: 0.623125; ap: 0.6287001406176287
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 32) acc: 0.6525; ap: 0.7140641396883968
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 33) acc: 0.608125; ap: 0.6404292285974695
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 34) acc: 0.621875; ap: 0.6511414431930399
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_50_44 Train loss: 0.4742119610309601 at step: 4400 lr 0.00014580000000000002
+(Val @ epoch 35) acc: 0.65125; ap: 0.7066738042104717
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 36) acc: 0.695625; ap: 0.7404257076134428
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 37) acc: 0.65375; ap: 0.7153508887937515
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_51_56 Train loss: 0.7608146071434021 at step: 4800 lr 0.00014580000000000002
+(Val @ epoch 38) acc: 0.708125; ap: 0.7915842896522093
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.705 --> 0.708125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_38_best.pth
+(Val @ epoch 39) acc: 0.645625; ap: 0.7036494461978366
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_52_54 changing lr at the end of epoch 40, iters 5125
+*************************
+Changing lr from 0.00014580000000000005 to 0.00013122000000000003
+*************************
+(Val @ epoch 40) acc: 0.59625; ap: 0.632906747089299
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_53_09 Train loss: 0.436293363571167 at step: 5200 lr 0.00013122000000000003
+(Val @ epoch 41) acc: 0.72625; ap: 0.771520950609777
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.708125 --> 0.72625, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_41_best.pth
+(Val @ epoch 42) acc: 0.6875; ap: 0.746952781803787
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 43) acc: 0.704375; ap: 0.7746260151342356
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_54_21 Train loss: 0.49998876452445984 at step: 5600 lr 0.00013122000000000003
+(Val @ epoch 44) acc: 0.654375; ap: 0.7046108797726971
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 45) acc: 0.645625; ap: 0.7057375669522001
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 46) acc: 0.6925; ap: 0.7413911159930009
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_55_33 Train loss: 0.5170996189117432 at step: 6000 lr 0.00013122000000000003
+(Val @ epoch 47) acc: 0.716875; ap: 0.7646906376872109
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 48) acc: 0.7375; ap: 0.8048860565728394
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.72625 --> 0.7375, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_48_best.pth
+(Val @ epoch 49) acc: 0.6975; ap: 0.7672828294305405
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_56_42 changing lr at the end of epoch 50, iters 6375
+*************************
+Changing lr from 0.00013122000000000003 to 0.00011809800000000003
+*************************
+(Val @ epoch 50) acc: 0.61375; ap: 0.6917184557095624
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_13_56_50 Train loss: 0.20046603679656982 at step: 6400 lr 0.00011809800000000003
+(Val @ epoch 51) acc: 0.73125; ap: 0.8075182753290947
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 52) acc: 0.715; ap: 0.8136544818008589
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 53) acc: 0.738125; ap: 0.8151562158668029
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.7375 --> 0.738125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_53_best.pth
+2024_07_02_13_58_03 Train loss: 0.19227443635463715 at step: 6800 lr 0.00011809800000000003
+(Val @ epoch 54) acc: 0.699375; ap: 0.7665769595836527
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 55) acc: 0.7075; ap: 0.7811518582331829
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 56) acc: 0.751875; ap: 0.8322522430514838
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.738125 --> 0.751875, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_56_best.pth
+2024_07_02_13_59_17 Train loss: 0.2672327160835266 at step: 7200 lr 0.00011809800000000003
+(Val @ epoch 57) acc: 0.743125; ap: 0.7947228270384739
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 58) acc: 0.740625; ap: 0.7854039200770122
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 59) acc: 0.7075; ap: 0.7717151279850665
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_00_32 Train loss: 0.2552233040332794 at step: 7600 lr 0.00011809800000000003
+2024_07_02_14_00_36 changing lr at the end of epoch 60, iters 7625
+*************************
+Changing lr from 0.00011809800000000003 to 0.00010628820000000004
+*************************
+(Val @ epoch 60) acc: 0.745625; ap: 0.8123064293779768
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 61) acc: 0.75875; ap: 0.8442572756045905
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.751875 --> 0.75875, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_61_best.pth
+(Val @ epoch 62) acc: 0.755; ap: 0.8316155294317882
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_01_50 Train loss: 0.16171160340309143 at step: 8000 lr 0.00010628820000000004
+(Val @ epoch 63) acc: 0.744375; ap: 0.8048748115919571
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 64) acc: 0.711875; ap: 0.7868409822590889
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 65) acc: 0.76125; ap: 0.8480314679814267
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.75875 --> 0.76125, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_65_best.pth
+(Val @ epoch 66) acc: 0.715625; ap: 0.7734917916869909
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_03_12 Train loss: 0.33262133598327637 at step: 8400 lr 0.00010628820000000004
+(Val @ epoch 67) acc: 0.771875; ap: 0.8347522256378195
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.76125 --> 0.771875, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_67_best.pth
+(Val @ epoch 68) acc: 0.7525; ap: 0.8337433461751294
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 69) acc: 0.7225; ap: 0.7913895463926303
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_04_26 Train loss: 0.24533455073833466 at step: 8800 lr 0.00010628820000000004
+2024_07_02_14_04_45 changing lr at the end of epoch 70, iters 8875
+*************************
+Changing lr from 0.00010628820000000004 to 9.565938000000004e-05
+*************************
+(Val @ epoch 70) acc: 0.75625; ap: 0.8316976600833721
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 71) acc: 0.771875; ap: 0.8582151486840646
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 72) acc: 0.763125; ap: 0.8346149316053172
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_06_31 Train loss: 0.09295997023582458 at step: 9200 lr 9.565938000000004e-05
+(Val @ epoch 73) acc: 0.78; ap: 0.8535762869129377
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.771875 --> 0.78, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_73_best.pth
+(Val @ epoch 74) acc: 0.77375; ap: 0.8504378774428725
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 75) acc: 0.7375; ap: 0.8104416074315632
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_08_37 Train loss: 0.0471479706466198 at step: 9600 lr 9.565938000000004e-05
+(Val @ epoch 76) acc: 0.70625; ap: 0.7885911800894774
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 77) acc: 0.7425; ap: 0.8260931299335701
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 78) acc: 0.7425; ap: 0.8119655456337
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_10_10 Train loss: 0.03777192533016205 at step: 10000 lr 9.565938000000004e-05
+(Val @ epoch 79) acc: 0.765625; ap: 0.8470907805767295
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_10_49 changing lr at the end of epoch 80, iters 10125
+*************************
+Changing lr from 9.565938000000004e-05 to 8.609344200000004e-05
+*************************
+(Val @ epoch 80) acc: 0.755; ap: 0.8358751685966598
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 81) acc: 0.7775; ap: 0.8553463153007097
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 82) acc: 0.735625; ap: 0.8069575188260734
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_11_43 Train loss: 0.19844217598438263 at step: 10400 lr 8.609344200000004e-05
+(Val @ epoch 83) acc: 0.7775; ap: 0.8665412733153341
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 84) acc: 0.775625; ap: 0.8483374880299777
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 85) acc: 0.754375; ap: 0.8509538430649151
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_12_55 Train loss: 0.01831160858273506 at step: 10800 lr 8.609344200000004e-05
+(Val @ epoch 86) acc: 0.795625; ap: 0.8701543850924612
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+acc increate 0.78 --> 0.795625, saving best model
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_86_best.pth
+(Val @ epoch 87) acc: 0.706875; ap: 0.775789283171077
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 88) acc: 0.759375; ap: 0.8474757367699371
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_14_08 Train loss: 0.11900152266025543 at step: 11200 lr 8.609344200000004e-05
+(Val @ epoch 89) acc: 0.7675; ap: 0.8389918735010178
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_14_38 changing lr at the end of epoch 90, iters 11375
+*************************
+Changing lr from 8.609344200000004e-05 to 7.748409780000004e-05
+*************************
+(Val @ epoch 90) acc: 0.760625; ap: 0.859897249190054
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 91) acc: 0.750625; ap: 0.8306659726487933
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_15_21 Train loss: 0.05975763499736786 at step: 11600 lr 7.748409780000004e-05
+(Val @ epoch 92) acc: 0.77125; ap: 0.8560885622765116
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 93) acc: 0.79125; ap: 0.8667524243311178
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 94) acc: 0.77; ap: 0.8621061130556618
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_16_33 Train loss: 0.03392811119556427 at step: 12000 lr 7.748409780000004e-05
+(Val @ epoch 95) acc: 0.779375; ap: 0.854185687735142
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 96) acc: 0.77625; ap: 0.8533394223484358
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 97) acc: 0.728125; ap: 0.8122962627341753
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+(Val @ epoch 98) acc: 0.7725; ap: 0.8498917407149038
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+2024_07_02_14_18_11 Train loss: 0.07379777729511261 at step: 12400 lr 7.748409780000004e-05
+(Val @ epoch 99) acc: 0.756875; ap: 0.8346392438154444
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-scratch-low-pass-filter-7x7-2024_07_02_13_35_18/model_epoch_last.pth
