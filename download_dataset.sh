@@ -28,7 +28,8 @@ cd $pwd/dataset
 
 # https://github.com/ZhendongWang6/DIRE
 # https://drive.google.com/drive/folders/1tKsOU-6FDdstrrKLPYuZ7RpQwtOSHxUD?usp=sharing
-gdown https://drive.google.com/drive/folders/1tKsOU-6FDdstrrKLPYuZ7RpQwtOSHxUD -O ./DiffusionForensics --folder
+# https://drive.google.com/drive/folders/1jZE4hg6SxRvKaPYO_yyMeJN_DOcqGMEf
+gdown https://drive.google.com/drive/folders/1jZE4hg6SxRvKaPYO_yyMeJN_DOcqGMEf -O ./DiffusionForensics --folder
 
 cd ./DiffusionForensics
 ls | xargs -I pa sh -c "tar -zxvf pa; rm pa"

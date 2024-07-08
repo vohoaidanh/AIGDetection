@@ -1,4 +1,6 @@
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
 from torchvision import transforms
 import numpy as np
@@ -99,24 +101,46 @@ class Bottleneck(nn.Module):
 
 from functools import partial
 class Preprocess():
+    
     config = {
         "kernel_size": (5,5),
         "sigma": (2.0, 2.0),     
+        "radius": (2.0, 2.0), #only for fft_filter   
         "filter": "no_filter",
         }
+    mask = torch.ones(size=(3,3,3))
     
     @classmethod
     def __repr__(cls):
         s = f'Experiment config is \n {20*"*"} \n {json.dumps(cls.config, indent=4)}\n {20*"*"}'
         return s
     
+    @classmethod    
+    def create_mask(self,im_size, radius):
+      
+        h, w = im_size
+        center_y, center_x = h // 2, w // 2
+        
+        if radius==0:
+            return torch.zeros(im_size)
+
+        Y, X = torch.meshgrid(torch.arange(h), torch.arange(w), indexing='ij')
+        dist_from_center = torch.sqrt((X - center_x) ** 2 + (Y - center_y) ** 2)
+
+        mask = dist_from_center <= torch.tensor(radius)
+        
+        extended_mask = mask.unsqueeze(0).repeat(3, 1, 1)
+
+        return extended_mask.float()
+    
+
     @classmethod
-    def low_pass_filter(self,x , kernel_size, sigma):
+    def low_pass_filter(self,x , kernel_size, sigma, **kwargs):
         #sigma=50% kernelsize
         return transforms.GaussianBlur(kernel_size, sigma)(x)
     
     @classmethod 
-    def high_pass_filter(self,x , kernel_size, sigma):
+    def high_pass_filter(self,x , kernel_size, sigma, **kwargs):
         #sigma=50% kernelsize
         x =  x - transforms.GaussianBlur(kernel_size, sigma)(x)
         
@@ -127,15 +151,59 @@ class Preprocess():
         return x_normalized
     
     @classmethod 
+    def fft_high_pass_filter(self, x, **kwargs):
+        _, _, h, w = x.shape
+        img_size = (h, w)
+        radius = kwargs.get('radius', 30)
+        if self.mask.size != img_size:
+            mask = self.create_mask(im_size=img_size, radius = radius)
+        else:
+            mask = self.create_mask(im_size=img_size, radius = radius)
+            
+        
+        mask = mask.unsqueeze(0)
+            
+        x_fft = torch.fft.fftn(x, dim=(-2, -1))  # Biến đổi Fourier 2D
+        x_fft_shifted = torch.fft.fftshift(x_fft, dim=(-2, -1))
+
+        x_fft_shifted_filter = x_fft_shifted * (1-mask)
+        x_fft_shifted_filter = torch.fft.ifftshift(x_fft_shifted_filter, dim=(-2, -1))
+        x_filtered = torch.fft.ifftn(x_fft_shifted_filter, dim=(-2, -1))
+        return x_filtered
+    
+    @classmethod 
+    def fft_low_pass_filter(self, x, **kwargs):
+        _, _, h, w = x.shape
+        img_size = (h, w)
+        radius = kwargs.get('radius', 30)
+        if self.mask.size != img_size:
+            mask = self.create_mask(im_size=img_size, radius = radius)
+        else:
+            mask = self.create_mask(im_size=img_size, radius = radius)
+            
+        
+        mask = mask.unsqueeze(0)
+            
+        x_fft = torch.fft.fftn(x, dim=(-2, -1))  # Biến đổi Fourier 2D
+        x_fft_shifted = torch.fft.fftshift(x_fft, dim=(-2, -1))
+
+        x_fft_shifted_filter = x_fft_shifted * (mask)
+        x_fft_shifted_filter = torch.fft.ifftshift(x_fft_shifted_filter, dim=(-2, -1))
+        x_filtered = torch.fft.ifftn(x_fft_shifted_filter, dim=(-2, -1))
+        return x_filtered
+    
+    @classmethod 
     def no_filter(self,x , kernel_size, sigma):
         return x
-            
+    
+    
     @classmethod 
     def filter(self):
         _filter =  getattr(self, self.config['filter'])
         return partial(_filter, 
                        kernel_size = self.config['kernel_size'], 
-                       sigma = self.config['sigma'])
+                       sigma = self.config['sigma'],
+                       radius = self.config['radius'])
         
     
     def to_image(self,tensor):
@@ -143,6 +211,17 @@ class Preprocess():
         image_np = image_np.transpose(1, 2, 0)  # Change tensor from CxHxW to HxWxC
         image_np = (image_np * 255).astype(np.uint8)
         image = Image.fromarray(image_np)
+        
+        
+        min_val = image_np.min()
+        max_val = image_np.max()
+        normalized_array = (image_np - min_val) / (max_val - min_val)
+        
+        # Convert to the range 0-255 and convert to uint8
+        uint8_array = (normalized_array * 255).astype(np.uint8)
+        
+        # Convert to a PIL Image
+        image = Image.fromarray(uint8_array)
 
         return image
     
@@ -286,19 +365,32 @@ if __name__ == '__main__':
     #x = torch.rand((4,3,224,224))
     #model(x)
     x = torch.rand((4,3,224,224))
-    img = Image.open(r"D:\Downloads\dataset\progan_val_4_class\cat\0_real\17262.png")
+    img = Image.open(r"D:\K32\do_an_tot_nghiep\data\real_gen_dataset\train\1_fake\01bfd85a-84ab-415c-8ba3-fec489ae7944.jpg")
     im = transforms.ToTensor()(img)
 #    pre = model(x)    
     process = Preprocess()
+    #mask = process.create_mask((100,100), 30) 
+    #plt.imshow(mask[2,:,:], cmap='gray')
+    im_blur_highpass = process.fft_high_pass_filter(im.unsqueeze(0), radius=90)
+    im_blur_highpass = process.to_image(torch.abs(im_blur_highpass).squeeze(0))
+    plt.imshow(im_blur_highpass)
+    
+    im_blur_lowpass = process.fft_low_pass_filter(im.unsqueeze(0), radius=90)
+    im_blur_lowpass = process.to_image(torch.abs(im_blur_lowpass).squeeze(0))
+    plt.imshow(im_blur_lowpass)
+
+    im_blur_lowpass = process.to_image(torch.abs(im_blur_lowpass).squeeze(0) + torch.abs(im_blur_highpass).squeeze(0) )
+
+    
+    plt.imshow(np.asanyarray(im_blur_highpass) + np.asanyarray(im_blur_lowpass))
+
     im_blur = process.low_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
     im_blur = process.to_image(im_blur.squeeze(0))
     
     im_blur_highpass = process.high_pass_filter(im.unsqueeze(0),kernel_size=(5,5), sigma=(2,2))
     im_blur_highpass = process.to_image(im_blur_highpass.squeeze(0))
-    
-    
+
     im_arr = np.asarray(im_blur_highpass)
-    
     
     im_arr[:,:,0].max()
         
@@ -335,14 +427,6 @@ if __name__ == '__main__':
     
     plt.tight_layout()  # Cân chỉnh layout
     plt.show()
-    
-    
-    
-    
-    
- 
-    
-    
     
     
     

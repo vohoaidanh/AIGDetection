@@ -179,5 +179,123 @@ np.dot(result, np.array([0.15,0.3,0.55]))
 
 
 
+import torch
+height  = 100
+width = 100
+r = 30
+y, x = torch.meshgrid(torch.arange(-height//2, height//2), torch.arange(-width//2, width//2), indexing="ij")
+radius = torch.sqrt(x.float()**2 + y.float()**2)
+high_pass_mask = (radius <= r).float()
 
+plt.imshow(high_pass_mask, cmap='gray')
+    
+mask = torch.ones(size = (height,width)) * 0
+    
+    
+def create_circle_mask(size = (15,15), r = 3):
+    mask = torch.zeros(size = size) 
+    center_y, center_x = size[0]//2, size[1]//2
+    for i in range(size[0]):
+        for j in range(size[1]):
+            if ((i-center_y)**2 + (j-center_x)**2) <= r**2:
+                mask[i,j] = 1
+    return mask
 
+def create_mask(im_size = (256,256), mask_size = (100,100)):
+    matrix = torch.ones(mask_size)
+    original_height, original_width = matrix.size()
+    target_height, target_width = im_size
+    pad_top = (target_height - original_height) // 2
+    pad_bottom = target_height - original_height - pad_top
+    pad_left = (target_width - original_width) // 2
+    pad_right = target_width - original_width - pad_left
+
+    padded_matrix = torch.nn.functional.pad(matrix, (pad_left, pad_right, pad_top, pad_bottom), value=0)
+    return padded_matrix
+    
+    
+
+plt.imshow(create_mask(im_size = (256,512),  mask_size = (100,150)), cmap='gray')
+
+import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
+
+def create_gaussian_mask(shape, sigma):
+    """
+    Create a Gaussian mask in the frequency domain.
+
+    Args:
+    shape (tuple): Shape of the mask (height, width).
+    sigma (float): Standard deviation of the Gaussian.
+
+    Returns:
+    np.ndarray: Gaussian mask of shape (height, width).
+    """
+    h, w = shape
+    center_y, center_x = h // 2, w // 2
+
+    Y, X = np.ogrid[:h, :w]
+    dist_from_center = np.sqrt((X - center_x) ** 2 + (Y - center_y) ** 2)
+
+    gaussian_mask = np.exp(-(dist_from_center ** 2) / (2 * sigma ** 2))
+    return gaussian_mask
+
+def apply_gaussian_filter_rgb(image, sigma):
+    """
+    Apply a Gaussian filter to an RGB image using Fourier transform.
+
+    Args:
+    image (np.ndarray): Input RGB image with shape (height, width, channels).
+    sigma (float): Standard deviation of the Gaussian.
+
+    Returns:
+    np.ndarray: Filtered RGB image.
+    """
+    filtered_channels = []
+    for channel in range(image.shape[-1]):
+        # Extract channel
+        image_channel = image[..., channel]
+
+        # Compute the 2D FFT of the channel
+        image_fft = np.fft.fft2(image_channel)
+        image_fft_shifted = np.fft.fftshift(image_fft)
+
+        # Create a Gaussian mask
+        gaussian_mask = create_gaussian_mask(image_channel.shape, sigma)
+
+        # Apply the Gaussian mask in the frequency domain
+        image_fft_shifted_filtered = image_fft_shifted * gaussian_mask
+
+        # Perform the inverse FFT
+        image_fft_filtered = np.fft.ifftshift(image_fft_shifted_filtered)
+        filtered_channel = np.fft.ifft2(image_fft_filtered).real
+
+        # Append filtered channel to list
+        filtered_channels.append(filtered_channel)
+
+    # Stack filtered channels back into RGB image
+    filtered_image = np.stack(filtered_channels, axis=-1)
+    return filtered_image
+
+# Load an example RGB image
+image = Image.open(r"D:\K32\do_an_tot_nghiep\data\real_gen_dataset\train\1_fake\01bfd85a-84ab-415c-8ba3-fec489ae7944.jpg")
+image_np = np.array(image)
+
+# Apply Gaussian filter with specified sigma
+sigma = 1
+filtered_image_np = apply_gaussian_filter_rgb(image_np, sigma)
+
+# Display the original and filtered images
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.title('Original Image')
+plt.imshow(image_np)
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+plt.title('Filtered Image')
+plt.imshow(filtered_image_np)
+plt.axis('off')
+
+plt.show()
