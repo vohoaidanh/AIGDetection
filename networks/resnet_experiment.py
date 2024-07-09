@@ -105,8 +105,9 @@ class Preprocess():
     config = {
         "kernel_size": (5,5),
         "sigma": (2.0, 2.0),     
-        "radius": (2.0, 2.0), #only for fft_filter   
-        "filter": "no_filter",
+        "radius": 90, #only for fft_high_pass_filter/fft_low_pass_filter   
+        "channel": 0, # only for single_color_channel transform. R,G,B
+        "filter": "fft_high_pass_filter",
         }
     mask = torch.ones(size=(3,3,3))
     
@@ -162,6 +163,7 @@ class Preprocess():
             
         
         mask = mask.unsqueeze(0)
+        mask = mask.to(x.device)
             
         x_fft = torch.fft.fftn(x, dim=(-2, -1))  # Biến đổi Fourier 2D
         x_fft_shifted = torch.fft.fftshift(x_fft, dim=(-2, -1))
@@ -169,7 +171,7 @@ class Preprocess():
         x_fft_shifted_filter = x_fft_shifted * (1-mask)
         x_fft_shifted_filter = torch.fft.ifftshift(x_fft_shifted_filter, dim=(-2, -1))
         x_filtered = torch.fft.ifftn(x_fft_shifted_filter, dim=(-2, -1))
-        return x_filtered
+        return x_filtered.real
     
     @classmethod 
     def fft_low_pass_filter(self, x, **kwargs):
@@ -181,21 +183,27 @@ class Preprocess():
         else:
             mask = self.create_mask(im_size=img_size, radius = radius)
             
-        
         mask = mask.unsqueeze(0)
-            
+        mask = mask.to(x.device)
+
         x_fft = torch.fft.fftn(x, dim=(-2, -1))  # Biến đổi Fourier 2D
         x_fft_shifted = torch.fft.fftshift(x_fft, dim=(-2, -1))
 
         x_fft_shifted_filter = x_fft_shifted * (mask)
         x_fft_shifted_filter = torch.fft.ifftshift(x_fft_shifted_filter, dim=(-2, -1))
         x_filtered = torch.fft.ifftn(x_fft_shifted_filter, dim=(-2, -1))
-        return x_filtered
+        return x_filtered.real
     
     @classmethod 
     def no_filter(self,x , kernel_size, sigma):
         return x
     
+    @classmethod 
+    def single_color_channel(self, x, **kwargs):
+     c = kwargs.get('channel', 0)
+     single_channel = x[:, c:c+1, :, :].clone()  # Clone the selected channel
+     x[:, :, :, :] = single_channel  # Assign the cloned channel to all channels
+     return x
     
     @classmethod 
     def filter(self):
@@ -367,15 +375,18 @@ if __name__ == '__main__':
     x = torch.rand((4,3,224,224))
     img = Image.open(r"D:\K32\do_an_tot_nghiep\data\real_gen_dataset\train\1_fake\01bfd85a-84ab-415c-8ba3-fec489ae7944.jpg")
     im = transforms.ToTensor()(img)
+
+
 #    pre = model(x)    
     process = Preprocess()
-    #mask = process.create_mask((100,100), 30) 
-    #plt.imshow(mask[2,:,:], cmap='gray')
-    im_blur_highpass = process.fft_high_pass_filter(im.unsqueeze(0), radius=90)
-    im_blur_highpass = process.to_image(torch.abs(im_blur_highpass).squeeze(0))
+    mask = process.single_color_channel(im.clone().unsqueeze(0), channel=2)
+    plt.imshow(process.to_image(mask.squeeze(0)))
+    
+    im_blur_highpass = process.fft_high_pass_filter(im.unsqueeze(0), radius=120)
+    im_blur_highpass = process.to_image(torch.abs(im_blur_highpass*20).squeeze(0))
     plt.imshow(im_blur_highpass)
     
-    im_blur_lowpass = process.fft_low_pass_filter(im.unsqueeze(0), radius=90)
+    im_blur_lowpass = process.fft_low_pass_filter(im.unsqueeze(0), radius=120)
     im_blur_lowpass = process.to_image(torch.abs(im_blur_lowpass).squeeze(0))
     plt.imshow(im_blur_lowpass)
 

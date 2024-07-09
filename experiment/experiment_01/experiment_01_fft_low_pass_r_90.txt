@@ -1,0 +1,218 @@
+Model_path checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_17_best.pth
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "radius": 90,
+    "filter": "fft_low_pass_filter"
+}
+ ********************
+=================================
+           ForenSynths
+=================================
+2024_07_08_03_01_00
+(0 biggan      ) acc: 57.1; ap: 61.0
+(1 cyclegan    ) acc: 64.8; ap: 72.0
+(2 deepfake    ) acc: 57.0; ap: 59.4
+(3 gaugan      ) acc: 54.9; ap: 58.5
+(4 progan      ) acc: 88.7; ap: 96.5
+(5 stargan     ) acc: 78.2; ap: 86.9
+(6 stylegan    ) acc: 60.9; ap: 78.5
+(7 stylegan2   ) acc: 69.6; ap: 86.9
+(8 Mean      ) acc: 66.4; ap: 75.0
+*************************
+
+
+
+
+
+
+
+
+
+
+----------------- Options ---------------
+                     arch: res50                         
+               batch_size: 32                            	[default: 64]
+                    beta1: 0.9                           
+                blur_prob: 0                             
+                 blur_sig: 0.5                           
+          checkpoints_dir: ./checkpoints                 
+                class_bal: False                         
+                  classes: car,cat,chair,horse           	[default: ]
+           continue_train: False                         
+                 cropSize: 224                           
+                 data_aug: False                         
+                 dataroot: /workspace/datasets/ForenSynths_train_val	[default: ./dataset/]
+                delr_freq: 10                            	[default: 20]
+            detect_method: experiment_01                 	[default: NPR]
+          earlystop_epoch: 15                            
+                    epoch: latest                        
+              epoch_count: 1                             
+                  gpu_ids: 0                             
+                init_gain: 0.02                          
+                init_type: normal                        
+                  isTrain: True                          	[default: None]
+               jpg_method: cv2                           
+                 jpg_prob: 0                             
+                 jpg_qual: 75                            
+               last_epoch: -1                            
+                 loadSize: 256                           
+                  loss_fn: BCEWithLogitsLoss             
+                loss_freq: 400                           
+                       lr: 0.0002                        	[default: 0.0001]
+                     mode: binary                        
+                     name: experiment-01-fft-lowpass-2024_07_08_02_24_45	[default: experiment_name]
+                new_optim: False                         
+                    niter: 20                            	[default: 1000]
+                  no_flip: False                         
+              num_threads: 4                             	[default: 8]
+                    optim: adam                          
+           resize_or_crop: scale_and_crop                
+                rz_interp: bilinear                      
+          save_epoch_freq: 20                            
+         save_latest_freq: 2000                          
+           serial_batches: False                         
+                   suffix:                               
+              train_split: train                         
+                val_split: val                           
+----------------- End -------------------
+train.py  --name  experiment-01-fft-lowpass-  --dataroot  /workspace/datasets/ForenSynths_train_val  --detect_method  experiment_01  --num_thread  4  --classes  car,cat,chair,horse  --batch_size  32  --delr_freq  10  --lr  0.0002  --niter  20
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "radius": 90,
+    "filter": "fft_low_pass_filter"
+}
+ ********************
+cwd: /workspace/AIGDetection
+2024_07_08_02_25_47 Train loss: 0.6897813081741333 at step: 400 lr 0.0002
+(Val @ epoch 0) acc: 0.500625; ap: 0.5528235285574445
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0 --> 0.500625, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_0_best.pth
+2024_07_08_02_26_52 Train loss: 0.6823755502700806 at step: 800 lr 0.0002
+2024_07_08_02_27_52 Train loss: 0.7063992023468018 at step: 1200 lr 0.0002
+(Val @ epoch 1) acc: 0.55375; ap: 0.567389792251517
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.500625 --> 0.55375, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_1_best.pth
+2024_07_08_02_28_56 Train loss: 0.6942551136016846 at step: 1600 lr 0.0002
+2024_07_08_02_29_57 Train loss: 0.6890532374382019 at step: 2000 lr 0.0002
+(Val @ epoch 2) acc: 0.575625; ap: 0.6204192599652997
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.55375 --> 0.575625, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_2_best.pth
+2024_07_08_02_31_02 Train loss: 0.5247894525527954 at step: 2400 lr 0.0002
+2024_07_08_02_32_02 Train loss: 0.640062689781189 at step: 2800 lr 0.0002
+(Val @ epoch 3) acc: 0.668125; ap: 0.69201863918965
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.575625 --> 0.668125, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_3_best.pth
+2024_07_08_02_33_07 Train loss: 0.6160832047462463 at step: 3200 lr 0.0002
+2024_07_08_02_34_07 Train loss: 0.5706764459609985 at step: 3600 lr 0.0002
+(Val @ epoch 4) acc: 0.680625; ap: 0.7374519767379328
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.668125 --> 0.680625, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_4_best.pth
+2024_07_08_02_35_11 Train loss: 0.48695701360702515 at step: 4000 lr 0.0002
+2024_07_08_02_36_12 Train loss: 0.6344804763793945 at step: 4400 lr 0.0002
+(Val @ epoch 5) acc: 0.5825; ap: 0.6270992228898924
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_5.pth
+2024_07_08_02_37_16 Train loss: 0.4740388095378876 at step: 4800 lr 0.0002
+2024_07_08_02_38_17 Train loss: 0.5340256690979004 at step: 5200 lr 0.0002
+(Val @ epoch 6) acc: 0.65375; ap: 0.7477154546620771
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_6.pth
+2024_07_08_02_39_21 Train loss: 0.7222382426261902 at step: 5600 lr 0.0002
+2024_07_08_02_40_22 Train loss: 0.5587600469589233 at step: 6000 lr 0.0002
+(Val @ epoch 7) acc: 0.751875; ap: 0.8255094671007857
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.680625 --> 0.751875, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_7_best.pth
+2024_07_08_02_41_27 Train loss: 0.39575624465942383 at step: 6400 lr 0.0002
+(Val @ epoch 8) acc: 0.665625; ap: 0.7316293928155048
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_8.pth
+2024_07_08_02_42_32 Train loss: 0.9038575887680054 at step: 6800 lr 0.0002
+2024_07_08_02_43_32 Train loss: 0.436805784702301 at step: 7200 lr 0.0002
+(Val @ epoch 9) acc: 0.698125; ap: 0.7477236479279905
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_9.pth
+2024_07_08_02_44_36 Train loss: 0.33203965425491333 at step: 7600 lr 0.0002
+2024_07_08_02_45_37 Train loss: 0.374702513217926 at step: 8000 lr 0.0002
+2024_07_08_02_46_15 changing lr at the end of epoch 10, iters 8250
+*************************
+Changing lr from 0.0002 to 0.00018
+*************************
+(Val @ epoch 10) acc: 0.846875; ap: 0.9389593662694564
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.751875 --> 0.846875, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_10_best.pth
+2024_07_08_02_46_41 Train loss: 0.2865470051765442 at step: 8400 lr 0.00018
+2024_07_08_02_47_42 Train loss: 0.22709126770496368 at step: 8800 lr 0.00018
+(Val @ epoch 11) acc: 0.84125; ap: 0.936906841239977
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_11.pth
+2024_07_08_02_48_46 Train loss: 0.26872408390045166 at step: 9200 lr 0.00018
+2024_07_08_02_49_46 Train loss: 0.2523895800113678 at step: 9600 lr 0.00018
+(Val @ epoch 12) acc: 0.86125; ap: 0.9374636442429416
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.846875 --> 0.86125, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_12_best.pth
+2024_07_08_02_50_51 Train loss: 0.18077914416790009 at step: 10000 lr 0.00018
+2024_07_08_02_51_52 Train loss: 0.30915218591690063 at step: 10400 lr 0.00018
+(Val @ epoch 13) acc: 0.889375; ap: 0.9641664440726909
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.86125 --> 0.889375, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_13_best.pth
+2024_07_08_02_52_57 Train loss: 0.15108492970466614 at step: 10800 lr 0.00018
+2024_07_08_02_53_57 Train loss: 0.11012054979801178 at step: 11200 lr 0.00018
+(Val @ epoch 14) acc: 0.925625; ap: 0.9830729787780846
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.889375 --> 0.925625, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_14_best.pth
+2024_07_08_02_55_02 Train loss: 0.19814805686473846 at step: 11600 lr 0.00018
+2024_07_08_02_56_02 Train loss: 0.2758364677429199 at step: 12000 lr 0.00018
+(Val @ epoch 15) acc: 0.9125; ap: 0.9670963581041062
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_15.pth
+2024_07_08_02_57_06 Train loss: 0.14598482847213745 at step: 12400 lr 0.00018
+(Val @ epoch 16) acc: 0.74125; ap: 0.893084366271246
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_16.pth
+2024_07_08_02_58_10 Train loss: 0.04164091497659683 at step: 12800 lr 0.00018
+2024_07_08_02_59_10 Train loss: 0.10249078273773193 at step: 13200 lr 0.00018
+(Val @ epoch 17) acc: 0.93875; ap: 0.9866921881621034
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+acc increate 0.925625 --> 0.93875, saving best model
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_17_best.pth
+2024_07_08_03_00_14 Train loss: 0.020783323794603348 at step: 13600 lr 0.00018
+2024_07_08_03_01_26 Train loss: 0.05435274541378021 at step: 14000 lr 0.00018
+(Val @ epoch 18) acc: 0.899375; ap: 0.9866848919658071
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_18.pth
+2024_07_08_03_03_25 Train loss: 0.2844959795475006 at step: 14400 lr 0.00018
+2024_07_08_03_05_13 Train loss: 0.033530768007040024 at step: 14800 lr 0.00018
+(Val @ epoch 19) acc: 0.930625; ap: 0.9856401565152187
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_19.pth
+Saving model ./checkpoints/experiment-01-fft-lowpass-2024_07_08_02_24_45/model_epoch_last.pth

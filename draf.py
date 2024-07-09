@@ -299,3 +299,100 @@ plt.imshow(filtered_image_np)
 plt.axis('off')
 
 plt.show()
+
+
+
+
+
+
+
+
+
+
+import re
+
+# Dữ liệu từ bảng 1
+text1 = """
+=================================
+(0 biggan      ) acc: 67.1; ap: 71.4
+(1 cyclegan    ) acc: 61.7; ap: 52.5
+(2 deepfake    ) acc: 50.4; ap: 60.3
+(3 gaugan      ) acc: 56.3; ap: 66.5
+(4 progan      ) acc: 61.5; ap: 62.0
+(5 stargan     ) acc: 74.8; ap: 73.8
+(6 stylegan    ) acc: 59.8; ap: 58.6
+(7 stylegan2   ) acc: 54.6; ap: 52.0
+(8 Mean      ) acc: 60.8; ap: 62.2
+*************************
+"""
+
+# Dữ liệu từ bảng 2 (giả định)
+text2 = """
+=================================
+           ForenSynths
+=================================
+2024_07_08_09_10_09
+(0 biggan      ) acc: 53.4; ap: 57.9
+(1 cyclegan    ) acc: 67.7; ap: 74.1
+(2 deepfake    ) acc: 57.4; ap: 60.6
+(3 gaugan      ) acc: 55.0; ap: 59.7
+(4 progan      ) acc: 90.6; ap: 97.9
+(5 stargan     ) acc: 67.4; ap: 80.2
+(6 stylegan    ) acc: 64.4; ap: 85.6
+(7 stylegan2   ) acc: 76.5; ap: 93.8
+(8 Mean      ) acc: 66.5; ap: 76.2
+*************************
+"""
+
+# Regular expression pattern to extract acc values
+pattern = r'acc:\s+([\d.]+)'
+
+# Extract acc values from text1
+matches1 = re.findall(pattern, text1)
+acc1 = [float(match) for match in matches1]
+
+# Extract acc values from text2
+matches2 = re.findall(pattern, text2)
+acc2 = [float(match) for match in matches2]
+
+# List of algorithms (assuming they are in the same order for both tables)
+algorithms = [
+    'biggan', 'cyclegan', 'deepfake', 'gaugan',
+    'progan', 'stargan', 'stylegan', 'stylegan2', 'Mean'
+]
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Độ rộng của các thanh
+bar_width = 0.35
+
+# Vị trí của các thanh
+index = np.arange(len(algorithms))
+
+# Vẽ biểu đồ so sánh
+fig, ax = plt.subplots(figsize=(10, 6))
+bars1 = ax.bar(index - bar_width/2, acc1, bar_width, label='High pass')
+bars2 = ax.bar(index + bar_width/2, acc2, bar_width, label='Low pass')
+
+# Đặt nhãn trục x, nhãn của công tắc chuẩn
+ax.set_xlabel('Algorithms')
+ax.set_ylabel('Accuracy')
+ax.set_title('Comparison of Accuracy between Table 1 and Table 2')
+ax.set_xticks(index)
+ax.set_xticklabels(algorithms, rotation=45, ha='right')
+ax.legend()
+
+# Chỉnh sửa càng
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+

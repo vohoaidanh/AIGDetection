@@ -153,13 +153,13 @@ class ResNet(nn.Module):
         return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
     
     def forward(self, x):
-        NPR = x.clone()
+        #NPR = x.clone()
         x = self.gradient_layer(x)
         
         #x = self.conv1(NPR*2.0/3.0)
-        NPR = self.interpolate(NPR, 0.5)
-        NPR = self.gradient_layer(NPR)
-        x = x - NPR
+        #NPR = self.interpolate(NPR, 0.5)
+        #NPR = self.gradient_layer(NPR)
+        #x = x - NPR
         
         x = self.conv1(x)
         x = self.bn1(x)

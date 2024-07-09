@@ -2,3 +2,4 @@ weights/*
 checkpoints/*
 *.pth
 __pycache__/
+experiment/**/*.zip

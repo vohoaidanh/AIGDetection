@@ -6,6 +6,7 @@ import torch
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
 from networks.resnet_experiment import *
+from networks.resnet_fusion import resnet50_fusion
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
         for path in paths:
@@ -67,9 +68,14 @@ def get_model(opt):
         model = resnet50_experiment_01(pretrained=False, num_classes=1)
         #Preprocess is contains the experiment configuration
         print(Preprocess())
-
         return model
     
+    elif opt.detect_method.lower() in ['model_fusion']:
+        print(f'Detect method model {opt.detect_method}')
+        opt.model1_path = r'model_epoch_last_3090.pth' # for NPR checkpoint
+        opt.model2_path = 'weights\Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39_model_eopch_7_best.pth'                           #For local grad checkpoints
+        model = resnet50_fusion(num_classes=1, model1_path=opt.model1_path, model2_path=opt.model2_path)
+        return model
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")
         
