@@ -72,8 +72,22 @@ for testSet in DetectionTests.keys():
         opt.classes  = '' #os.listdir(opt.dataroot) if multiclass[v_id] else ['']
         opt.no_resize = DetectionTests[testSet]['no_resize']
         opt.no_crop   = DetectionTests[testSet]['no_crop']
-        acc, ap, _, _, _, _ = validate(model, opt)
+        acc, ap, r_acc, f_acc, _, _ = validate(model, opt)
         accs.append(acc);aps.append(ap)
-        print("({} {:12}) acc: {:.1f}; ap: {:.1f}".format(v_id, val, acc*100, ap*100))
+        print("({} {:12}) acc: {:.1f}; ap: {:.1f}; r_acc: {:.1f}; f_acc: {:.1f}".format(v_id, val, acc*100, ap*100, r_acc, f_acc))
     print("({} {:10}) acc: {:.1f}; ap: {:.1f}".format(v_id+1,'Mean', np.array(accs).mean()*100, np.array(aps).mean()*100));print('*'*25) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -332,15 +332,15 @@ text2 = """
            ForenSynths
 =================================
 2024_07_08_09_10_09
-(0 biggan      ) acc: 53.4; ap: 57.9
-(1 cyclegan    ) acc: 67.7; ap: 74.1
-(2 deepfake    ) acc: 57.4; ap: 60.6
-(3 gaugan      ) acc: 55.0; ap: 59.7
-(4 progan      ) acc: 90.6; ap: 97.9
-(5 stargan     ) acc: 67.4; ap: 80.2
-(6 stylegan    ) acc: 64.4; ap: 85.6
-(7 stylegan2   ) acc: 76.5; ap: 93.8
-(8 Mean      ) acc: 66.5; ap: 76.2
+(0 biggan      ) acc: 86.9; ap: 92.5
+(2 cyclegan    ) acc: 97.0; ap: 98.8
+(3 deepfake    ) acc: 72.2; ap: 93.7
+(4 gaugan      ) acc: 83.2; ap: 85.6
+(6 progan      ) acc: 99.9; ap: 100.0
+(9 stargan     ) acc: 100.0; ap: 100.0
+(10 stylegan    ) acc: 96.7; ap: 100.0
+(11 stylegan2   ) acc: 98.7; ap: 100.0
+(13 Mean      ) acc: 78.8; ap: 83.4
 *************************
 """
 
@@ -393,6 +393,6 @@ plt.show()
 
 
 
-
+np.mean(acc2)
 
 

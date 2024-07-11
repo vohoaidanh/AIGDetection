@@ -7,6 +7,7 @@ from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
 from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
+from networks.resnet_lstm import resnet50_lstm
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
         for path in paths:
@@ -76,6 +77,13 @@ def get_model(opt):
         opt.model2_path = 'weights\Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39_model_eopch_7_best.pth'                           #For local grad checkpoints
         model = resnet50_fusion(num_classes=1, model1_path=opt.model1_path, model2_path=opt.model2_path)
         return model
+    
+    elif opt.detect_method.lower() in ['resnet_lstm']:
+        print(f'Detect method model {opt.detect_method}')
+        opt.backbone_path = r'Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39_model_eopch_7_best.pth'
+        model = resnet50_lstm(backbone_path=opt.backbone_path)
+        return model
+    
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")
         
