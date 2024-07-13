@@ -1,0 +1,65 @@
+Model_path checkpoints/experiment-02-single-channel-color-pretrained-2024_07_12_03_39_56/model_epoch_4_best.pth
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "radius": 90,
+    "channel": 0,
+    "filter": "single_color_channel"
+}
+ ********************
+=================================
+           ForenSynths
+=================================
+2024_07_12_04_09_17
+(0 biggan      ) acc: 70.9000; ap: 76.1975; r_acc: 0.7145; f_acc: 0.7035
+(1 cyclegan    ) acc: 75.3596; ap: 83.7804; r_acc: 0.8229; f_acc: 0.6843
+(2 deepfake    ) acc: 84.6068; ap: 95.6415; r_acc: 0.7388; f_acc: 0.9537
+(3 gaugan      ) acc: 64.2200; ap: 69.6784; r_acc: 0.7778; f_acc: 0.5066
+(4 progan      ) acc: 98.3375; ap: 99.9269; r_acc: 0.9975; f_acc: 0.9692
+(5 stargan     ) acc: 96.5233; ap: 99.9304; r_acc: 0.9310; f_acc: 0.9995
+(6 stylegan    ) acc: 89.7513; ap: 98.7527; r_acc: 0.9918; f_acc: 0.8032
+(7 stylegan2   ) acc: 84.9024; ap: 98.2124; r_acc: 0.9917; f_acc: 0.7063
+(8 Mean      ) acc: 83.1; ap: 90.3
+*************************
+
+Model_path checkpoints/experiment-02-no-filter-2024_07_12_04_31_08/model_epoch_12_best.pth
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "radius": 90,
+    "channel": 0,
+    "filter": "no_filter"
+}
+ ********************
+=================================
+           ForenSynths
+=================================
+2024_07_12_05_02_45
+(0 biggan      ) acc: 65.4250; ap: 66.4753; r_acc: 0.6065; f_acc: 0.7020
+(1 cyclegan    ) acc: 72.2180; ap: 75.4167; r_acc: 0.6737; f_acc: 0.7706
+(2 deepfake    ) acc: 89.4727; ap: 97.1899; r_acc: 0.9889; f_acc: 0.8002
+(3 gaugan      ) acc: 57.9300; ap: 56.2604; r_acc: 0.4798; f_acc: 0.6788
+(4 progan      ) acc: 99.6875; ap: 99.9920; r_acc: 0.9985; f_acc: 0.9952
+(5 stargan     ) acc: 99.0495; ap: 99.9997; r_acc: 1.0000; f_acc: 0.9810
+(6 stylegan    ) acc: 83.5921; ap: 92.4788; r_acc: 0.9985; f_acc: 0.6733
+(7 stylegan2   ) acc: 83.9196; ap: 98.0293; r_acc: 0.9985; f_acc: 0.6799
+(8 Mean      ) acc: 81.4; ap: 85.7
+*************************

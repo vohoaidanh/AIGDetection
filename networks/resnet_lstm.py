@@ -36,17 +36,19 @@ class Preprocess():
 
     @classmethod 
     def add_gaussian_noise(self, img, amplitude):
+        device = img.device
         noise = torch.randn(img.size()) * amplitude
+        noise = noise.to(device)
         noisy_img = img + noise
         noisy_img = torch.clamp(noisy_img, 0, 1)
         return noisy_img
     
     @classmethod 
     def process(self,x):
-        x1 = self.blur(img_tensor=x, kernel_size=5)
-        x2 = self.blur(x, kernel_size=7)
-        x3 = self.interpolate(x, factor=0.5)
-        x4 = self.add_gaussian_noise(x, amplitude=0.1)
+        x1 = self.blur(img_tensor=x, kernel_size=3)
+        x2 = self.blur(img_tensor=x, kernel_size=5)
+        x3 = self.blur(img_tensor=x, kernel_size=7)
+        x4 = self.blur(img_tensor=x, kernel_size=9)
         combined_tensor = torch.stack([x,x1,x2,x3,x4], dim=1)  # Shape: [batch_size, sequence_length, channels, width, height]
 
         return combined_tensor
@@ -64,13 +66,13 @@ class ResNetLSTM(nn.Module):
         
         # LSTM để học mối quan hệ giữa các đặc trưng
         self.lstm = nn.LSTM(input_size=512, hidden_size=hidden_size, num_layers=num_layers, batch_first=True)
-        
+        self.dropout = nn.Dropout(0.5)
         # Fully connected layer để phân loại
         self.fc = nn.Linear(hidden_size, num_classes)
         
                 # Freeze parameters of models A and B
         for param in self.resnet.parameters():
-            param.requires_grad = False
+            param.requires_grad = True
         
         
     def get_trainable_params(self):

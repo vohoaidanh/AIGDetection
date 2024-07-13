@@ -1,0 +1,32 @@
+Model_path checkpoints/experiment-02-no-filter-2024_07_12_04_31_08/model_epoch_1_best.pth
+Detect method model experiment_01
+Experiment config is 
+ ******************** 
+ {
+    "kernel_size": [
+        5,
+        5
+    ],
+    "sigma": [
+        2.0,
+        2.0
+    ],
+    "radius": 90,
+    "channel": 0,
+    "filter": "no_filter"
+}
+ ********************
+=================================
+           ForenSynths
+=================================
+2024_07_12_04_39_40
+(0 biggan      ) acc: 65.1750; ap: 67.3229; r_acc: 0.7715; f_acc: 0.5320
+(1 cyclegan    ) acc: 58.4784; ap: 59.9115; r_acc: 0.6601; f_acc: 0.5095
+(2 deepfake    ) acc: 64.4958; ap: 87.9177; r_acc: 0.9819; f_acc: 0.3069
+(3 gaugan      ) acc: 51.1900; ap: 50.8695; r_acc: 0.6890; f_acc: 0.3348
+(4 progan      ) acc: 98.5500; ap: 99.8921; r_acc: 0.9930; f_acc: 0.9780
+(5 stargan     ) acc: 90.7454; ap: 99.9801; r_acc: 1.0000; f_acc: 0.8149
+(6 stylegan    ) acc: 77.9169; ap: 94.5242; r_acc: 0.9978; f_acc: 0.5605
+(7 stylegan2   ) acc: 77.3786; ap: 96.8411; r_acc: 0.9970; f_acc: 0.5506
+(8 Mean      ) acc: 73.0; ap: 82.2
+*************************
