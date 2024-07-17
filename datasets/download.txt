@@ -31,3 +31,6 @@ done < "$TEMP_FILE"
 
 # Xóa các tệp tạm thời
 rm file_list.txt "$TEMP_FILE"
+
+
+!find /workspace/datasets -type d -name "*ipynb*" -exec rm -r {} +

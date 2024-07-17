@@ -390,9 +390,39 @@ plt.show()
 
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Tạo dữ liệu phân phối chuẩn với trung bình 0 và độ lệch chuẩn 1
+mean = [0, 0]
+cov = [[1, 0], [0, 1]]  # ma trận hiệp phương sai (covariance matrix)
+
+# Tạo 1000 điểm dữ liệu
+x, y = np.random.multivariate_normal(mean, cov, 1000).T
+
+# Vẽ biểu đồ phân bố các điểm
+plt.scatter(x, y, alpha=0.3)
+plt.title('Gaussian Distribution of 1000 points')
+plt.xlabel('x1')
+plt.ylabel('x2')
+plt.axis('equal')
+plt.grid(True)
+plt.show()
 
 
 
-np.mean(acc2)
+F.sigmoid(torch.tensor(-2.0))
+
+
+
+
+
+
+
+
+
+
+
+
 
 

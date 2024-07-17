@@ -8,6 +8,7 @@ from networks.resnet_local_grad import resnet50_local_grad
 from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
+from networks.semi_supervisor import resnet_similarity
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
         for path in paths:
@@ -84,6 +85,10 @@ def get_model(opt):
         model = resnet50_lstm(backbone_path=opt.backbone_path)
         return model
     
+    elif opt.detect_method.lower() in ['resnet_similarity']:
+        print(f'Detect method model {opt.detect_method}')
+        model = resnet_similarity(pretrained=True)
+
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")
         
