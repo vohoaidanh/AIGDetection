@@ -6,7 +6,7 @@ from torch.nn import functional as F
 from typing import Any, cast, Dict, List, Optional, Union
 import numpy as np
 from networks.local_grad import *
-__all__ = ['ResNet', 'resnet_similarity']
+__all__ = ['ResNet', 'resnet_similarity','SimilarityClassifier']
 
 
 model_urls = {
@@ -238,6 +238,7 @@ def resnet152(pretrained=False, **kwargs):
 
 class SimilarityClassifier(nn.Module):
     def __init__(self,pretrained):
+        print('load SimilarityClassifier')
         super(SimilarityClassifier, self).__init__()
         self.pretrained = pretrained
         self.feature_extractor = resnet50_local_grad(pretrained=self.pretrained)
@@ -252,9 +253,28 @@ class SimilarityClassifier(nn.Module):
         distance = torch.sqrt(torch.sum((features1 - features2) ** 2, dim=1, keepdim=True))
         output = self.classifier(distance)
         return output
+    
+class ResnetCenterLoss(nn.Module):
+    def __init__(self,pretrained):
+        print('load ResnetCenterLoss')
+        super(ResnetCenterLoss, self).__init__()
+        self.pretrained = pretrained
+        self.feature_extractor = resnet50_local_grad(pretrained=self.pretrained)
+        self.feature_extractor = nn.Sequential(*list(self.feature_extractor.children())[:-1])
+        self.classifier = nn.Linear(512, 1)  # Output: 2 classes (0 and 1)
+    
+    def forward(self, x):
+        bz,_,_,_ = x.shape
+        features = self.feature_extractor(x).view(bz,-1)
+        output = self.classifier(features)
+        return features, output
+
 
 def resnet_similarity(pretrained=False):
     return SimilarityClassifier(pretrained=pretrained)
+
+def resnet_center_loss(pretrained):
+    return ResnetCenterLoss(pretrained=pretrained)
 
 if __name__ == '__main__':
     from options.train_options import TrainOptions
@@ -262,7 +282,8 @@ if __name__ == '__main__':
     import torch
     
     from torchvision import transforms
-    
+    from networks.trainer import Trainer
+
     transform = transforms.Compose([
     transforms.ToTensor(),  # Converts the image to a tensor (HWC -> CHW, values scaled between 0 and 1)
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -270,24 +291,19 @@ if __name__ == '__main__':
     
     from PIL import Image
     opt = TrainOptions().parse()
-    opt.detect_method = 'local_grad'
+    opt.detect_method = 'resnet_center_loss'
     opt.model_path = r'D:/K32/do_an_tot_nghiep/NPR-DeepfakeDetection/weights/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39_model_eopch_16_last.pth'
     
-    feature = resnet_similarity(pretrained=True)
     
+    model = Trainer(opt)
+    #model = get_model(opt)
+
+    #feature = resnet_center_loss(pretrained=True)
     img = Image.open(r"D:\dataset\stylegan\bedroom\0_real\14240.png")
     im = transform(img)
     im = im.unsqueeze(0)
+    out = model.model(im)
     
-    feature.eval()
-    with torch.no_grad():        
-        out = feature(im)
-        print(out)
-
-
-
-
-
 
 
 

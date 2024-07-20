@@ -413,13 +413,83 @@ plt.show()
 
 F.sigmoid(torch.tensor(-2.0))
 
+import torch.nn.functional as F
+
+features1 = torch.randn(3, 512)
+features2 = torch.randn(3, 512)
+
+# Calculate cosine similarity
+distance = F.cosine_similarity(features1, features2)
+distance = distance.unsqueeze(1)
 
 
 
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Hàm biến đổi
+def sin_transform(x, a, b):
+  return np.sin(x) + a * np.sin(a*x + b)
+
+# Tham số
+x_min = 0
+x_max = 10
+num_points = 1000
+a = 2  # Tham số điều chỉnh độ dốc của sin(ax + b)
+b = 0  # Tham số điều chỉnh vị trí dọc trục y của sin(ax + b)
+
+# Tạo dữ liệu
+x = np.linspace(x_min, x_max, num_points)
+y1 = np.sin(x)  # sin(x)
+y2 = sin_transform(x, a, b)  # sin(ax + b)
+
+# Vẽ đồ thị
+plt.figure(figsize=(10, 6))
+
+# Vẽ đường sin(x)
+plt.plot(x, y1, label='sin(x)', color='blue')
+
+# Vẽ đường sin(ax + b)
+plt.plot(x, y2, label='sin(ax + b)', color='red')
+
+# Thêm chú thích
+plt.title('Phân phối dữ liệu sin(x) và sin(ax + b)')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+
+# Hiển thị đồ thị
+plt.grid(True)
+plt.tight_layout()
+plt.show()
 
 
+import torch
 
+# Ví dụ đơn giản
+x = torch.tensor([[1.0, 2.0], 
+                  [3.0, 4.0]])  # Batch có 2 điểm dữ liệu, mỗi điểm có 2 chiều
+centers = torch.tensor([[1.0, 1.0], 
+                        [2.0, 2.0], 
+                        [3.0, 3.0]])  # Centers của 3 lớp, mỗi center có 2 chiều
+num_classes = 3  # Số lớp
+
+# Tính toán khoảng cách Euclidean bình phương
+batch_size = x.size(0)
+distmat = torch.pow(x, 2).sum(dim=1, keepdim=True).expand(batch_size, num_classes) + \
+          torch.pow(centers, 2).sum(dim=1, keepdim=True).expand(num_classes, batch_size).t()
+
+print(distmat)
+distmat.addmm_(1, -2, x, centers.t())
+
+
+classes = torch.arange(2).long()
+
+labels = torch.tensor([0,1,0])
+labels = labels.unsqueeze(1).expand(3, 2)
+
+labels.eq(classes.expand(3, 2))
 
 
 

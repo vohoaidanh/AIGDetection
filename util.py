@@ -1,6 +1,7 @@
 import sys
 import os
 import torch
+import torch.nn as nn
 #from torch import nn
 #import torchvision
 from networks.resnet import resnet50
@@ -8,7 +9,10 @@ from networks.resnet_local_grad import resnet50_local_grad
 from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
-from networks.semi_supervisor import resnet_similarity
+from networks.semi_supervisor import resnet_similarity, resnet_center_loss
+
+from networks.center_loss import CenterLoss
+
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
         for path in paths:
@@ -88,18 +92,22 @@ def get_model(opt):
     elif opt.detect_method.lower() in ['resnet_similarity']:
         print(f'Detect method model {opt.detect_method}')
         model = resnet_similarity(pretrained=True)
+        return model
+    
+    elif opt.detect_method.lower() in ['resnet_center_loss']:
+        print(f'Detect method model {opt.detect_method}')
+        model = resnet_center_loss(pretrained=True)
+        return model
 
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")
         
         
+
         
         
         
-        
-        
-        
-        
+    
         
         
         

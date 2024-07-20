@@ -3,3 +3,4 @@ checkpoints/*
 *.pth
 __pycache__/
 experiment/**/*.zip
+networks/checkpoints/

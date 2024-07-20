@@ -4,7 +4,7 @@ import torch.nn as nn
 from networks.resnet import resnet50
 from networks.base_model import BaseModel, init_weights
 from util import get_model
-
+from networks.center_loss import CenterLoss
 class Trainer(BaseModel):
     def name(self):
         return 'Trainer'
@@ -22,15 +22,22 @@ class Trainer(BaseModel):
 
         if self.isTrain:
             #self.loss_fn = nn.BCEWithLogitsLoss()
+            
+            self.center_loss = CenterLoss(num_classes=2, feat_dim=512, use_gpu=True)
             self.loss_fn = getattr(nn, opt.loss_fn)()
 
             # initialize optimizers
             if opt.optim == 'adam':
-                self.optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
+                model_params = filter(lambda p: p.requires_grad, self.model.parameters())
+                params = list(model_params) + list(self.center_loss.parameters())
+                self.optimizer = torch.optim.Adam(params,
                                                   lr=opt.lr, betas=(opt.beta1, 0.999))
             elif opt.optim == 'sgd':
-                self.optimizer = torch.optim.SGD(filter(lambda p: p.requires_grad, self.model.parameters()),
+                model_params = filter(lambda p: p.requires_grad, self.model.parameters())
+                params = list(model_params) + list(self.center_loss.parameters())
+                self.optimizer = torch.optim.SGD(params,
                                                  lr=opt.lr, momentum=0.0, weight_decay=0)
+                
             else:
                 raise ValueError("optim should be [adam, sgd]")
 
@@ -58,15 +65,27 @@ class Trainer(BaseModel):
 
 
     def forward(self):
-        self.output = self.model(self.input)
+        self.features, self.output = self.model(self.input)
 
     def get_loss(self):
         return self.loss_fn(self.output.squeeze(1), self.label)
 
     def optimize_parameters(self):
         self.forward()
-        self.loss = self.loss_fn(self.output.squeeze(1), self.label)
+        #self.loss = self.loss_fn(self.output.squeeze(1), self.label)
+        alpha = 0.3
+        self.loss = self.center_loss(self.features, self.label) * alpha + self.loss_fn(self.output.squeeze(1), self.label)
         self.optimizer.zero_grad()
         self.loss.backward()
+        for param in self.center_loss.parameters():
+            # lr_cent is learning rate for center loss, e.g. lr_cent = 0.5
+            lr_cent = 0.5
+            param.grad.data *= (lr_cent / (alpha * self.lr))
+        
+        #self.optimizer.zero_grad()
+        #self.loss.backward()
         self.optimizer.step()
+
+
+
 
