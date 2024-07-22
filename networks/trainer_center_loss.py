@@ -73,13 +73,14 @@ class Trainer(BaseModel):
     def optimize_parameters(self):
         self.forward()
         #self.loss = self.loss_fn(self.output.squeeze(1), self.label)
-        alpha = 0.3
-        self.loss = self.center_loss(self.features, self.label) * alpha + self.loss_fn(self.output.squeeze(1), self.label)
+        alpha = 0.5
+        self.center_loss_value = self.center_loss(self.features, self.label)
+        self.loss = self.center_loss_value * alpha + self.loss_fn(self.output.squeeze(1), self.label)
         self.optimizer.zero_grad()
         self.loss.backward()
         for param in self.center_loss.parameters():
             # lr_cent is learning rate for center loss, e.g. lr_cent = 0.5
-            lr_cent = 0.5
+            lr_cent = 0.01
             param.grad.data *= (lr_cent / (alpha * self.lr))
         
         #self.optimizer.zero_grad()
