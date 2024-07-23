@@ -6,6 +6,9 @@ from networks.base_model import BaseModel, init_weights
 from util import get_model
 from networks.center_loss import CenterLoss
 class Trainer(BaseModel):
+    alpha = 2.0
+    target_center_loss = None
+
     def name(self):
         return 'Trainer'
 
@@ -49,6 +52,9 @@ class Trainer(BaseModel):
  
 
     def adjust_learning_rate(self, min_lr=1e-6):
+        Trainer.alpha = Trainer.alpha*0.8
+        if Trainer.alpha < 1e-3:
+            Trainer.alpha=0.0
         for param_group in self.optimizer.param_groups:
             param_group['lr'] *= 0.9
             if param_group['lr'] < min_lr:
@@ -73,16 +79,23 @@ class Trainer(BaseModel):
     def optimize_parameters(self):
         self.forward()
         #self.loss = self.loss_fn(self.output.squeeze(1), self.label)
-        alpha = 0.5
         self.center_loss_value = self.center_loss(self.features, self.label)
-        self.loss = self.center_loss_value * alpha + self.loss_fn(self.output.squeeze(1), self.label)
+        
+        if Trainer.max_center_loss is None:
+            Trainer.target_center_loss = self.center_loss_value * 0.2
+            
+        if self.center_loss_value < Trainer.target_center_loss:
+            Trainer.alpha = 0.0
+            
+        self.loss = self.center_loss_value * Trainer.alpha + 1.0*self.loss_fn(self.output.squeeze(1), self.label)
         self.optimizer.zero_grad()
         self.loss.backward()
-        for param in self.center_loss.parameters():
-            # lr_cent is learning rate for center loss, e.g. lr_cent = 0.5
-            lr_cent = 0.01
-            param.grad.data *= (lr_cent / (alpha * self.lr))
-        
+        if Trainer.alpha > 1e-3:
+          for param in self.center_loss.parameters():
+              # lr_cent is learning rate for center loss, e.g. lr_cent = 0.5
+              lr_cent = self.lr*2.0
+              param.grad.data *= (lr_cent / (Trainer.alpha * self.lr))
+          
         #self.optimizer.zero_grad()
         #self.loss.backward()
         self.optimizer.step()

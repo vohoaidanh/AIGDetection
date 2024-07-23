@@ -493,6 +493,68 @@ labels.eq(classes.expand(3, 2))
 
 
 
+import json
+import cv2
+filename = r"D:\Downloads\Bird Nest With AI Images.v2-without-preprocessing.coco\train\_annotations.coco.json"
+with open(filename, 'r') as file:
+    data = json.load(file)
+
+filename = r"D:\Downloads\Bird Nest With AI Images.v2-without-preprocessing.coco\train\BrokenBig-16-_bmp.rf.bb3938008259536c39e333859d66cb91.jpg"
+img = Image.open(filename)
+img = img.resize(size=(400,400))
+grayscale_image = img.convert('L')  # 'L' mode is for grayscale
+# Hiển thị ảnh kết hợp
+plt.figure(figsize=(10, 10))
+plt.imshow(img)
+plt.title('Image Origin')
+plt.axis('off')
+plt.show()
+
+threshold = 50  # You can adjust this value
+binary_image = grayscale_image.point(lambda x: 255 if x > threshold else 0, mode='1')
+mask = np.asarray(binary_image)
+mask = 1-mask
+
+#plt.imshow(grayscale_image, cmap='gray')
+#plt.imshow(grayscale_image*mask, cmap='gray')
+
+kernel = np.ones((5, 5), np.uint8)
+binary_image = mask*1.0
+dilated_image = cv2.dilate(binary_image, kernel, iterations=3)
+eroded_image = cv2.erode(dilated_image, kernel, iterations=3)
+#plt.imshow(dilated_image, cmap='gray')
+#plt.imshow(eroded_image, cmap='gray')
+
+mask_rgb = (eroded_image * 255).astype(np.uint8)
+mask_rgb = cv2.cvtColor(mask_rgb, cv2.COLOR_GRAY2RGB)
+
+image_rgb = np.asarray(img)
+
+# Áp dụng độ trong suốt alpha lên mặt nạ
+alpha = 0.5  # Độ trong suốt, có thể điều chỉnh từ 0 (trong suốt) đến 1 (không trong suốt)
+mask_colored = np.zeros_like(mask_rgb)
+mask_colored[mask > 0] = [0, 255, 0]  # Đặt màu cho vùng mặt nạ (ở đây là màu xanh lá cây)
+
+# Kết hợp ảnh gốc và mặt nạ với độ trong suốt alpha
+combined = cv2.addWeighted(image_rgb, 1, mask_colored, alpha, 0)
+
+# Hiển thị ảnh kết hợp
+plt.figure(figsize=(10, 10))
+plt.imshow(combined)
+plt.title('Image with Mask Overlay')
+plt.axis('off')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
 
 
 
