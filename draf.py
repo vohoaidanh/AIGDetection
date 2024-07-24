@@ -492,7 +492,9 @@ labels = labels.unsqueeze(1).expand(3, 2)
 labels.eq(classes.expand(3, 2))
 
 
-
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
 import json
 import cv2
 filename = r"D:\Downloads\Bird Nest With AI Images.v2-without-preprocessing.coco\train\_annotations.coco.json"
@@ -518,14 +520,19 @@ mask = 1-mask
 #plt.imshow(grayscale_image, cmap='gray')
 #plt.imshow(grayscale_image*mask, cmap='gray')
 
-kernel = np.ones((5, 5), np.uint8)
-binary_image = mask*1.0
-dilated_image = cv2.dilate(binary_image, kernel, iterations=3)
-eroded_image = cv2.erode(dilated_image, kernel, iterations=3)
+kernel = np.ones((15, 15), np.uint8)
+binary_image = (mask * 255).astype(np.uint8)
+
+#dilated_image = cv2.dilate(binary_image, kernel, iterations=1)
+eroded_image = cv2.erode(binary_image, kernel, iterations=1)
+dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
+dilated_image = cv2.dilate(dilated_image, kernel, iterations=1)
+dilated_image = cv2.dilate(dilated_image, kernel, iterations=1)
+
 #plt.imshow(dilated_image, cmap='gray')
 #plt.imshow(eroded_image, cmap='gray')
-
-mask_rgb = (eroded_image * 255).astype(np.uint8)
+#eroded_image = dilated_image
+mask_rgb = (dilated_image * 255).astype(np.uint8)
 mask_rgb = cv2.cvtColor(mask_rgb, cv2.COLOR_GRAY2RGB)
 
 image_rgb = np.asarray(img)
