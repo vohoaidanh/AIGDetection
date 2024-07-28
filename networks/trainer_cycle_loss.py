@@ -26,7 +26,7 @@ class Trainer(BaseModel):
         if self.isTrain:
             #self.loss_fn = nn.BCEWithLogitsLoss()
             
-            self.center_loss = CenterLoss(num_classes=2, feat_dim=512, use_gpu=True)
+            self.center_loss = CenterLoss(num_classes=2,margin=1.0, feat_dim=512, use_gpu=True)
             self.loss_fn = getattr(nn, opt.loss_fn)()
 
             # initialize optimizers

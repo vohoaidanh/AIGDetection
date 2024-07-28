@@ -556,6 +556,168 @@ plt.show()
 
 
 
+loaded_data = torch.load(r"C:\Users\danhv\Downloads\ForenSynths_stylegan2.pt", map_location='cpu')
+feature_tensor = loaded_data['feature'][0::2]
+features = feature_tensor[0]
+for i in range(1,len(feature_tensor)):
+    features = torch.cat((features, feature_tensor[i]))
+
+loaded_data['feature'] = features
+
+y_pred = loaded_data['y_pred']
+features = loaded_data['feature']
+
+feature_0 = features[y_pred<0.5]
+feature_1 = features[y_pred>=0.5]
+
+id1 =  np.random.randint(0,5045//2)
+#id2 = np.random.randint(0,5045//2)
+id1 = np.random.randint(0, 5055)
+
+id2 = np.random.randint(0, 350)
+
+d0 = torch.square(feature_0[id1:id1+1] - feature_1[id2:id2+1])
+d0 = d0.clamp(min=1e-12, max=1e+12).sum(dim=1)
+print(d0)
+
+
+
+
+import torch
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
+# Chuyển các tensor thành numpy arrays
+X = np.array([t.numpy() for t in features])
+labels = loaded_data['y_true']
+
+# Sử dụng PCA để giảm số chiều xuống 2
+pca = PCA(n_components=2)
+X_reduced = pca.fit_transform(X)
+
+# Visualize
+plt.figure(figsize=(8, 6))
+plt.scatter(X_reduced[labels == 1, 0], X_reduced[labels == 1, 1], color='blue', label='Class 1', alpha=0.3)
+plt.scatter(X_reduced[labels == 0, 0], X_reduced[labels == 0, 1], color='red', label='Class 0', alpha=0.3)
+
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.legend()
+plt.title('PCA of D-dimensional data')
+plt.show()
+
+
+
+
+#
+
+import torch
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+
+
+# Chuyển các tensor thành numpy arrays
+X = np.array([t.numpy() for t in features])
+labels = loaded_data['y_true']
+
+# Sử dụng T-SNE để giảm số chiều xuống 2
+tsne = TSNE(n_components=2, random_state=0)
+X_reduced = tsne.fit_transform(X)
+
+# Visualize
+plt.figure(figsize=(8, 6))
+plt.scatter(X_reduced[labels == 0, 0], X_reduced[labels == 0, 1], color='red', label='Class 0', alpha=0.3)
+plt.scatter(X_reduced[labels == 1, 0], X_reduced[labels == 1, 1], color='blue', label='Class 1', alpha=0.3)
+plt.xlabel('Dimension 1')
+plt.ylabel('Dimension 2')
+plt.legend()
+plt.title('T-SNE of D-dimensional data STYLE-GAN2')
+plt.show()
+
+import torch
+a = torch.tensor([1,2,1,4]).view((-1,1))
+torch.eq(a, a.t()).float()
+
+
+
+
+import pickle
+with open(r"C:\Users\danhv\Downloads\ViT-L-14_4_0.8_2_1024_128_0.001_5.pickle", 'rb') as file:
+    data = pickle.load(file)
+
+
+import torch
+
+# Create a leaf tensor with requires_grad=True
+e = 1e-3
+x = torch.tensor([3.0], requires_grad=True) + e
+
+# Perform some operations
+y = x ** 2
+z = 2*x
+t = 1/(y + z)
+
+# Retain gradients for non-leaf tensors
+#y.retain_grad()
+#z.retain_grad()
+
+# Perform backward pass
+t.backward()
+
+# Access gradients
+print(f'x = {x.item()} ; t = {t.item()}')
+#print(f'Gradient of x: {x.grad}')  # Gradient of x
+
+(t.item()-0.06666667014360428)/(x-3) - e
+
+import torch.nn.functional as F
+
+
+def gradient_filter(input_tensor):
+    device = input_tensor.device
+    batch_size, channels, height, width = input_tensor.size()
+
+    # Define the gradient filters for x and y directions
+    kernel_x = torch.tensor([[0, 0, 0], [0, -1, 1], [0, 0, 0]], dtype=torch.float32, device=device).unsqueeze(0).unsqueeze(0)
+    kernel_y = kernel_x.transpose(2, 3)  # Transpose kernel_x to get kernel_y
+
+    # Expand the kernels to match the number of input channels
+    kernel_x = kernel_x.expand(channels, 1, 3, 3)
+    kernel_y = kernel_y.expand(channels, 1, 3, 3)
+
+    # Apply the filters
+    diff_x = F.conv2d(input_tensor, kernel_x, padding=1, groups=channels)
+    diff_y = F.conv2d(input_tensor, kernel_y, padding=1, groups=channels)
+
+    # Add a small value to avoid division by zero
+    diff_x = diff_x + 1e-9
+    diff_y = diff_y + 1e-9
+
+    # Calculate the final output and normalize to [0..1]
+    output = (torch.arctan(diff_y / diff_x) / (torch.pi / 2) + 1.0) / 2.0
+
+    #output = torch.sqrt(diff_x**2 + diff_y**2)
+    #output = torch.fft.fft2(output)
+    #output = torch.angle(output)
+
+    return output
+
+
+
+a = gradient_filter(torch.rand([3,3,4,4]))
+
+torch.sqrt(torch.tensor(0.01))
+
+
+import torch
+x = torch.fft.fft2(torch.rand([1,3,4,4]))
+angles = torch.angle(x)
+
+angles.min()
+
+
 
 
 

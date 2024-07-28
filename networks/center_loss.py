@@ -72,6 +72,8 @@ class CycleLoss(nn.Module):
             d0=torch.tensor(0.0)
         else:
             d0 = torch.square(x0 - self.centers)
+            mask = d0 < 0.02
+            d0[mask] = 0.0
             d0 = d0.clamp(min=1e-12, max=1e+12).sum(dim=1)
             d0 = torch.mean(d0)
         
@@ -111,7 +113,7 @@ if __name__ == '__main__':
     
     center_loss(x,y)
     
-    cycle_loss(x2,y2)
+    cycle_loss(x1,y1)
     
     with torch.no_grad():
         print(torch.mean(torch.sum(torch.square(x1 - c[0]), dim=1))/2)
