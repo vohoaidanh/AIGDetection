@@ -10,6 +10,7 @@ from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
 from networks.semi_supervisor import resnet_similarity, resnet_center_loss
+from networks.resnet_kmeans import resnet50_multi_branch
 
 from networks.center_loss import CenterLoss
 
@@ -97,6 +98,11 @@ def get_model(opt):
     elif opt.detect_method.lower() in ['resnet_center_loss']:
         print(f'Detect method model {opt.detect_method}')
         model = resnet_center_loss(pretrained=True)
+        return model
+    
+    elif opt.detect_method.lower() in ['resnet_kmeans']:
+        print(f'Detect method model {opt.detect_method}')
+        model = resnet50_multi_branch(pretrained=True)
         return model
 
     else:
