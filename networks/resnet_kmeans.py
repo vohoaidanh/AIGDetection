@@ -8,7 +8,7 @@ from networks.resnet_local_grad import ResNet as ResNet
 from networks.resnet_local_grad import Bottleneck as Bottleneck
 import sys
 from data import create_dataloader
-
+import pickle
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 __all__ = ['resnet50_multi_branch']
@@ -61,13 +61,27 @@ class ResnetMultiBranch(nn.Module):
     def __init__(self, num_classes=1, kmeans_center=None, **kwargs):
         super(ResnetMultiBranch,self).__init__()
         self.kmeans_center = kmeans_center
+        self.kmeans_center = self.kmeans_center.to(DEVICE)
         self.resnet = MyResnetFeatures(Bottleneck, [3, 4, 6, 3], **kwargs)
         #self.features = nn.Sequential(*list(self.resnet.children())[:-2])
         self.avgpool = self.resnet.avgpool
         num_features = 1024#self.resnet.fc.in_features
 
         self.heads =nn.ModuleList([MLPHead(input_dim = num_features, output_dim = num_classes) for _ in range(len(self.kmeans_center))])
-        
+
+        self.freeze_layers()
+
+    def freeze_layers(self):
+        for name, param in self.resnet.named_parameters():
+            if not any(layer in name for layer in ['layer3']):
+                param.requires_grad = False
+
+        # Ensure the heads are not frozen
+        for head in self.heads:
+            for param in head.parameters():
+                param.requires_grad = True
+
+
     def forward(self, x):
         feature, feature_layer3 = self.resnet(x)
         feature = self.avgpool(feature)
@@ -154,7 +168,7 @@ def resnet50_multi_branch(pretrained=True, kmeans_path=None, **kwargs):
     
     #Load center
     if kmeans_path is None:
-        kmeans_path = r'weights/kmeans_model_progan_resnet_pretrain.pkl'
+        kmeans_path = r'/content/AIGDetection/ForenSynths_train_val_24000_kmeans.pkl'
     with open(kmeans_path, 'rb') as file:
         print(f'resnet50_multi_branch Loading Kmeans centers at {kmeans_path}')
         kmeans = pickle.load(file)
@@ -214,6 +228,7 @@ def evaluate_kmeans(opt, kmeans_model, feature_extractor, val_loader):
             
     return all_labels, all_predictions
 
+
 if __name__ == '__main__':
     
     print(50*'=')
@@ -223,7 +238,10 @@ if __name__ == '__main__':
     from sklearn.cluster import MiniBatchKMeans
     import time
     import pickle
-    
+            
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
 
     def get_train_opt():
         train_opt = TrainOptions().parse()
@@ -263,97 +281,86 @@ if __name__ == '__main__':
 
 
 
-# =============================================================================
-#     #Vadilation
-#     
-#     model_path = r'NPR_kmeans_model_progan_resnet_pretrain.pkl'
-#     with open(model_path, 'rb') as file:
-#         kmeans = pickle.load(file)
-#         #kmeans.cluster_centers_ = kmeans.cluster_centers_.astype(float)
-#         
-#     
-#     def get_val_opt():
-#         val_opt = TrainOptions().parse(print_options=True)
-#         val_opt.dataroot = r'D:\Downloads\dataset\CNN_synth'
-#         val_opt.val_split = r'stylegan2'
-#         val_opt.dataroot = '{}/{}/'.format(val_opt.dataroot, val_opt.val_split)
-#         val_opt.detect_method = 'local_grad'
-#         val_opt.batch_size = 64
-#         val_opt.isTrain = False
-#         val_opt.no_resize = False
-#         val_opt.no_crop = False
-#         val_opt.serial_batches = True
-#         val_opt.classes = []
-#         val_opt.num_threads = 1
-#         
-#         return val_opt
-# 
-#     val_opt = get_val_opt()
-#     val_opt.num_threads = 0
-#     val_loader = create_dataloader(val_opt)   
-#     
-#     all_labels, all_pred = evaluate_kmeans(opt=val_opt, 
-#                                            kmeans_model=kmeans, 
-#                                            feature_extractor=feature_extractor, 
-#                                            val_loader=val_loader)    
-# 
-# 
-# =============================================================================
+    #Vadilation
     
-# =============================================================================
-# 
-#     
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-#    
-# df = pd.DataFrame(zip(all_labels, all_pred), columns=['Label', 'Value'])
-# 
-# plt.figure(figsize=(10, 6))
-# plt.title(val_opt.val_split)
-# sns.countplot(data=df, x='Value', hue='Label')
-# 
-# 
-# dataiter = iter(val_loader)  
-# x = next(dataiter) 
-# x0 = feature_extractor(x[0])
-# x0 = x0[-1].view(64,-1)
-# x0 = x0.cpu().detach().numpy()
-# 
-# cluster_centers = kmeans.cluster_centers_
-# 
-# distances = np.linalg.norm(x0[:, np.newaxis, :] - cluster_centers, axis=2)
-# distances_norm = distances/(np.max(distances, axis=1).reshape(-1,1))
-# distances_norm = 1.-distances_norm
-# np.argmin(distances, axis=1)
-# 
-# kmeans.predict(x0)
-# 
-# kmeans_center = torch.tensor(cluster_centers)[:5]
-# muti_head = ResnetMultiBranch(num_classes=1, kmeans_center=kmeans_center)
-# 
-# intens = torch.rand(6,3,224,224)
-# out,w = muti_head(x[0])
-# 
-# w.t()[33]
-# muti_head.kmeans_center
-# 
-# 
-# 
-# distances = torch.rand(3,5) 
-# sum_distances = torch.sum(distances,dim=1)
-# 
-#     
-# from networks.resnet import resnet50
-# 
-# mymodel = resnet50(pretrained=False, num_classes=1)
-# out1 = mymodel(x[0])
-# 
-# out1[0]
-# 
-# 
-# 
-# =============================================================================
+    model_path = r"D:\K32\do_an_tot_nghiep\NPR-DeepfakeDetection\weights\ForenSynths_train_val_24000_kmeans.pkl"
+    with open(model_path, 'rb') as file:
+        kmeans = pickle.load(file)
+        #kmeans.cluster_centers_ = kmeans.cluster_centers_.astype(float)
+        
+    
+    def get_val_opt():
+        val_opt = TrainOptions().parse(print_options=True)
+        val_opt.dataroot = r'D:\Downloads\dataset\CNN_synth'
+        val_opt.val_split = r'stylegan2'
+        val_opt.dataroot = '{}/{}/'.format(val_opt.dataroot, val_opt.val_split)
+        val_opt.detect_method = 'local_grad'
+        val_opt.batch_size = 64
+        val_opt.isTrain = False
+        val_opt.no_resize = False
+        val_opt.no_crop = False
+        val_opt.serial_batches = True
+        val_opt.classes = []
+        val_opt.num_threads = 1
+        
+        return val_opt
+
+    val_opt = get_val_opt()
+    val_opt.num_threads = 0
+    val_loader = create_dataloader(val_opt)   
+    
+    all_labels, all_pred = evaluate_kmeans(opt=val_opt, 
+                                           kmeans_model=kmeans, 
+                                           feature_extractor=feature_extractor, 
+                                           val_loader=val_loader)    
+
+ 
+df = pd.DataFrame(zip(all_labels, all_pred), columns=['Label', 'Value'])
+
+plt.figure(figsize=(10, 6))
+plt.title(val_opt.val_split)
+sns.countplot(data=df, x='Value', hue='Label')
+
+
+dataiter = iter(val_loader)  
+x = next(dataiter) 
+x0 = feature_extractor(x[0])
+x0 = x0[-1].view(64,-1)
+x0 = x0.cpu().detach().numpy()
+
+cluster_centers = kmeans.cluster_centers_
+
+distances = np.linalg.norm(x0[:, np.newaxis, :] - cluster_centers, axis=2)
+distances_norm = distances/(np.max(distances, axis=1).reshape(-1,1))
+distances_norm = 1.-distances_norm
+np.argmin(distances, axis=1)
+
+kmeans.predict(x0)
+
+kmeans_center = torch.tensor(cluster_centers)[:5]
+muti_head = ResnetMultiBranch(num_classes=1, kmeans_center=kmeans_center)
+
+intens = torch.rand(6,3,224,224)
+out,w = muti_head(x[0])
+
+w.t()[33]
+muti_head.kmeans_center
+
+
+
+distances = torch.rand(3,5) 
+sum_distances = torch.sum(distances,dim=1)
+
+    
+from networks.resnet import resnet50
+
+mymodel = resnet50(pretrained=False, num_classes=1)
+out1 = mymodel(x[0])
+
+out1[0]
+
+
+
 
 # =============================================================================
 # 
