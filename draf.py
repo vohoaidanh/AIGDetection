@@ -706,22 +706,31 @@ def gradient_filter(input_tensor):
 
 
 
-a = gradient_filter(torch.rand([3,3,4,4]))
-
-torch.sqrt(torch.tensor(0.01))
 
 
-import torch
-x = torch.fft.fft2(torch.rand([1,3,4,4]))
-angles = torch.angle(x)
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import IsolationForest
 
-angles.min()
+# Tạo dữ liệu mẫu
+data = pd.DataFrame({
+    'feature1': np.random.randn(100),
+    'feature2': np.random.randn(100)
+})
 
+# Thêm một vài điểm bất thường
+data.iloc[95:, :] = data.iloc[95:, :] + 3
 
+# Khởi tạo mô hình Isolation Forest
+model = IsolationForest(contamination=0.05)
+model.fit(data)
 
+# Dự đoán
+data['anomaly'] = model.predict(data)
+data['anomaly'] = data['anomaly'].apply(lambda x: 1 if x == -1 else 0)
 
-
-
-
+# Hiển thị các điểm bất thường
+anomalies = data[data['anomaly'] == 1]
+print(anomalies)
 
 

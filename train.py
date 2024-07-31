@@ -78,6 +78,7 @@ if __name__ == '__main__':
     # model.eval();testmodel();
     model.train()
     print(f'cwd: {os.getcwd()}')
+    early_stop_count = 0
     for epoch in range(opt.niter):
         epoch_start_time = time.time()
         iter_data_time = time.time()
@@ -107,13 +108,18 @@ if __name__ == '__main__':
         val_writer.add_scalar('ap', ap, model.total_steps)
         print("(Val @ epoch {}) acc: {}; ap: {}".format(epoch, acc, ap))
         model.save_networks('last')
-        if acc>best_acc:
+        if acc>=best_acc:
             print(f'acc increate {best_acc} --> {acc}, saving best model')
             best_acc = acc
             model.save_networks(f'{epoch}_best')
+            early_stop_count = 0
         else:
-            model.save_networks(f'{epoch}')
-
+            early_stop_count += 1
+            print(f'early stop count {early_stop_count}/{opt.earlystop_epoch}')
+            
+        if early_stop_count == opt.earlystop_epoch:
+            print(f'Early stop at epoch {epoch}')
+            break
         # testmodel()
         model.train()
 
