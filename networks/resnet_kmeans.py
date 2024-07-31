@@ -6,6 +6,8 @@ import numpy as np
 from networks.local_grad import *
 from networks.resnet_local_grad import ResNet as ResNet
 from networks.resnet_local_grad import Bottleneck as Bottleneck
+from networks.inception import inception_local_grad
+
 import sys
 from data import create_dataloader
 import pickle
@@ -267,94 +269,106 @@ def evaluate_kmeans(opt, kmeans_model, feature_extractor, val_loader):
 
 
 
+
+if __name__ == '__main__':
+    
+    print(50*'=')
+
+    from options.train_options import TrainOptions
+    from util import get_model
+    import torch
+    from sklearn.cluster import MiniBatchKMeans
+    import time
+    import pickle
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    def get_train_opt():
+        train_opt = TrainOptions().parse()
+        train_opt.dataroot = 'D:\Downloads\dataset\progan_val_4_class'
+        train_opt.detect_method = 'local_grad'
+        train_opt.batch_size = 320
+        train_opt.num_threads = 1
+        train_opt.kmean_model_name  ='inception_kmeans'
+        return train_opt
+    
+    
+    train_opt = get_train_opt()
+    train_loader = create_dataloader(train_opt)
+    #model = resnet50_local_grad(pretrained=True, num_classes=1)
+    model = inception_local_grad(pretrained=True, num_classes=1)
+    
+    #model.load_state_dict(torch.load(r'model_epoch_last_3090.pth', map_location='cpu'), strict=True)
+
+    feature_extractor =  FeatureExtractor(model, [model.avgpool])   
+    feature_extractor.to(DEVICE)
+    feature_extractor.eval()
+    #Create kmeans model
+    kmeans_model = MiniBatchKMeans(n_clusters=5,
+                                   random_state=0,
+                                   batch_size=train_opt.batch_size,
+                                   n_init="auto")
+
+    
+    #Save Kmeans model after trained
+    kmeans = train(opt=train_opt, 
+                   kmeans_model=kmeans_model, 
+                   feature_extractor=feature_extractor, 
+                   train_loader=train_loader)  
+    with open(f'{train_opt.kmean_model_name}.pkl', 'wb') as f:
+        pickle.dump(kmeans, f)
+    
+
+
+
+    #Vadilation
+    model = inception_local_grad(pretrained=True, num_classes=1)
+    
+    #model.load_state_dict(torch.load(r'model_epoch_last_3090.pth', map_location='cpu'), strict=True)
+
+    feature_extractor =  FeatureExtractor(model, [model.avgpool])   
+    feature_extractor.to(DEVICE)
+    feature_extractor.eval()
+    
+    model_path = r"D:/K32/do_an_tot_nghiep/NPR-DeepfakeDetection/networks/inception_kmeans.pkl"
+    with open(model_path, 'rb') as file:
+        kmeans = pickle.load(file)
+        #kmeans.cluster_centers_ = kmeans.cluster_centers_.astype(float)
+        
+    
+    def get_val_opt():
+        val_opt = TrainOptions().parse(print_options=True)
+        val_opt.dataroot = r'D:\Downloads\dataset\CNN_synth'
+        val_opt.val_split = r'cyclegan'
+        val_opt.dataroot = '{}/{}/'.format(val_opt.dataroot, val_opt.val_split)
+        val_opt.detect_method = 'local_grad'
+        val_opt.batch_size = 64
+        val_opt.isTrain = False
+        val_opt.no_resize = False
+        val_opt.no_crop = False
+        val_opt.serial_batches = True
+        val_opt.classes = []
+        val_opt.num_threads = 1
+        
+        return val_opt
+
+    val_opt = get_val_opt()
+    val_opt.num_threads = 0
+    val_loader = create_dataloader(val_opt)   
+    
+    all_labels, all_pred = evaluate_kmeans(opt=val_opt, 
+                                           kmeans_model=kmeans, 
+                                           feature_extractor=feature_extractor, 
+                                           val_loader=val_loader)    
+
+    df = pd.DataFrame(zip(all_labels, all_pred), columns=['Label', 'Value'])
+    plt.figure(figsize=(10, 6))
+    plt.title(val_opt.val_split)
+    sns.countplot(data=df, x='Value', hue='Label')
+    
+    
 # =============================================================================
-# 
-# if __name__ == '__main__':
-#     
-#     print(50*'=')
-#     from options.train_options import TrainOptions
-#     from util import get_model
-#     import torch
-#     from sklearn.cluster import MiniBatchKMeans
-#     import time
-#     import pickle
-#             
-#     import pandas as pd
-#     import matplotlib.pyplot as plt
-#     import seaborn as sns
-# 
-#     def get_train_opt():
-#         train_opt = TrainOptions().parse()
-#         train_opt.dataroot = 'D:\Downloads\dataset\progan_val_4_class'
-#         train_opt.detect_method = 'local_grad'
-#         train_opt.batch_size = 320
-#         train_opt.num_threads = 1
-#         train_opt.kmean_model_name  ='NPR_kmeans_model_progan_resnet_pretrain'
-#         return train_opt
-#     
-#     
-#     train_opt = get_train_opt()
-#     train_loader = create_dataloader(train_opt)
-#     model = resnet50_local_grad(pretrained=True, num_classes=1)
-#     
-#     #model.load_state_dict(torch.load(r'model_epoch_last_3090.pth', map_location='cpu'), strict=True)
-# 
-#     feature_extractor =  FeatureExtractor(model, [model.avgpool])   
-#     feature_extractor.to(DEVICE)
-#     feature_extractor.eval()
-#     #Create kmeans model
-#     kmeans_model = MiniBatchKMeans(n_clusters=5,
-#                                    random_state=0,
-#                                    batch_size=train_opt.batch_size,
-#                                    n_init="auto")
-# 
-#     
-#     #Save Kmeans model after trained
-#     kmeans = train(opt=train_opt, 
-#                    kmeans_model=kmeans_model, 
-#                    feature_extractor=feature_extractor, 
-#                    train_loader=train_loader)  
-#     with open(f'{train_opt.kmean_model_name}.pkl', 'wb') as f:
-#         pickle.dump(kmeans, f)
-# 
-#     
-# 
-# 
-# 
-#     #Vadilation
-#     
-#     model_path = r"D:\K32\do_an_tot_nghiep\NPR-DeepfakeDetection\weights\ForenSynths_train_val_24000_kmeans.pkl"
-#     with open(model_path, 'rb') as file:
-#         kmeans = pickle.load(file)
-#         #kmeans.cluster_centers_ = kmeans.cluster_centers_.astype(float)
-#         
-#     
-#     def get_val_opt():
-#         val_opt = TrainOptions().parse(print_options=True)
-#         val_opt.dataroot = r'D:\Downloads\dataset\CNN_synth'
-#         val_opt.val_split = r'stylegan2'
-#         val_opt.dataroot = '{}/{}/'.format(val_opt.dataroot, val_opt.val_split)
-#         val_opt.detect_method = 'local_grad'
-#         val_opt.batch_size = 64
-#         val_opt.isTrain = False
-#         val_opt.no_resize = False
-#         val_opt.no_crop = False
-#         val_opt.serial_batches = True
-#         val_opt.classes = []
-#         val_opt.num_threads = 1
-#         
-#         return val_opt
-# 
-#     val_opt = get_val_opt()
-#     val_opt.num_threads = 0
-#     val_loader = create_dataloader(val_opt)   
-#     
-#     all_labels, all_pred = evaluate_kmeans(opt=val_opt, 
-#                                            kmeans_model=kmeans, 
-#                                            feature_extractor=feature_extractor, 
-#                                            val_loader=val_loader)    
-# 
-#  
 # df = pd.DataFrame(zip(all_labels, all_pred), columns=['Label', 'Value'])
 # 
 # plt.figure(figsize=(10, 6))
@@ -399,8 +413,8 @@ def evaluate_kmeans(opt, kmeans_model, feature_extractor, val_loader):
 # 
 # out1[0]
 # 
+# 
 # =============================================================================
-
 
 
 # =============================================================================

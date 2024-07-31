@@ -6,6 +6,29 @@ from torchvision.models import Inception_V3_Weights
 from networks.local_grad import gradient_filter
 #import torch.nn.functional as F
 
+def split_and_shuffle_image_tensor(image_tensor, grid_size=8):
+    # Lấy kích thước của ảnh
+    batch_size, channels, height, width = image_tensor.shape
+    
+    # Chia ảnh thành các ô
+    cell_height = height // grid_size
+    cell_width = width // grid_size
+    
+    # Chia tensor ảnh thành các ô nhỏ
+    cells = image_tensor.unfold(2, cell_height, cell_height).unfold(3, cell_width, cell_width)
+    
+    # Chuyển các ô thành danh sách để dễ dàng xáo trộn
+    cells = cells.permute(0, 2, 3, 1, 4, 5).contiguous().view(batch_size, -1, channels, cell_height, cell_width)
+    
+    # Xáo trộn danh sách các ô
+    shuffled_indices = torch.randperm(cells.size(1))
+    shuffled_cells = cells[:, shuffled_indices]
+    
+    # Ghép các ô đã xáo trộn lại thành ảnh
+    shuffled_image = shuffled_cells.view(batch_size, grid_size, grid_size, channels, cell_height, cell_width)
+    shuffled_image = shuffled_image.permute(0, 3, 1, 4, 2, 5).contiguous().view(batch_size, channels, height, width)
+    
+    return shuffled_image
 
 class MLPHead(nn.Module):
     def __init__(self, input_dim, output_dim):
@@ -21,13 +44,15 @@ class Clf_model(nn.Module):
     
     def __init__(self, original_model, num_classes=1):
         super(Clf_model, self).__init__()
+        self.preprocess = split_and_shuffle_image_tensor
         self.gradient_filter = gradient_filter
-        input_dim = 768
-        self.features = nn.Sequential(*list(original_model.children())[:-7])
+        input_dim = 80
+        self.features = nn.Sequential(*list(original_model.children())[:5])
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.head = MLPHead(input_dim=input_dim, output_dim=num_classes)
         
     def forward(self,x):
+        x = self.preprocess(x)
         x = self.gradient_filter(x)
         x = self.features(x)
         x = self.avgpool(x)

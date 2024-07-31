@@ -706,31 +706,76 @@ def gradient_filter(input_tensor):
 
 
 
+import torch
+import torch.nn.functional as F
+import torch
+import torchvision.transforms as transforms
+from PIL import Image
+import matplotlib.pyplot as plt
 
+def split_and_shuffle_image_tensor(image_tensor, grid_size=4):
+    # Lấy kích thước của ảnh
+    batch_size, channels, height, width = image_tensor.shape
+    
+    # Chia ảnh thành các ô
+    cell_height = height // grid_size
+    cell_width = width // grid_size
+    
+    # Chia tensor ảnh thành các ô nhỏ
+    cells = image_tensor.unfold(2, cell_height, cell_height).unfold(3, cell_width, cell_width)
+    
+    # Chuyển các ô thành danh sách để dễ dàng xáo trộn
+    cells = cells.permute(0, 2, 3, 1, 4, 5).contiguous().view(batch_size, -1, channels, cell_height, cell_width)
+    
+    # Xáo trộn danh sách các ô
+    shuffled_indices = torch.randperm(cells.size(1))
+    shuffled_cells = cells[:, shuffled_indices]
+    
+    # Ghép các ô đã xáo trộn lại thành ảnh
+    shuffled_image = shuffled_cells.view(batch_size, grid_size, grid_size, channels, cell_height, cell_width)
+    shuffled_image = shuffled_image.permute(0, 3, 1, 4, 2, 5).contiguous().view(batch_size, channels, height, width)
+    
+    return shuffled_image
 
-import numpy as np
-import pandas as pd
-from sklearn.ensemble import IsolationForest
+# Ví dụ sử dụng
+image_tensor = torch.randn(2,3, 8, 8)  # Tạo một tensor ảnh ngẫu nhiên 3 kênh (RGB), kích thước 64x64
+shuffled_image_tensor = split_and_shuffle_image_tensor(image_tensor)
 
-# Tạo dữ liệu mẫu
-data = pd.DataFrame({
-    'feature1': np.random.randn(100),
-    'feature2': np.random.randn(100)
-})
+print(shuffled_image_tensor.shape)  # Kiểm tra kích thước ảnh đã xáo trộn
 
-# Thêm một vài điểm bất thường
-data.iloc[95:, :] = data.iloc[95:, :] + 3
+# Tải ảnh và chuyển đổi thành tensor
+image_path = r"D:\K32\do_an_tot_nghiep\data\real_gen_dataset\train\0_real\000609286.jpg"  # Đặt đường dẫn tới ảnh của bạn ở đây
+image = Image.open(image_path)
 
-# Khởi tạo mô hình Isolation Forest
-model = IsolationForest(contamination=0.05)
-model.fit(data)
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+])
 
-# Dự đoán
-data['anomaly'] = model.predict(data)
-data['anomaly'] = data['anomaly'].apply(lambda x: 1 if x == -1 else 0)
+image_tensor = transform(image).unsqueeze(0)  # Thêm trục batch
 
-# Hiển thị các điểm bất thường
-anomalies = data[data['anomaly'] == 1]
-print(anomalies)
+# Sử dụng hàm chia và xáo trộn ảnh
+shuffled_image_tensor = split_and_shuffle_image_tensor(image_tensor)
+
+# Chuyển tensor thành ảnh để hiển thị
+unloader = transforms.ToPILImage()
+
+original_image = unloader(image_tensor.squeeze(0))
+shuffled_image = unloader(shuffled_image_tensor.squeeze(0))
+
+# Hiển thị ảnh trước và sau khi xáo trộn
+plt.figure(figsize=(8, 4))
+
+plt.subplot(1, 2, 1)
+plt.title('Original Image')
+plt.imshow(original_image)
+
+plt.subplot(1, 2, 2)
+plt.title('Shuffled Image')
+plt.imshow(shuffled_image)
+
+plt.show()
+
+#"D:\K32\do_an_tot_nghiep\NPR-DeepfakeDetection\experiment\images\Local_grad_kmeans_pretrained\Figure 2024-07-29 085228.png"
 
 
