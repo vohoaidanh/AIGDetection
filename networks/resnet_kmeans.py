@@ -39,8 +39,8 @@ class MyResnetFeatures(ResNet):
         x = self.relu(x)
         x = self.maxpool(x)
         
-        x = self.layer1(x)
-        feature_layer2 = self.layer2(x)
+        feature_layer1 = self.layer1(x)
+        feature_layer2 = self.layer2(feature_layer1)
         feature_layer3 = self.layer3(feature_layer2)
         
         return feature_layer2, feature_layer3
@@ -226,14 +226,17 @@ def resnet50_multi_branch(pretrained=True, kmeans_path=None, **kwargs):
 
 def train (opt, kmeans_model, feature_extractor, train_loader):
     from tqdm import tqdm
-
+    avgpool = nn.AdaptiveAvgPool2d((1,1))
+    
+    
     for data in tqdm(train_loader):
         #print(time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()),f'Epoch : {i}')
         with torch.no_grad():
             in_tens = data[0].to(DEVICE)
             bz,c,h,w = data[0].shape
-            batch_features = feature_extractor(in_tens)
-            batch_features = batch_features[-1].view(bz,-1)
+            batch_features = feature_extractor(in_tens)[-1]
+            batch_features = avgpool(batch_features).detach()
+            batch_features = batch_features.view(bz,-1)
             batch_features_cpu = batch_features.cpu().numpy()
             kmeans_model.partial_fit(batch_features_cpu)
     feature_extractor.remove_hooks()
@@ -245,14 +248,16 @@ def evaluate_kmeans(opt, kmeans_model, feature_extractor, val_loader):
     all_labels = []
     all_predictions = []
     #kmeans_model.cluster_centers_ = kmeans_model.cluster_centers_.astype(float)
-   
+    avgpool = nn.AdaptiveAvgPool2d((1,1))
+
     for i, data in enumerate(val_loader):
         print(time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()),f'Epoch : {i}')
         with torch.no_grad():
             in_tens = data[0].to(DEVICE)
             bz,c,h,w = data[0].shape
-            batch_features = feature_extractor(in_tens)
-            batch_features = batch_features[-1].view(bz,-1)
+            batch_features = feature_extractor(in_tens)[-1]
+            batch_features = avgpool(batch_features).detach()
+            batch_features = batch_features.view(bz,-1)
             batch_features_cpu = batch_features.cpu().numpy()
             
             print(f'batch_features_cpu shape: {batch_features_cpu.shape}')
@@ -290,21 +295,22 @@ if __name__ == '__main__':
         train_opt.detect_method = 'local_grad'
         train_opt.batch_size = 320
         train_opt.num_threads = 1
-        train_opt.kmean_model_name  ='inception_kmeans'
+        train_opt.kmean_model_name  ='resnet_kmeans_noconnection'
         return train_opt
     
     
     train_opt = get_train_opt()
     train_loader = create_dataloader(train_opt)
-    #model = resnet50_local_grad(pretrained=True, num_classes=1)
-    model = inception_local_grad(pretrained=True, num_classes=1)
+    model = resnet50_local_grad(pretrained=True, num_classes=1)
+    #model = inception_local_grad(pretrained=True, num_classes=1)
     
     #model.load_state_dict(torch.load(r'model_epoch_last_3090.pth', map_location='cpu'), strict=True)
 
-    feature_extractor =  FeatureExtractor(model, [model.avgpool])   
+    feature_extractor =  FeatureExtractor(model, [model.layer1])   
     feature_extractor.to(DEVICE)
     feature_extractor.eval()
     #Create kmeans model
+    
     kmeans_model = MiniBatchKMeans(n_clusters=5,
                                    random_state=0,
                                    batch_size=train_opt.batch_size,
@@ -323,15 +329,20 @@ if __name__ == '__main__':
 
 
     #Vadilation
-    model = inception_local_grad(pretrained=True, num_classes=1)
+    model = resnet50_local_grad(pretrained=True, num_classes=1)
+    #model = inception_local_grad(pretrained=True, num_classes=1)
     
     #model.load_state_dict(torch.load(r'model_epoch_last_3090.pth', map_location='cpu'), strict=True)
 
-    feature_extractor =  FeatureExtractor(model, [model.avgpool])   
+    feature_extractor =  FeatureExtractor(model, [model.layer1])   
     feature_extractor.to(DEVICE)
     feature_extractor.eval()
     
-    model_path = r"D:/K32/do_an_tot_nghiep/NPR-DeepfakeDetection/networks/inception_kmeans.pkl"
+    
+    #batch_features = feature_extractor(torch.rand(4,3,224,224))
+    #out = model.avgpool(batch_features[-1])
+    
+    model_path = r"D:/K32/do_an_tot_nghiep/NPR-DeepfakeDetection/networks/resnet_kmeans_noconnection.pkl"
     with open(model_path, 'rb') as file:
         kmeans = pickle.load(file)
         #kmeans.cluster_centers_ = kmeans.cluster_centers_.astype(float)
@@ -339,8 +350,8 @@ if __name__ == '__main__':
     
     def get_val_opt():
         val_opt = TrainOptions().parse(print_options=True)
-        val_opt.dataroot = r'D:\Downloads\dataset\CNN_synth'
-        val_opt.val_split = r'cyclegan'
+        val_opt.dataroot = r'D:\Downloads\dataset\progan_val_4_class'
+        val_opt.val_split = r'train'
         val_opt.dataroot = '{}/{}/'.format(val_opt.dataroot, val_opt.val_split)
         val_opt.detect_method = 'local_grad'
         val_opt.batch_size = 64

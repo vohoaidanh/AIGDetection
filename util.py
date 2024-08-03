@@ -67,8 +67,8 @@ def get_model(opt):
         
     elif opt.detect_method.lower() in ['local_grad']:
         print(f'Detect method model {opt.detect_method}')
-        #model = resnet50_local_grad(pretrained=False, num_classes=1)
-        model = inception_local_grad(pretrained=True, num_classes=1)
+        model = resnet50_local_grad(pretrained=False, num_classes=1)
+        #model = inception_local_grad(pretrained=True, num_classes=1)
         return model
     
     elif opt.detect_method.lower() in ['experiment_01']:

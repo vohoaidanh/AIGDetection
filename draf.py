@@ -778,4 +778,83 @@ plt.show()
 
 #"D:\K32\do_an_tot_nghiep\NPR-DeepfakeDetection\experiment\images\Local_grad_kmeans_pretrained\Figure 2024-07-29 085228.png"
 
+torch.sin(torch.linalg(1,10)))
 
+
+
+
+x = torch.linspace(-50, 50,1000)
+y = torch.sin(x)
+z = torch.sigmoid(x)
+
+plt.plot(1*y*z+0.5*z)
+plt.plot(y.view(-1))
+
+import torch
+import torch.nn as nn
+
+class SinActivation(nn.Module):
+    def forward(self, x):
+        return torch.sin(x) * nn.Sigmoid()(x)
+
+sin = SinActivation()
+
+
+
+def newrelu(x):
+    y = torch.max(torch.tensor(0.0), x)
+    z = torch.max(torch.tensor(10.0), x)
+    return y + torch.sin(z)
+
+
+plt.plot(newrelu(x))
+plt.plot(x,torch.max(torch.tensor(0.0), x))
+plt.plot(x,torch.max(torch.tensor(0.0), x)+2*torch.sin(torch.max(torch.tensor(0.0), x)))
+plt.plot(x,torch.max(torch.tensor(0.0), x))
+plt.plot(x,0.5*torch.max(torch.tensor(0.0), x) + 0.5*torch.sin(x))
+
+
+
+
+print(50*'=')
+
+from options.train_options import TrainOptions
+from util import get_model
+import torch
+from sklearn.cluster import MiniBatchKMeans
+import time
+import pickle
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def get_train_opt():
+    train_opt = TrainOptions().parse()
+    train_opt.dataroot = 'D:\Downloads\dataset\progan_val_4_class'
+    train_opt.detect_method = 'local_grad'
+    train_opt.batch_size = 2
+    train_opt.num_threads = 1
+    train_opt.kmean_model_name  ='resnet_kmeans_noconnection'
+    train_opt.mode = 'custom'
+    return train_opt
+
+
+train_opt = get_train_opt()
+from data import create_dataloader
+
+train_loader = create_dataloader(train_opt)
+
+dataiter = iter(train_loader)
+sample = next(dataiter)
+
+a = sample[0][0][2:5]
+a = x[0][2:5]
+
+import matplotlib.pyplot as plt
+import numpy as np
+image_np = a.permute(1, 2, 0).numpy()
+
+# Vẽ ảnh
+plt.imshow(image_np)
+plt.axis('off')  # Tắt trục
+plt.show()
