@@ -9,6 +9,7 @@ from networks.resnet_local_grad import resnet50_local_grad
 from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
+from networks.resnet_attention import simple_vit
 from networks.semi_supervisor import resnet_similarity, resnet_center_loss
 from networks.resnet_kmeans import resnet50_multi_branch
 from networks.inception import inception_local_grad
@@ -104,6 +105,11 @@ def get_model(opt):
     elif opt.detect_method.lower() in ['resnet_kmeans']:
         print(f'Detect method model {opt.detect_method}')
         model = resnet50_multi_branch(pretrained=True)
+        return model
+    
+    elif opt.detect_method.lower() in ['vit']:
+        print(f'Detect method model {opt.detect_method}')
+        model = simple_vit()
         return model
 
     else:

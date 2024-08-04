@@ -146,5 +146,25 @@ plt.imshow(gaussian_matrix)
 
 
 
+import clip
+import torch
+
+# Tải mô hình CLIP
+model, preprocess = clip.load("ViT-B/32", device="cpu")
+
+
+# Duyệt qua các module và in ra những module có tên chứa "ln_2"
+for name, module in model.visual.named_modules():
+    if "ln_2" in name:
+        print(name, module)
+        print(20*'-')
+    else:
+        print(name, module)
+
+
+
+
+
+
 
 
