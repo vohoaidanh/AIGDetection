@@ -9,7 +9,8 @@ from PIL import Image
 from PIL import ImageFile
 from scipy.ndimage.filters import gaussian_filter
 from torchvision.transforms import InterpolationMode
-import random
+import random as rrandom
+from tqdm import tqdm
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def dataset_folder(opt, root):
@@ -150,7 +151,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 class CustomDataset(Dataset):
-    def __init__(self, root, transform=None, num_samples=2):
+    def __init__(self, root, transform=None, num_samples=1):
         # Khởi tạo dataset từ thư mục
         self.dataset = datasets.ImageFolder(root=root, transform=transform)
         self.transform = transform
@@ -163,15 +164,35 @@ class CustomDataset(Dataset):
         indices_by_class = {class_idx: [] for class_idx in range(len(self.dataset.classes))}
         
         # Phân loại các chỉ số ảnh theo lớp
-        for idx, (img, label) in enumerate(self.dataset):
+        for idx, (path, label) in tqdm(enumerate(self.dataset.samples), total=len(self.dataset.samples), desc="Processing images"):
             indices_by_class[label].append(idx)
-        
         
         return indices_by_class
 
     def __len__(self):
         # Trả về số lượng batch (chỉ số ảnh)
         return len(self.dataset)  # hoặc số lượng batch tùy ý
+    
+    def combine_fft(self,main_img, ref_img):
+        
+        # Thực hiện biến đổi Fourier cho ảnh thứ nhất
+        fft_img1 = torch.fft.fft2(main_img)
+        #magnitude_img1 = torch.abs(fft_img1)
+        phase_img1 = torch.angle(fft_img1)
+        
+        # Thực hiện biến đổi Fourier cho ảnh thứ hai
+        fft_img2 = torch.fft.fft2(ref_img)
+        magnitude_img2 = torch.abs(fft_img2)
+        #phase_img2 = torch.angle(fft_img2)
+        
+        
+        real = magnitude_img2 * torch.cos(phase_img1)
+        imag = magnitude_img2 * torch.sin(phase_img1)
+        
+        combined_fft = torch.complex(real, imag)
+        combined_image = torch.fft.ifft2(combined_fft)
+
+        return torch.abs(combined_image)
 
     def __getitem__(self, idx):
             # Lấy ảnh và nhãn từ chỉ số idx
@@ -196,18 +217,19 @@ class CustomDataset(Dataset):
             
             # Thêm ảnh bổ sung vào danh sách
             for index in additional_indices:
-                img, _ = self.dataset[index]
-                if isinstance(img, torch.Tensor):
-                    img = img
+                img2, _ = self.dataset[index]
+                if isinstance(img2, torch.Tensor):
+                    img2 = img2
                 else:
                     if self.transform:
-                        img = self.transform(img)
-                images.append(img)
-            
+                        img2 = self.transform(img2)
+                images.append(img2)
+
 
                 #labels.append(label)
-            random.shuffle(images)
-            images_tensor = torch.cat(images, dim=0)
+            rrandom.shuffle(images)
+            #images_tensor = torch.cat(images, dim=0)
+            images_tensor = self.combine_fft(img, images[-1])
             # Trả về một batch chứa các ảnh và nhãn
             return images_tensor, label
 
@@ -242,3 +264,5 @@ def my_binary_dataset(opt, root):
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]))
     return dset
+
+

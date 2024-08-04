@@ -296,6 +296,7 @@ if __name__ == '__main__':
         train_opt.batch_size = 320
         train_opt.num_threads = 1
         train_opt.kmean_model_name  ='resnet_kmeans_noconnection'
+        train_opt.mode = 'binary'
         return train_opt
     
     
@@ -377,6 +378,12 @@ if __name__ == '__main__':
     plt.figure(figsize=(10, 6))
     plt.title(val_opt.val_split)
     sns.countplot(data=df, x='Value', hue='Label')
+    
+    
+    #dataiter = iter(train_loader)
+    #samples = next(dataiter)
+    #samples = samples[0]
+    
     
     
 # =============================================================================

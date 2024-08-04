@@ -217,13 +217,20 @@ def resnet50_local_grad_new(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
-    model.conv1 =  nn.Conv2d(9, 64, kernel_size=3, stride=2, padding=1, bias=False)
-
 
     if pretrained:
+        print('load resnet50 pretrain weight')
         state_dict = model_zoo.load_url(model_urls['resnet50'])
         new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['fc', 'layer3', 'layer4'])}
         model.load_state_dict(new_state_dict,strict=False)
+        
+    resnet_conv1_weights = model.conv1.weight.data
+    model.conv1 =  nn.Conv2d(9, 64, kernel_size=7, stride=2, padding=3, bias=False)
+    with torch.no_grad():
+        model.conv1.weight[:, :3, :, :] = resnet_conv1_weights
+        model.conv1.weight[:, 3:6, :, :] = resnet_conv1_weights
+        model.conv1.weight[:, 6:9, :, :] = resnet_conv1_weights
+
     return model
 
 
@@ -235,6 +242,9 @@ def resnet101(pretrained=False, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['resnet101']))
+    
+ 
+
     return model
 
 
@@ -256,12 +266,11 @@ if __name__ == '__main__':
     opt = TrainOptions().parse()
     opt.detect_method = 'local_grad'
     model = get_model(opt)
-    
+    #model = resnet50_local_grad_new(pretrained=True)
+
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
-    
-    
-       
+
     
     
     
