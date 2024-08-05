@@ -163,6 +163,31 @@ for name, module in model.visual.named_modules():
 
 
 
+from transformers import ViTImageProcessor, ViTForImageClassification
+from PIL import Image
+import requests
+
+url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
+image = Image.open(requests.get(url, stream=True).raw)
+
+processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
+model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
+model.classifier = nn.Linear(768,1,bias=True)
+image = torch.rand(12,3,224,224)
+inputs = processor(images=image, return_tensors="pt",do_rescale=False)
+
+outputs = model(input_tensor)
+logits = outputs.logits
+# model predicts one of the 1000 ImageNet classes
+predicted_class_idx = logits.argmax(-1).item()
+
+print("Predicted class:", model.config.id2label[predicted_class_idx])
+
+input_tensor = inputs['pixel_values']
+
+
+torch.max(input_tensor/12, dim=0)
+
 
 
 

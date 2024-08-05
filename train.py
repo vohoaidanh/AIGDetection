@@ -30,9 +30,8 @@ def seed_torch(seed=1029):
 # test config
 #vals = ['progan', 'stylegan', 'stylegan2', 'biggan', 'cyclegan', 'stargan', 'gaugan', 'deepfake']
 #multiclass = [1, 1, 1, 0, 1, 0, 0, 0] # 1 is dataset have multiclass like car, cat,  hourse...
-vals = ['biggan']
-multiclass = [0]
-
+vals = ['stylegan', 'stylegan2', 'biggan', 'cyclegan', 'stargan', 'gaugan', 'deepfake']
+multiclass = [1, 1, 0, 1, 0, 0, 0] # 1 is dataset have multiclass like car, cat,  hourse...
 
 def get_val_opt():
     val_opt = TrainOptions().parse(print_options=False)
