@@ -6,11 +6,12 @@ from torch import nn
 from einops import rearrange
 from einops.layers.torch import Rearrange
 from networks.local_grad import gradient_filter
-
+from networks.resnet_local_grad import resnet50_local_grad
 #from networks.resnet import resnet18
 # helpers
 #######################################
 from transformers import ViTImageProcessor, ViTForImageClassification
+from torchvision import models
 
 
 def pair(t):
@@ -27,17 +28,63 @@ def posemb_sincos_2d(h, w, dim, temperature: int = 10000, dtype = torch.float32)
     pe = torch.cat((x.sin(), x.cos(), y.sin(), y.cos()), dim=1)
     return pe.type(dtype)
 
+class Head(nn.Module):
+    def __init__(self, in_features, out_features):
+        super(Head, self).__init__()
+        self.branch0 = nn.Linear(in_features, out_features)
+        self.branch1 = nn.Linear(in_features, out_features)
+        
 
-def conv3x3(in_planes, out_planes, stride=1):
-    """3x3 convolution with padding"""
-    return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
-                     padding=1, bias=False)
+    def forward(self, x):
+        return 0.5*(self.branch0(x) + self.branch1(x))
+    
+class ModelCLF(nn.Module):
+    def __init__(self, num_classes=1):
+        super(ModelCLF, self).__init__()
+        self.resnet = resnet50_local_grad(pretrained=True)
+        self.resnet = nn.Sequential(*list(self.resnet.children())[:-1])
+        self.head = Head(in_features=512, out_features=num_classes)
+    def forward(self, x):
+        # Extract features using ResNet
+        features = self.resnet(x)
+        # Flatten the features for MLP
+        features = features.view(features.size(0), -1)
+        # Pass features through MLP head
+        out = self.head(features)
+        return out
 
 
-def conv1x1(in_planes, out_planes, stride=1):
-    """1x1 convolution"""
-    return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
+class SmallCNN(nn.Module):
+    def __init__(self, c, patch_high, patch_width, embedding_size):
+        super(SmallCNN, self).__init__()
+        # Load the pretrained ResNet-18 model
+        self.resnet = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+        self.resnet = nn.Sequential(*list(self.resnet.children())[:6])
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(128, embedding_size)  # ResNet-18 outputs 512 features
 
+        
+
+    def forward(self, x):
+        # Xử lý input có kích thước [batch_size, seq_leng, c, patch_high, patch_width]
+        batch_size, seq_leng, c, patch_high, patch_width = x.size()
+        
+        # Reshape đầu vào để [batch_size * seq_leng, c, patch_high, patch_width]
+        x = x.view(batch_size * seq_leng, c, patch_high, patch_width)
+           
+        x = self.resnet(x)
+        x = self.avgpool(x)
+        # Flatten để đưa vào fully connected layer
+        x = x.view(batch_size * seq_leng, -1)  # [batch_size * seq_leng, 128 * patch_high * patch_width]
+        #x = x.view(x.size(0), -1)
+
+        # Đưa vào fully connected layer để lấy embedding
+        x = self.fc(x)
+        
+        # Reshape để đưa về kích thước [batch_size, seq_leng, embedding_size]
+        x = x.view(batch_size, seq_leng, -1)
+        
+        return x
 
 # classes
 
@@ -98,7 +145,7 @@ class Transformer(nn.Module):
         return self.norm(x)
 
 class SimpleViT(nn.Module):
-    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, channels = 3, dim_head = 64):
+    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, channels = 3, dim_head = 64, **kwargs):
         super().__init__()
         image_height, image_width = pair(image_size)
         patch_height, patch_width = pair(patch_size)
@@ -109,10 +156,13 @@ class SimpleViT(nn.Module):
         self.gradient_filter = gradient_filter
         
         self.to_patch_embedding = nn.Sequential(
-            Rearrange("b c (h p1) (w p2) -> b (h w) (p1 p2 c)", p1 = patch_height, p2 = patch_width),
-            nn.LayerNorm(patch_dim),
-            nn.Linear(patch_dim, dim),
-            nn.LayerNorm(dim),
+            #Rearrange("b c (h p1) (w p2) -> b (h w) (p1 p2 c)", p1 = patch_height, p2 = patch_width),
+            #nn.LayerNorm(patch_dim),
+            #nn.Linear(patch_dim, dim),
+            #nn.LayerNorm(dim),
+            #######################
+            Rearrange("b c (h p1) (w p2) -> b (h w) c p1 p2", p1 = patch_height, p2 = patch_width),
+            SmallCNN(c=3, patch_high=patch_height, patch_width=patch_width, embedding_size=dim)
         )
 
         self.pos_embedding = posemb_sincos_2d(
@@ -141,20 +191,26 @@ class SimpleViT(nn.Module):
         return self.linear_head(x)
     
     
-def simple_vit(pretrained=False, **kwargs):
+def simple_vit(pretrained=False, image_size=224, patch_size=56, num_classes=1,embedding_dim=128, mlp_dim=256, **kwargs):
     """Constructs a ResNet-50 model.
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = SimpleViT(
-        image_size = 224,
-        patch_size = 28,
-        num_classes = 1,
-        dim = 512,
+        image_size = image_size,
+        patch_size = patch_size,
+        num_classes = num_classes,
+        dim = embedding_dim,
         depth = 6,
         heads = 16,
-        mlp_dim = 512
+        mlp_dim = mlp_dim,
+        **kwargs
     )
+    
+    for name, param in model.named_parameters():
+        if 'resnet' in name:
+            param.requires_grad = False
+    
 
     return model
 
@@ -175,11 +231,12 @@ class PretrainVit(nn.Module):
 def pretrain_vit(**kwargs): 
     model = PretrainVit(**kwargs)
     
-    #exclude_layers = ['classifier', 'layer.10', 'layer.11']
-    exclude_layers = []
-    for name, param in model.named_parameters():
-        if not any(exclude_layer in name for exclude_layer in exclude_layers):
-               param.requires_grad = False
+    exclude_layers = ['classifier', 'layer.10', 'layer.11']
+    #exclude_layers = None
+    if exclude_layers is not None:
+        for name, param in model.named_parameters():
+            if not any(exclude_layer in name for exclude_layer in exclude_layers):
+                   param.requires_grad = False
     
     return model
     
@@ -190,7 +247,7 @@ if __name__ == '__main__':
     
     v = SimpleViT(
         image_size = 224,
-        patch_size = 28,
+        patch_size = 14,
         num_classes = 1,
         dim = 512,
         depth = 6,
@@ -198,100 +255,75 @@ if __name__ == '__main__':
         mlp_dim = 512
     )
     
+    v = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256, patch_size=14)
+    
+    params = v.named_parameters()
+    for name, param in v.named_parameters():
+        print(f'{name}: requires_grad={param.requires_grad}')
     img = torch.randn(2, 3, 224, 224)
     
     preds = v(img) # (1, 1000)
     
-    v = pretrain_vit(num_classes=1)
-       
-    preds=preds['logits']
-    
- 
-
 # =============================================================================
+#     v = pretrain_vit(num_classes=1)
+#        
+#     preds=preds['logits']
+#     
+#  
+# 
 #     
 #     att = Attention(dim=784, heads=8,dim_head=64)
 #     inputs = torch.rand(2,3,784)
 #     out = att(inputs)    
 # 
-# class SmallCNN(nn.Module):
-#     def __init__(self, c, patch_high, patch_width, embedding_size):
-#         super(SmallCNN, self).__init__()
-#         
-#         # Các lớp CNN để trích xuất đặc trưng
-#         inplanes=64
-#         planes = 3
-#         stride = 1
-#         self.expansion=1
-#         
-#         self.conv1 = conv1x1(inplanes, planes)
-#         self.bn1 = nn.BatchNorm2d(planes)
-#         self.conv2 = conv3x3(planes, planes, stride)
-#         self.bn2 = nn.BatchNorm2d(planes)
-#         self.conv3 = conv1x1(planes, planes * self.expansion)
-#         self.bn3 = nn.BatchNorm2d(planes * self.expansion)
-#         self.relu = nn.ReLU(inplace=True)
-#         self.bn1 = nn.BatchNorm2d(128)
-#         self.relu = nn.ReLU(inplace=True)
-#         #self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-#         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
 # 
-#         
-#         # Kích thước đầu vào của fully connected layer sau các lớp conv
-#         self.fc_input_dim = 128
-# 
-#         # Fully connected layer để tạo ra embedding
-#         self.fc = nn.Linear(self.fc_input_dim, embedding_size)
-#         
-# 
-#     def forward(self, x):
-#         # Xử lý input có kích thước [batch_size, seq_leng, c, patch_high, patch_width]
-#         batch_size, seq_leng, c, patch_high, patch_width = x.size()
-#         
-#         # Reshape đầu vào để [batch_size * seq_leng, c, patch_high, patch_width]
-#         x = x.view(batch_size * seq_leng, c, patch_high, patch_width)
-#         
-#         out = self.conv1(x)
-#         out = self.bn1(out)
-#         out = self.relu(out)
-# 
-#         out = self.conv2(out)
-#         out = self.bn2(out)
-# 
-# 
-#         out = self.relu(out)
-#        
-#         x = self.avgpool(out)
-#         # Flatten để đưa vào fully connected layer
-#         x = x.view(batch_size * seq_leng, -1)  # [batch_size * seq_leng, 128 * patch_high * patch_width]
-#         #x = x.view(x.size(0), -1)
-# 
-#         # Đưa vào fully connected layer để lấy embedding
-#         x = self.fc(x)
-#         
-#         # Reshape để đưa về kích thước [batch_size, seq_leng, embedding_size]
-#         x = x.view(batch_size, seq_leng, -1)
-#         
-#         return x
 #     
-#     
-#     patch_dim=3*56*56
-#     dim=512
+# 
 #     module = nn.Sequential(
-#         Rearrange("b c (h p1) (w p2) -> b (h w) (p1 p2 c)", p1 = 56, p2 = 56),
-#         nn.LayerNorm(patch_dim),
-#         nn.Linear(patch_dim, dim),
-#         nn.LayerNorm(dim),
+#         #Rearrange("b c (h p1) (w p2) -> b (h w) (p1 p2 c)", p1 = 56, p2 = 56),
+#         #nn.LayerNorm(patch_dim),
+#         #nn.Linear(patch_dim, dim),
+#         #nn.LayerNorm(dim),
+#         SmallCNN(c=3, patch_high=56, patch_width=56, embedding_size=512),
 #     )
 #         
 #     
-#     out = module(torch.rand(2,3,224,224))
+#     out = module(torch.rand(2,16,3,56,56))
 #     
-#     c = SmallCNN(3,28,28,512)
+#     c = SmallCNN(3,28,28,128)
 #     
 #     out = c(torch.rand(4,16,3,28,28))
 #     
 #     
 # 
+#     
+#     resnet4 = nn.Sequential(*list(resnet.children())[:6])
+#     out = resnet4(torch.rand(4,3,224,224))
+#     adap = nn.AdaptiveAvgPool2d((1,1))
+#     out = adap(out)
+#     out = out.view(4,128,28*28)
+#     
+#     
+#     from einops import rearrange
+#     
+#     # Example input tensor
+#     batch_size, channels, height, width = 8, 3, 224, 224
+#     image_tensor = torch.randn(batch_size, channels, height, width)
+#     
+#     # Define patch size
+#     patch_height, patch_width = 56, 56
+#     
+#     # Rearrange operation
+#     patches = rearrange(image_tensor, "b c (h p1) (w p2) -> b (h w) (p1 p2 c)", p1=patch_height, p2=patch_width)
+#     patches = rearrange(image_tensor, "b c (h p1) (w p2) -> b (h w) c p1 p2", p1=patch_height, p2=patch_width)
+#     
+#     print(patches.shape)  # Output shape: [2, 16, 192]
+#     torch.sqrt(torch.tensor(9408))
+#     56*56*3
 # =============================================================================
+model = ModelCLF(num_classes=1)
+out = model(torch.rand(13,3,224,224)).detach()
+
+
+
 

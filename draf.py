@@ -187,6 +187,20 @@ input_tensor = inputs['pixel_values']
 
 
 torch.max(input_tensor/12, dim=0)
+import torch
+import torch.nn as nn
+import numpy as np
+logit_scale = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
+
+
+norm = nn.LayerNorm([4,4])
+bnorm = nn.BatchNorm2d([4])
+
+x = torch.rand(2,3,4,4)
+
+
+y = norm(x).detach()
+y[0][1].var()
 
 
 

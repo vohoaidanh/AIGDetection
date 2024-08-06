@@ -4,6 +4,8 @@ from torch.nn import functional as F
 from typing import Any, cast, Dict, List, Optional, Union
 import numpy as np
 from networks.local_grad import *
+from einops import rearrange
+
 __all__ = ['ResNet', 'resnet50_local_grad']
 
 
@@ -27,6 +29,33 @@ def conv1x1(in_planes, out_planes, stride=1):
     return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
 
 
+class Attention(nn.Module):
+    def __init__(self, dim, heads = 8, dim_head = 64):
+        super().__init__()
+        inner_dim = dim_head *  heads
+        self.heads = heads
+        self.scale = dim_head ** -0.5
+        self.norm = nn.LayerNorm(dim)
+
+        self.attend = nn.Softmax(dim = -1)
+
+        self.to_qkv = nn.Linear(dim, inner_dim * 3, bias = False)
+        self.to_out = nn.Linear(inner_dim, dim, bias = False)
+
+    def forward(self, x):
+        x = self.norm(x)
+
+        qkv = self.to_qkv(x).chunk(3, dim = -1)
+        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h = self.heads), qkv)
+
+        dots = torch.matmul(q, k.transpose(-1, -2)) * self.scale
+
+        attn = self.attend(dots)
+
+        out = torch.matmul(attn, v)
+        out = rearrange(out, 'b h n d -> b n (h d)')
+        return self.to_out(out)
+        
 class BasicBlock(nn.Module):
     expansion = 1
 
@@ -111,8 +140,16 @@ class ResNet(nn.Module):
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64 , layers[0])
+        
+        self.att1 = Attention(dim=256, heads=8, dim_head=64)
+        #self.pool1 = nn.AdaptiveAvgPool2d((1, 256))
+    
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        
+        self.att2 = Attention(dim=512, heads=8, dim_head=64)
+        #self.pool2 = nn.AdaptiveAvgPool2d((1, 512))
+        
         # self.fc1 = nn.Linear(512 * block.expansion, 1)
         self.fc1 = nn.Linear(512, num_classes)
 
@@ -153,13 +190,7 @@ class ResNet(nn.Module):
         return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
     
     def forward(self, x):
-        #NPR = x.clone()
         x = self.gradient_layer(x)
-        
-        #x = self.conv1(NPR*2.0/3.0)
-        #NPR = self.interpolate(NPR, 0.5)
-        #NPR = self.gradient_layer(NPR)
-        #x = x - NPR
         
         x = self.conv1(x)
         x = self.bn1(x)
@@ -167,13 +198,25 @@ class ResNet(nn.Module):
         x = self.maxpool(x)
 
         x = self.layer1(x)
+        
+        b, c, h, w = x.shape
+        x = x.view(b, c, -1).permute(0, 2, 1)
+           
+        x = self.att1(x)
+        x = rearrange(x, 'b (h w) d -> b d h w', h = h, w=w)
+
         x = self.layer2(x)
-
+        b, c, h, w = x.shape
+        x = x.view(b, c, -1).permute(0, 2, 1)
+        x = self.att2(x)
+        x = rearrange(x, 'b (h w) d -> b d h w', h = h, w=w)
+        
         x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
+        x = x.view(b, -1)
         x = self.fc1(x)
-
+        
         return x
+
 
 
 def resnet18(pretrained=False, **kwargs):
@@ -212,29 +255,6 @@ def resnet50_local_grad(pretrained=False, **kwargs):
     return model
 
 
-def resnet50_local_grad_new(pretrained=False, **kwargs):
-    """Constructs a ResNet-50 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
-
-    if pretrained:
-        print('load resnet50 pretrain weight')
-        state_dict = model_zoo.load_url(model_urls['resnet50'])
-        new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['fc', 'layer3', 'layer4'])}
-        model.load_state_dict(new_state_dict,strict=False)
-        
-    resnet_conv1_weights = model.conv1.weight.data
-    model.conv1 =  nn.Conv2d(9, 64, kernel_size=7, stride=2, padding=3, bias=False)
-    with torch.no_grad():
-        model.conv1.weight[:, :3, :, :] = resnet_conv1_weights
-        model.conv1.weight[:, 3:6, :, :] = resnet_conv1_weights
-        model.conv1.weight[:, 6:9, :, :] = resnet_conv1_weights
-
-    return model
-
-
 def resnet101(pretrained=False, **kwargs):
     """Constructs a ResNet-101 model.
     Args:
@@ -264,10 +284,10 @@ if __name__ == '__main__':
     from options.train_options import TrainOptions
     from util import get_model
     import torch
-    opt = TrainOptions().parse()
-    opt.detect_method = 'local_grad'
-    model = get_model(opt)
-    #model = resnet50_local_grad_new(pretrained=True)
+    #opt = TrainOptions().parse()
+    #opt.detect_method = 'local_grad'
+    #model = get_model(opt)
+    model = resnet50_local_grad(pretrained=True)
 
     intens = torch.rand(2,3,224,224)
     out = model(intens)    

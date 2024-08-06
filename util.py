@@ -109,8 +109,8 @@ def get_model(opt):
     
     elif opt.detect_method.lower() in ['vit']:
         print(f'Detect method model {opt.detect_method}')
-        #model = simple_vit()
-        model = pretrain_vit()
+        model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
+        #model = pretrain_vit()
         return model
 
     else:
