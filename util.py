@@ -6,13 +6,14 @@ import torch.nn as nn
 #import torchvision
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
-from networks.resnet_experiment import *
+#from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
 from networks.resnet_attention import simple_vit, pretrain_vit
 from networks.semi_supervisor import resnet_similarity, resnet_center_loss
 from networks.resnet_kmeans import resnet50_multi_branch
 from networks.inception import inception_local_grad
+from networks.main_models import build_model
 from networks.center_loss import CenterLoss
 
 def mkdirs(paths):
@@ -72,11 +73,12 @@ def get_model(opt):
         #model = inception_local_grad(pretrained=True, num_classes=1)
         return model
     
-    elif opt.detect_method.lower() in ['experiment_01']:
+    elif opt.detect_method.lower() in ['experiment']:
         print(f'Detect method model {opt.detect_method}')
-        model = resnet50_experiment_01(pretrained=False, num_classes=1)
+        #model = resnet50_experiment_01(pretrained=False, num_classes=1)
         #Preprocess is contains the experiment configuration
-        print(Preprocess())
+        model = build_model(backbone_name='vgg16', num_classes=1, layer_to_extract=-1)
+
         return model
     
     elif opt.detect_method.lower() in ['model_fusion']:
