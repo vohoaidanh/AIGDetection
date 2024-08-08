@@ -202,6 +202,117 @@ x = torch.rand(2,3,4,4)
 y = norm(x).detach()
 y[0][1].var()
 
+import torchvision.models as models
+
+class ViTFeatureExtractor(nn.Module):
+    def __init__(self, vit_model, extract_layer):
+        super(ViTFeatureExtractor, self).__init__()
+        self.vit_model = vit_model
+        self.extract_layer = extract_layer
+
+    def forward(self, x):
+        # Forward pass through the model
+        for name, layer in self.vit_model.named_children():
+            print(name, 100*'-')
+            x = layer(x)
+            if name == self.extract_layer:
+                break
+        return x
+    
+vit_model = models.vit_b_16(weights='IMAGENET1K_V1')
+#vit_model = models.vit_l_16(weights=None)
+
+extract_layer = 'encoder_layer_11'  # Replace with the actual layer name
+feature_extractor = ViTFeatureExtractor(vit_model, extract_layer)
+
+intens = torch.rand(3,3,224,224)
+with torch.no_grad():
+    features = feature_extractor(intens)
+
+
+
+for name, layer in vit_model.named_children():
+    print(name, 20*'-')
+
+
+class Hook:
+    def __init__(self, model, layers_to_hook):
+        self.model = model
+        self.layers_to_hook = layers_to_hook
+        self.features = {}
+        self.hooks = []
+
+        self._register_hooks()
+
+    def _register_hooks(self):
+        for name, layer in self.model.named_modules():
+            if name in self.layers_to_hook:
+                hook = layer.register_forward_hook(self._hook_fn(name))
+                self.hooks.append(hook)
+
+    def _hook_fn(self, layer_name):
+        def hook(module, input, output):
+            self.features[layer_name] = output
+        return hook
+
+    def remove_hooks(self):
+        for hook in self.hooks:
+            hook.remove()
+
+    def clear_features(self):
+        self.features = {}
+
+    def __call__(self, x):
+        self.clear_features()
+        with torch.no_grad():
+            _ = self.model(x)
+        return self.features
+
+
+
+N = 3  # Change this to the desired layer number
+layers_to_hook = [f'encoder.layers.encoder_layer_{N}' for N in range(23)]  # Replace with actual layer path in the model
+
+# Create the Hook instance
+hook = Hook(vit_model, layers_to_hook)
+
+dummy_input = torch.randn(1, 3, 224, 224)
+features = hook(dummy_input)
+feature_key = list(features.keys())[0]
+
+
+features['encoder.layers.encoder_layer_0'] - features['encoder.layers.encoder_layer_1'] 
+
+hook.remove_hooks()
+
+32*32
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

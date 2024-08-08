@@ -95,7 +95,7 @@ if __name__ == '__main__':
     num_classes = 1  # Number of classes for classification
     layer_to_extract = "layer2"  # For ResNet, choose the layer to extract features from
 
-    model = build_model(backbone_name='vgg16', num_classes=1, layer_to_extract=-1)
+    model = build_model(backbone_name='resnet50', num_classes=1, layer_to_extract=6)
     print(model)
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
@@ -112,5 +112,8 @@ if __name__ == '__main__':
     nn.Flatten()(out).shape
     connection(torch.rand(3,4,5,6))
 
+    features = model.features[:28]
+    features(intens).shape
+    layer_list += list(vgg16.classifier.children())
 
 

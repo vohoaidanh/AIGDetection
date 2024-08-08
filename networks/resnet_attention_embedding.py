@@ -199,13 +199,14 @@ class ResNet(nn.Module):
 
         x = self.layer1(x)
         
-        b, c, h, w = x.shape
-        x = x.view(b, c, -1).permute(0, 2, 1)
+        #b, c, h, w = x.shape
+        #x = x.view(b, c, -1).permute(0, 2, 1)
            
-        x = self.att1(x)
-        x = rearrange(x, 'b (h w) d -> b d h w', h = h, w=w)
+        #x = self.att1(x)
+        #x = rearrange(x, 'b (h w) d -> b d h w', h = h, w=w)
 
         x = self.layer2(x)
+       
         b, c, h, w = x.shape
         x = x.view(b, c, -1).permute(0, 2, 1)
         x = self.att2(x)
