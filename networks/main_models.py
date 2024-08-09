@@ -9,6 +9,7 @@ import numpy as np
 from networks.local_grad import *
 
 from networks.local_grad import gradient_filter
+from networks.resnet_local_grad import resnet50_local_grad
 __all__ = ['build_model']
 
 class ConditionalAvgPool2d(nn.Module):
@@ -56,9 +57,33 @@ def get_backbone(backbone_name, layer_to_extract=-1, pretrained=True):
 
     return backbone, output_shape
 
+def build_model_gradient(backbone_name, num_classes, layer_to_extract):
+    backbone, output_shape = get_backbone(backbone_name, layer_to_extract)
+    
+    
+    
+    print(f'output_shape of bacbone is {output_shape}')
+    in_features = output_shape[1]
+    preprocess = PreProcess()
+    connection = ConditionalAvgPool2d()
+    head = ClassificationHead(in_features, num_classes)
+    
+    # Create the final model
+    model = nn.Sequential(
+        preprocess,
+        backbone,
+        connection,  # Global average pooling
+        nn.Flatten(),  # Ensure the output is flattened before passing to the head
+        head
+    )
+    
+    return model
+
+        
 
 def build_model(backbone_name, num_classes, layer_to_extract):
     backbone, output_shape = get_backbone(backbone_name, layer_to_extract)
+    
     print(f'output_shape of bacbone is {output_shape}')
     in_features = output_shape[1]
     preprocess = PreProcess()
@@ -79,6 +104,9 @@ def build_model(backbone_name, num_classes, layer_to_extract):
 
 
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    
+    
     #from options.train_options import TrainOptions
     #from util import get_model
     #import torch
@@ -89,7 +117,8 @@ if __name__ == '__main__':
 
     #intens = torch.rand(2,3,224,224)
     #out = model(intens)    
-    
+    path = r"D:/K32/do_an_tot_nghiep/NPR-DeepfakeDetection/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39_model_eopch_7_best.pth"
+    model = ResnetGrad(model_A_path=path)
     # Example usage
     backbone_name = "resnet50"  # Choose from "resnet50", "resnet18", "vgg16"
     num_classes = 1  # Number of classes for classification
@@ -100,7 +129,9 @@ if __name__ == '__main__':
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
     
-    
+    plt.imshow(out[1][0].permute(1,2,0))
+    out[1][0].shape
+    out[1][0].sum()
     model = get_backbone('resnet50')
     
     avgpool = nn.AdaptiveAvgPool1d(1)

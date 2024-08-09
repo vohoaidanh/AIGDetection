@@ -1,0 +1,805 @@
+----------------- Options ---------------
+                     arch: res50                         
+               batch_size: 32                            	[default: 64]
+                    beta1: 0.9                           
+                blur_prob: 0.2                           	[default: 0]
+                 blur_sig: 0.5                           
+          checkpoints_dir: ./checkpoints                 
+                class_bal: False                         
+                  classes: car,cat,chair,horse           	[default: ]
+           continue_train: False                         
+                 cropSize: 224                           
+                 data_aug: False                         
+                 dataroot: /workspace/datasets/ForenSynths_train_val	[default: ./dataset/]
+                delr_freq: 10                            	[default: 20]
+            detect_method: local_grad                    	[default: NPR]
+          earlystop_epoch: 15                            
+                    epoch: latest                        
+              epoch_count: 1                             
+                  gpu_ids: 0                             
+                init_gain: 0.02                          
+                init_type: normal                        
+                  isTrain: True                          	[default: None]
+               jpg_method: cv2                           
+                 jpg_prob: 0                             
+                 jpg_qual: 75                            
+               last_epoch: -1                            
+                 loadSize: 256                           
+                  loss_fn: BCEWithLogitsLoss             
+                loss_freq: 400                           
+                       lr: 0.0002                        	[default: 0.0001]
+                     mode: binary                        
+                     name: resnet-attention-blur0.2-2024_08_08_02_26_49	[default: experiment_name]
+                new_optim: False                         
+                    niter: 1000                          
+                  no_flip: False                         
+              num_threads: 4                             	[default: 8]
+                    optim: adam                          
+           resize_or_crop: scale_and_crop                
+                rz_interp: bilinear                      
+          save_epoch_freq: 20                            
+         save_latest_freq: 2000                          
+           serial_batches: False                         
+                   suffix:                               
+              train_split: train                         
+                val_split: val                           
+----------------- End -------------------
+train.py  --name  resnet-attention-blur0.2-  --dataroot  /workspace/datasets/ForenSynths_train_val  --detect_method  local_grad  --num_thread  4  --blur_prob  0.2  --classes  car,cat,chair,horse  --batch_size  32  --delr_freq  10  --lr  0.0002  --niter  1000
+Detect method model local_grad
+cwd: /workspace/AIGDetection
+warm up 0
+2024_08_08_02_28_10 Train loss: 0.23187565803527832 at step: 400 lr 0.01
+2024_08_08_02_29_30 Train loss: 0.04725969582796097 at step: 800 lr 0.01
+2024_08_08_02_30_50 Train loss: 0.06774087250232697 at step: 1200 lr 0.01
+2024_08_08_02_32_10 Train loss: 0.01037045381963253 at step: 1600 lr 0.01
+2024_08_08_02_33_30 Train loss: 0.0016364804469048977 at step: 2000 lr 0.01
+2024_08_08_02_34_50 Train loss: 0.15811556577682495 at step: 2400 lr 0.01
+2024_08_08_02_36_10 Train loss: 0.01456285547465086 at step: 2800 lr 0.01
+2024_08_08_02_37_30 Train loss: 0.017881549894809723 at step: 3200 lr 0.01
+2024_08_08_02_38_50 Train loss: 0.003536424832418561 at step: 3600 lr 0.01
+2024_08_08_02_40_10 Train loss: 0.007747144438326359 at step: 4000 lr 0.01
+2024_08_08_02_41_30 Train loss: 0.0128554105758667 at step: 4400 lr 0.01
+warm up 1
+2024_08_08_02_42_50 Train loss: 0.05452122911810875 at step: 4800 lr 0.01
+2024_08_08_02_44_11 Train loss: 0.012103131040930748 at step: 5200 lr 0.01
+2024_08_08_02_45_31 Train loss: 0.002266379538923502 at step: 5600 lr 0.01
+2024_08_08_02_46_51 Train loss: 0.051632434129714966 at step: 6000 lr 0.01
+2024_08_08_02_48_11 Train loss: 0.013780664652585983 at step: 6400 lr 0.01
+2024_08_08_02_49_31 Train loss: 0.005590653046965599 at step: 6800 lr 0.01
+2024_08_08_02_50_50 Train loss: 0.003252733265981078 at step: 7200 lr 0.01
+2024_08_08_02_52_11 Train loss: 0.010274438187479973 at step: 7600 lr 0.01
+2024_08_08_02_53_31 Train loss: 0.018135443329811096 at step: 8000 lr 0.01
+2024_08_08_02_54_51 Train loss: 0.001736346399411559 at step: 8400 lr 0.01
+2024_08_08_02_56_11 Train loss: 0.00801017228513956 at step: 8800 lr 0.01
+2024_08_08_02_57_31 Train loss: 0.0002658319426700473 at step: 9200 lr 0.0002
+2024_08_08_02_58_51 Train loss: 0.003905931953340769 at step: 9600 lr 0.0002
+2024_08_08_03_00_11 Train loss: 0.12060987949371338 at step: 10000 lr 0.0002
+2024_08_08_03_01_31 Train loss: 0.0020922550465911627 at step: 10400 lr 0.0002
+2024_08_08_03_02_51 Train loss: 0.011169797740876675 at step: 10800 lr 0.0002
+2024_08_08_03_04_11 Train loss: 0.000522166839800775 at step: 11200 lr 0.0002
+2024_08_08_03_05_31 Train loss: 0.044359032064676285 at step: 11600 lr 0.0002
+2024_08_08_03_06_51 Train loss: 0.03267314285039902 at step: 12000 lr 0.0002
+2024_08_08_03_08_11 Train loss: 0.007690254598855972 at step: 12400 lr 0.0002
+2024_08_08_03_09_31 Train loss: 0.014819435775279999 at step: 12800 lr 0.0002
+2024_08_08_03_10_51 Train loss: 0.005660085938870907 at step: 13200 lr 0.0002
+(Val @ epoch 0) acc: 0.99125; ap: 0.9997946413043297
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0 --> 0.99125, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_0_best.pth
+*************************
+2024_08_08_03_11_56
+(0 progan      ) acc: 99.0; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.2; ap: 99.9; r_acc: 1.0; f_acc: 0.9
+(2 stylegan2   ) acc: 94.6; ap: 99.6; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 75.5; ap: 89.8; r_acc: 0.5; f_acc: 1.0
+(4 cyclegan    ) acc: 79.3; ap: 85.6; r_acc: 0.6; f_acc: 1.0
+(5 stargan     ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 62.5; ap: 77.1; r_acc: 0.3; f_acc: 1.0
+(7 deepfake    ) acc: 61.5; ap: 87.8; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 83.6; ap: 92.5
+*************************
+2024_08_08_03_12_40
+2024_08_08_03_13_00 Train loss: 0.010063355788588524 at step: 13600 lr 0.0002
+2024_08_08_03_14_20 Train loss: 0.0023003011010587215 at step: 14000 lr 0.0002
+2024_08_08_03_15_40 Train loss: 0.0021503346506506205 at step: 14400 lr 0.0002
+2024_08_08_03_17_00 Train loss: 0.12218905240297318 at step: 14800 lr 0.0002
+2024_08_08_03_18_20 Train loss: 0.01677403785288334 at step: 15200 lr 0.0002
+2024_08_08_03_19_40 Train loss: 0.003908103797584772 at step: 15600 lr 0.0002
+2024_08_08_03_21_00 Train loss: 0.0009204127709381282 at step: 16000 lr 0.0002
+2024_08_08_03_22_21 Train loss: 0.001176786725409329 at step: 16400 lr 0.0002
+2024_08_08_03_23_41 Train loss: 0.004442144185304642 at step: 16800 lr 0.0002
+2024_08_08_03_25_01 Train loss: 0.00015770405298098922 at step: 17200 lr 0.0002
+2024_08_08_03_26_21 Train loss: 0.0014692796394228935 at step: 17600 lr 0.0002
+2024_08_08_03_27_41 Train loss: 0.0397196002304554 at step: 18000 lr 0.0002
+(Val @ epoch 1) acc: 0.996875; ap: 0.9999751771978092
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.99125 --> 0.996875, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_1_best.pth
+*************************
+2024_08_08_03_27_46
+(0 progan      ) acc: 99.4; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.2; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 82.0; ap: 90.7; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 79.7; ap: 87.8; r_acc: 0.8; f_acc: 0.8
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 67.0; ap: 69.6; r_acc: 0.6; f_acc: 0.8
+(7 deepfake    ) acc: 56.5; ap: 89.0; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 85.0; ap: 92.1
+*************************
+2024_08_08_03_28_31
+2024_08_08_03_29_50 Train loss: 0.039958007633686066 at step: 18400 lr 0.0002
+2024_08_08_03_31_10 Train loss: 0.06392503529787064 at step: 18800 lr 0.0002
+2024_08_08_03_32_30 Train loss: 0.027973880991339684 at step: 19200 lr 0.0002
+2024_08_08_03_33_50 Train loss: 0.020315617322921753 at step: 19600 lr 0.0002
+2024_08_08_03_35_10 Train loss: 0.012757688760757446 at step: 20000 lr 0.0002
+2024_08_08_03_36_30 Train loss: 0.00577885378152132 at step: 20400 lr 0.0002
+2024_08_08_03_37_51 Train loss: 0.0007158716907724738 at step: 20800 lr 0.0002
+2024_08_08_03_39_11 Train loss: 4.45053810835816e-05 at step: 21200 lr 0.0002
+2024_08_08_03_40_31 Train loss: 0.019093411043286324 at step: 21600 lr 0.0002
+2024_08_08_03_41_51 Train loss: 0.003771234070882201 at step: 22000 lr 0.0002
+2024_08_08_03_43_11 Train loss: 1.792011062207166e-05 at step: 22400 lr 0.0002
+(Val @ epoch 2) acc: 0.999375; ap: 0.9999953124951172
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.996875 --> 0.999375, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_2_best.pth
+*************************
+2024_08_08_03_43_36
+(0 progan      ) acc: 99.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.4; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 82.5; ap: 92.8; r_acc: 0.7; f_acc: 0.9
+(4 cyclegan    ) acc: 87.2; ap: 93.6; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 71.8; ap: 75.7; r_acc: 0.5; f_acc: 0.9
+(7 deepfake    ) acc: 55.2; ap: 90.2; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 86.4; ap: 94.0
+*************************
+2024_08_08_03_44_21
+2024_08_08_03_45_20 Train loss: 0.00011713629646692425 at step: 22800 lr 0.0002
+2024_08_08_03_46_40 Train loss: 0.035157717764377594 at step: 23200 lr 0.0002
+2024_08_08_03_48_00 Train loss: 0.0009689779835753143 at step: 23600 lr 0.0002
+2024_08_08_03_49_21 Train loss: 0.014882246032357216 at step: 24000 lr 0.0002
+2024_08_08_03_50_41 Train loss: 0.0002861000830307603 at step: 24400 lr 0.0002
+2024_08_08_03_52_01 Train loss: 0.0001274176756851375 at step: 24800 lr 0.0002
+2024_08_08_03_53_21 Train loss: 0.0038449435960501432 at step: 25200 lr 0.0002
+2024_08_08_03_54_41 Train loss: 0.006110777147114277 at step: 25600 lr 0.0002
+2024_08_08_03_56_01 Train loss: 1.035185869113775e-05 at step: 26000 lr 0.0002
+2024_08_08_03_57_21 Train loss: 0.0023070815950632095 at step: 26400 lr 0.0002
+2024_08_08_03_58_41 Train loss: 0.0013855521101504564 at step: 26800 lr 0.0002
+(Val @ epoch 3) acc: 0.99625; ap: 0.9999292362913463
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_3.pth
+early stop count 1/15
+*************************
+2024_08_08_03_59_27
+(0 progan      ) acc: 99.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.5; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.6; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 82.2; ap: 93.7; r_acc: 0.7; f_acc: 0.9
+(4 cyclegan    ) acc: 84.3; ap: 86.7; r_acc: 0.7; f_acc: 1.0
+(5 stargan     ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 67.8; ap: 71.2; r_acc: 0.5; f_acc: 0.9
+(7 deepfake    ) acc: 60.0; ap: 88.8; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 86.2; ap: 92.5
+*************************
+2024_08_08_04_00_12
+2024_08_08_04_00_51 Train loss: 0.003206424182280898 at step: 27200 lr 0.0002
+2024_08_08_04_02_11 Train loss: 0.028613094240427017 at step: 27600 lr 0.0002
+2024_08_08_04_03_31 Train loss: 0.002209364203736186 at step: 28000 lr 0.0002
+2024_08_08_04_04_51 Train loss: 0.06648849695920944 at step: 28400 lr 0.0002
+2024_08_08_04_06_11 Train loss: 5.782251537311822e-05 at step: 28800 lr 0.0002
+2024_08_08_04_07_31 Train loss: 0.012959012761712074 at step: 29200 lr 0.0002
+2024_08_08_04_08_51 Train loss: 0.01561235822737217 at step: 29600 lr 0.0002
+2024_08_08_04_10_11 Train loss: 0.0002255682775285095 at step: 30000 lr 0.0002
+2024_08_08_04_11_31 Train loss: 0.006828098092228174 at step: 30400 lr 0.0002
+2024_08_08_04_12_51 Train loss: 0.0025474063586443663 at step: 30800 lr 0.0002
+2024_08_08_04_14_11 Train loss: 0.01143963448703289 at step: 31200 lr 0.0002
+(Val @ epoch 4) acc: 0.988125; ap: 0.9998742694539677
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_4.pth
+early stop count 2/15
+*************************
+2024_08_08_04_15_17
+(0 progan      ) acc: 98.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.9; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 98.4; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 77.5; ap: 91.2; r_acc: 0.6; f_acc: 1.0
+(4 cyclegan    ) acc: 80.7; ap: 88.4; r_acc: 0.6; f_acc: 1.0
+(5 stargan     ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 67.0; ap: 66.3; r_acc: 0.4; f_acc: 0.9
+(7 deepfake    ) acc: 54.5; ap: 83.9; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 84.4; ap: 91.2
+*************************
+2024_08_08_04_16_02
+2024_08_08_04_16_21 Train loss: 0.04747884348034859 at step: 31600 lr 0.0002
+2024_08_08_04_17_40 Train loss: 0.024661334231495857 at step: 32000 lr 0.0002
+2024_08_08_04_19_01 Train loss: 0.0007111785816960037 at step: 32400 lr 0.0002
+2024_08_08_04_20_21 Train loss: 0.021433308720588684 at step: 32800 lr 0.0002
+2024_08_08_04_21_41 Train loss: 0.028562959283590317 at step: 33200 lr 0.0002
+2024_08_08_04_23_01 Train loss: 0.0015226578107103705 at step: 33600 lr 0.0002
+2024_08_08_04_24_21 Train loss: 0.0004239633271936327 at step: 34000 lr 0.0002
+2024_08_08_04_25_41 Train loss: 3.53782634192612e-05 at step: 34400 lr 0.0002
+2024_08_08_04_27_01 Train loss: 0.0022842874750494957 at step: 34800 lr 0.0002
+2024_08_08_04_28_21 Train loss: 1.2742246326524764e-05 at step: 35200 lr 0.0002
+2024_08_08_04_29_42 Train loss: 0.0019736741669476032 at step: 35600 lr 0.0002
+2024_08_08_04_31_02 Train loss: 0.0002008828887483105 at step: 36000 lr 0.0002
+(Val @ epoch 5) acc: 0.998125; ap: 0.9999968769506866
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_5.pth
+early stop count 3/15
+*************************
+2024_08_08_04_31_07
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.1; ap: 99.9; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 87.5; ap: 94.3; r_acc: 0.9; f_acc: 0.9
+(4 cyclegan    ) acc: 78.0; ap: 88.6; r_acc: 0.9; f_acc: 0.7
+(5 stargan     ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 66.5; ap: 70.8; r_acc: 0.7; f_acc: 0.6
+(7 deepfake    ) acc: 57.0; ap: 90.7; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 85.4; ap: 93.0
+*************************
+2024_08_08_04_31_52
+2024_08_08_04_33_11 Train loss: 1.1164207535330206e-05 at step: 36400 lr 0.0002
+2024_08_08_04_34_31 Train loss: 0.02454853057861328 at step: 36800 lr 0.0002
+2024_08_08_04_35_51 Train loss: 0.1301683634519577 at step: 37200 lr 0.0002
+2024_08_08_04_37_11 Train loss: 0.009492163546383381 at step: 37600 lr 0.0002
+2024_08_08_04_38_31 Train loss: 0.002660102443769574 at step: 38000 lr 0.0002
+2024_08_08_04_39_51 Train loss: 0.0014458124060183764 at step: 38400 lr 0.0002
+2024_08_08_04_41_11 Train loss: 0.0027976229321211576 at step: 38800 lr 0.0002
+2024_08_08_04_42_31 Train loss: 0.00875859148800373 at step: 39200 lr 0.0002
+2024_08_08_04_43_51 Train loss: 0.0034291106276214123 at step: 39600 lr 0.0002
+2024_08_08_04_45_11 Train loss: 0.005906439386308193 at step: 40000 lr 0.0002
+2024_08_08_04_46_32 Train loss: 5.471838085213676e-05 at step: 40400 lr 0.0002
+(Val @ epoch 6) acc: 0.996875; ap: 0.9998953960120901
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_6.pth
+early stop count 4/15
+*************************
+2024_08_08_04_46_57
+(0 progan      ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.9; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.2; ap: 99.9; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 84.5; ap: 92.7; r_acc: 0.7; f_acc: 0.9
+(4 cyclegan    ) acc: 86.0; ap: 91.2; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 69.8; ap: 77.7; r_acc: 0.5; f_acc: 0.9
+(7 deepfake    ) acc: 55.2; ap: 87.7; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 86.4; ap: 93.6
+*************************
+2024_08_08_04_47_42
+2024_08_08_04_48_40 Train loss: 0.015293216332793236 at step: 40800 lr 0.0002
+2024_08_08_05_17_32 Train loss: 0.015642283484339714 at step: 49200 lr 0.0002
+(Val @ epoch 8) acc: 0.996875; ap: 0.9999953300124533
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_8.pth
+early stop count 6/15
+*************************
+2024_08_08_05_18_38
+(0 progan      ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 94.5; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(2 stylegan2   ) acc: 94.4; ap: 99.9; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 89.0; ap: 94.3; r_acc: 0.9; f_acc: 0.9
+(4 cyclegan    ) acc: 81.3; ap: 92.8; r_acc: 0.9; f_acc: 0.7
+(5 stargan     ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 69.0; ap: 72.0; r_acc: 0.7; f_acc: 0.6
+(7 deepfake    ) acc: 51.7; ap: 81.2; r_acc: 1.0; f_acc: 0.0
+(8 Mean      ) acc: 84.9; ap: 92.5
+*************************
+2024_08_08_05_19_23
+2024_08_08_05_19_41 Train loss: 0.005099106580018997 at step: 49600 lr 0.0002
+2024_08_08_05_21_01 Train loss: 0.0005530589260160923 at step: 50000 lr 0.0002
+2024_08_08_05_22_21 Train loss: 0.003781616222113371 at step: 50400 lr 0.0002
+2024_08_08_05_23_41 Train loss: 0.014871921390295029 at step: 50800 lr 0.0002
+2024_08_08_05_25_01 Train loss: 6.656887308054138e-06 at step: 51200 lr 0.0002
+2024_08_08_05_26_21 Train loss: 0.00027426076121628284 at step: 51600 lr 0.0002
+2024_08_08_05_27_41 Train loss: 0.0020635155960917473 at step: 52000 lr 0.0002
+2024_08_08_05_29_01 Train loss: 2.8569171263370663e-05 at step: 52400 lr 0.0002
+2024_08_08_05_30_21 Train loss: 4.058000195072964e-05 at step: 52800 lr 0.0002
+2024_08_08_05_31_41 Train loss: 8.457015792373568e-05 at step: 53200 lr 0.0002
+2024_08_08_05_33_01 Train loss: 9.52877144300146e-06 at step: 53600 lr 0.0002
+2024_08_08_05_34_22 Train loss: 3.122818816336803e-05 at step: 54000 lr 0.0002
+(Val @ epoch 9) acc: 0.998125; ap: 0.9999921894214079
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_9.pth
+early stop count 7/15
+*************************
+2024_08_08_05_34_28
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 98.0; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 83.0; ap: 91.3; r_acc: 0.7; f_acc: 1.0
+(4 cyclegan    ) acc: 82.6; ap: 88.5; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 66.8; ap: 71.6; r_acc: 0.4; f_acc: 0.9
+(7 deepfake    ) acc: 56.0; ap: 87.9; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 85.6; ap: 92.4
+*************************
+2024_08_08_05_35_13
+2024_08_08_05_36_31 Train loss: 3.380693669896573e-05 at step: 54400 lr 0.0002
+2024_08_08_05_37_51 Train loss: 0.0003371317288838327 at step: 54800 lr 0.0002
+2024_08_08_05_39_11 Train loss: 3.4722826967481524e-05 at step: 55200 lr 0.0002
+2024_08_08_05_40_31 Train loss: 0.00024380453396588564 at step: 55600 lr 0.0002
+2024_08_08_05_41_51 Train loss: 8.292650454677641e-05 at step: 56000 lr 0.0002
+2024_08_08_05_43_10 Train loss: 8.015631465241313e-05 at step: 56400 lr 0.0002
+2024_08_08_05_44_30 Train loss: 7.909725536592305e-05 at step: 56800 lr 0.0002
+2024_08_08_05_45_50 Train loss: 0.00026361230993643403 at step: 57200 lr 0.0002
+2024_08_08_05_47_10 Train loss: 0.015163748525083065 at step: 57600 lr 0.0002
+2024_08_08_05_48_30 Train loss: 0.05356214568018913 at step: 58000 lr 0.0002
+2024_08_08_05_49_50 Train loss: 0.0035756980068981647 at step: 58400 lr 0.0002
+2024_08_08_05_50_13 changing lr at the end of epoch 10, iters 58513
+*************************
+Changing lr from 0.0002 to 0.00018
+*************************
+(Val @ epoch 10) acc: 0.996875; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_10.pth
+early stop count 8/15
+*************************
+2024_08_08_05_50_17
+(0 progan      ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 96.2; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(2 stylegan2   ) acc: 94.2; ap: 99.9; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 85.5; ap: 93.6; r_acc: 0.9; f_acc: 0.8
+(4 cyclegan    ) acc: 77.8; ap: 89.6; r_acc: 0.9; f_acc: 0.6
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 68.5; ap: 73.9; r_acc: 0.8; f_acc: 0.6
+(7 deepfake    ) acc: 55.5; ap: 90.9; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 84.6; ap: 93.5
+*************************
+2024_08_08_05_51_02
+2024_08_08_05_51_59 Train loss: 3.9710292185191065e-05 at step: 58800 lr 0.00018
+2024_08_08_05_53_19 Train loss: 0.0406247079372406 at step: 59200 lr 0.00018
+2024_08_08_05_54_40 Train loss: 1.175258876173757e-05 at step: 59600 lr 0.00018
+2024_08_08_05_56_00 Train loss: 0.00028850752278231084 at step: 60000 lr 0.00018
+2024_08_08_05_57_20 Train loss: 0.00011590120993787423 at step: 60400 lr 0.00018
+2024_08_08_05_58_40 Train loss: 0.0031273760832846165 at step: 60800 lr 0.00018
+2024_08_08_06_00_00 Train loss: 0.025013640522956848 at step: 61200 lr 0.00018
+2024_08_08_06_01_20 Train loss: 0.002727982122451067 at step: 61600 lr 0.00018
+2024_08_08_06_02_40 Train loss: 7.781723979860544e-06 at step: 62000 lr 0.00018
+2024_08_08_06_04_01 Train loss: 0.0007752156816422939 at step: 62400 lr 0.00018
+2024_08_08_06_05_21 Train loss: 0.001868192688561976 at step: 62800 lr 0.00018
+(Val @ epoch 11) acc: 0.996875; ap: 0.9999953124951172
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_11.pth
+early stop count 9/15
+*************************
+2024_08_08_06_06_08
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.5; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.9; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 80.0; ap: 93.4; r_acc: 0.6; f_acc: 1.0
+(4 cyclegan    ) acc: 83.4; ap: 88.4; r_acc: 0.7; f_acc: 1.0
+(5 stargan     ) acc: 98.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 68.8; ap: 70.8; r_acc: 0.4; f_acc: 0.9
+(7 deepfake    ) acc: 59.8; ap: 87.7; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 85.8; ap: 92.5
+*************************
+2024_08_08_06_06_52
+2024_08_08_06_07_30 Train loss: 0.020849306136369705 at step: 63200 lr 0.00018
+2024_08_08_06_08_50 Train loss: 1.3022915481997188e-05 at step: 63600 lr 0.00018
+2024_08_08_06_10_10 Train loss: 0.0006493384717032313 at step: 64000 lr 0.00018
+2024_08_08_06_11_30 Train loss: 0.0023338831961154938 at step: 64400 lr 0.00018
+2024_08_08_06_12_50 Train loss: 0.0007148450240492821 at step: 64800 lr 0.00018
+2024_08_08_06_14_10 Train loss: 0.002254408085718751 at step: 65200 lr 0.00018
+2024_08_08_06_15_30 Train loss: 0.00047667333274148405 at step: 65600 lr 0.00018
+2024_08_08_06_16_50 Train loss: 0.024955585598945618 at step: 66000 lr 0.00018
+2024_08_08_06_18_10 Train loss: 0.0006058248691260815 at step: 66400 lr 0.00018
+2024_08_08_06_19_30 Train loss: 7.990450831130147e-05 at step: 66800 lr 0.00018
+2024_08_08_06_20_50 Train loss: 4.339788119978039e-06 at step: 67200 lr 0.00018
+(Val @ epoch 12) acc: 0.998125; ap: 0.999966812214304
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_12.pth
+early stop count 10/15
+*************************
+2024_08_08_06_21_57
+(0 progan      ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 96.3; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 81.8; ap: 92.1; r_acc: 0.9; f_acc: 0.8
+(4 cyclegan    ) acc: 83.7; ap: 94.5; r_acc: 0.9; f_acc: 0.7
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 69.2; ap: 76.7; r_acc: 0.7; f_acc: 0.7
+(7 deepfake    ) acc: 50.2; ap: 80.6; r_acc: 1.0; f_acc: 0.0
+(8 Mean      ) acc: 84.8; ap: 93.0
+*************************
+2024_08_08_06_22_42
+2024_08_08_06_22_59 Train loss: 0.0036255090963095427 at step: 67600 lr 0.00018
+2024_08_08_06_24_19 Train loss: 0.0016253609210252762 at step: 68000 lr 0.00018
+2024_08_08_06_25_39 Train loss: 0.0010426711523905396 at step: 68400 lr 0.00018
+2024_08_08_06_26_59 Train loss: 4.944164174958132e-05 at step: 68800 lr 0.00018
+2024_08_08_06_28_19 Train loss: 0.0005634810077026486 at step: 69200 lr 0.00018
+2024_08_08_06_29_39 Train loss: 1.948317503774888e-06 at step: 69600 lr 0.00018
+2024_08_08_06_30_59 Train loss: 0.0002420698874630034 at step: 70000 lr 0.00018
+2024_08_08_06_32_19 Train loss: 0.001011026557534933 at step: 70400 lr 0.00018
+2024_08_08_06_33_39 Train loss: 2.361809720241581e-06 at step: 70800 lr 0.00018
+2024_08_08_06_34_59 Train loss: 0.09777434170246124 at step: 71200 lr 0.00018
+2024_08_08_06_36_19 Train loss: 8.90604715095833e-05 at step: 71600 lr 0.00018
+2024_08_08_06_37_39 Train loss: 0.00013191555626690388 at step: 72000 lr 0.00018
+(Val @ epoch 13) acc: 0.999375; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.999375 --> 0.999375, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_13_best.pth
+*************************
+2024_08_08_06_37_46
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 98.4; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 85.8; ap: 92.7; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 83.2; ap: 89.2; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 70.8; ap: 71.1; r_acc: 0.6; f_acc: 0.9
+(7 deepfake    ) acc: 54.2; ap: 87.5; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 86.4; ap: 92.6
+*************************
+2024_08_08_06_38_31
+2024_08_08_06_39_48 Train loss: 0.001991532975807786 at step: 72400 lr 0.00018
+2024_08_08_06_41_08 Train loss: 4.297607665648684e-05 at step: 72800 lr 0.00018
+2024_08_08_06_42_28 Train loss: 0.0032694335095584393 at step: 73200 lr 0.00018
+2024_08_08_06_43_48 Train loss: 1.7732213564158883e-06 at step: 73600 lr 0.00018
+2024_08_08_06_45_08 Train loss: 0.0005884499987587333 at step: 74000 lr 0.00018
+2024_08_08_06_46_28 Train loss: 0.002278178231790662 at step: 74400 lr 0.00018
+2024_08_08_06_47_48 Train loss: 4.220579285174608e-06 at step: 74800 lr 0.00018
+2024_08_08_06_49_08 Train loss: 4.681536302086897e-05 at step: 75200 lr 0.00018
+2024_08_08_06_50_28 Train loss: 1.3167413271730766e-05 at step: 75600 lr 0.00018
+2024_08_08_06_51_49 Train loss: 0.00039483243017457426 at step: 76000 lr 0.00018
+2024_08_08_06_53_09 Train loss: 0.0004825877258554101 at step: 76400 lr 0.00018
+(Val @ epoch 14) acc: 0.980625; ap: 0.9997917194695988
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_14.pth
+early stop count 1/15
+*************************
+2024_08_08_06_53_36
+(0 progan      ) acc: 98.3; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.8; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 81.2; ap: 90.7; r_acc: 0.7; f_acc: 0.9
+(4 cyclegan    ) acc: 75.6; ap: 84.0; r_acc: 0.8; f_acc: 0.7
+(5 stargan     ) acc: 98.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 61.3; ap: 57.8; r_acc: 0.5; f_acc: 0.8
+(7 deepfake    ) acc: 57.5; ap: 86.2; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 83.5; ap: 89.8
+*************************
+2024_08_08_06_54_21
+2024_08_08_06_55_18 Train loss: 0.0008191225933842361 at step: 76800 lr 0.00018
+2024_08_08_06_56_38 Train loss: 8.42694571474567e-05 at step: 77200 lr 0.00018
+2024_08_08_06_57_58 Train loss: 3.659378126030788e-05 at step: 77600 lr 0.00018
+2024_08_08_06_59_18 Train loss: 2.6006453481386416e-05 at step: 78000 lr 0.00018
+2024_08_08_07_00_38 Train loss: 2.484718606865499e-06 at step: 78400 lr 0.00018
+2024_08_08_07_01_58 Train loss: 0.0055916160345077515 at step: 78800 lr 0.00018
+2024_08_08_07_03_18 Train loss: 5.844712632097071e-06 at step: 79200 lr 0.00018
+2024_08_08_07_04_38 Train loss: 8.330081618623808e-05 at step: 79600 lr 0.00018
+2024_08_08_07_05_58 Train loss: 0.000176054731127806 at step: 80000 lr 0.00018
+2024_08_08_07_07_18 Train loss: 1.8814071154338308e-05 at step: 80400 lr 0.00018
+2024_08_08_07_08_38 Train loss: 7.379353519354481e-06 at step: 80800 lr 0.00018
+(Val @ epoch 15) acc: 0.9975; ap: 0.9999984394506867
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_15.pth
+early stop count 2/15
+*************************
+2024_08_08_07_09_26
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 84.8; ap: 92.9; r_acc: 0.8; f_acc: 0.8
+(4 cyclegan    ) acc: 73.3; ap: 85.3; r_acc: 0.9; f_acc: 0.6
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 68.0; ap: 70.8; r_acc: 0.7; f_acc: 0.7
+(7 deepfake    ) acc: 56.8; ap: 90.6; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 85.1; ap: 92.4
+*************************
+2024_08_08_07_10_11
+2024_08_08_07_10_47 Train loss: 9.068808140000328e-05 at step: 81200 lr 0.00018
+2024_08_08_07_12_07 Train loss: 0.004480133764445782 at step: 81600 lr 0.00018
+2024_08_08_07_13_27 Train loss: 3.7886878999415785e-05 at step: 82000 lr 0.00018
+2024_08_08_07_14_47 Train loss: 0.00010924228990916163 at step: 82400 lr 0.00018
+2024_08_08_07_16_07 Train loss: 0.0004110648005735129 at step: 82800 lr 0.00018
+2024_08_08_07_17_27 Train loss: 5.248128218227066e-05 at step: 83200 lr 0.00018
+2024_08_08_07_18_47 Train loss: 8.128286572173238e-05 at step: 83600 lr 0.00018
+2024_08_08_07_20_07 Train loss: 7.082967204041779e-05 at step: 84000 lr 0.00018
+2024_08_08_07_21_27 Train loss: 0.010059094987809658 at step: 84400 lr 0.00018
+2024_08_08_07_22_47 Train loss: 0.0024459001142531633 at step: 84800 lr 0.00018
+2024_08_08_07_24_07 Train loss: 8.39896165416576e-05 at step: 85200 lr 0.00018
+(Val @ epoch 16) acc: 0.99875; ap: 0.9999829211572411
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_16.pth
+early stop count 3/15
+*************************
+2024_08_08_07_25_15
+(0 progan      ) acc: 99.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.1; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.6; ap: 99.9; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 83.8; ap: 90.4; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 77.9; ap: 89.3; r_acc: 0.9; f_acc: 0.7
+(5 stargan     ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 69.5; ap: 70.9; r_acc: 0.6; f_acc: 0.7
+(7 deepfake    ) acc: 51.2; ap: 81.3; r_acc: 1.0; f_acc: 0.0
+(8 Mean      ) acc: 84.7; ap: 91.5
+*************************
+2024_08_08_07_26_00
+2024_08_08_07_26_16 Train loss: 0.00475239846855402 at step: 85600 lr 0.00018
+2024_08_08_07_27_36 Train loss: 0.0012439097044989467 at step: 86000 lr 0.00018
+2024_08_08_07_28_56 Train loss: 0.007047421298921108 at step: 86400 lr 0.00018
+2024_08_08_07_30_15 Train loss: 0.00016055135347414762 at step: 86800 lr 0.00018
+2024_08_08_07_31_35 Train loss: 0.0043066758662462234 at step: 87200 lr 0.00018
+2024_08_08_07_32_55 Train loss: 0.00019532479927875102 at step: 87600 lr 0.00018
+2024_08_08_07_34_15 Train loss: 0.0009737939690239727 at step: 88000 lr 0.00018
+2024_08_08_07_35_35 Train loss: 4.787353100255132e-05 at step: 88400 lr 0.00018
+2024_08_08_07_36_55 Train loss: 2.330858478671871e-05 at step: 88800 lr 0.00018
+2024_08_08_07_38_15 Train loss: 0.0020756865851581097 at step: 89200 lr 0.00018
+2024_08_08_07_39_35 Train loss: 3.7252783613439533e-07 at step: 89600 lr 0.00018
+2024_08_08_07_40_54 Train loss: 0.00015282287495210767 at step: 90000 lr 0.00018
+(Val @ epoch 17) acc: 0.999375; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.999375 --> 0.999375, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_17_best.pth
+*************************
+2024_08_08_07_41_03
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.9; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 85.0; ap: 92.1; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 82.8; ap: 90.4; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 68.0; ap: 67.9; r_acc: 0.6; f_acc: 0.8
+(7 deepfake    ) acc: 56.0; ap: 89.2; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 86.1; ap: 92.4
+*************************
+2024_08_08_07_41_47
+2024_08_08_07_43_04 Train loss: 3.769054455915466e-05 at step: 90400 lr 0.00018
+2024_08_08_07_44_23 Train loss: 6.239881622605026e-05 at step: 90800 lr 0.00018
+2024_08_08_07_45_43 Train loss: 0.00010961830412270501 at step: 91200 lr 0.00018
+2024_08_08_07_47_03 Train loss: 0.008758706040680408 at step: 91600 lr 0.00018
+2024_08_08_07_48_23 Train loss: 4.287926640245132e-05 at step: 92000 lr 0.00018
+2024_08_08_07_49_43 Train loss: 0.00010725062747951597 at step: 92400 lr 0.00018
+2024_08_08_07_51_03 Train loss: 0.0013678029645234346 at step: 92800 lr 0.00018
+2024_08_08_07_52_23 Train loss: 0.00029231986263766885 at step: 93200 lr 0.00018
+2024_08_08_07_53_43 Train loss: 0.00012351039913482964 at step: 93600 lr 0.00018
+2024_08_08_07_55_04 Train loss: 3.300551270513097e-06 at step: 94000 lr 0.00018
+2024_08_08_07_56_24 Train loss: 0.011655852198600769 at step: 94400 lr 0.00018
+(Val @ epoch 18) acc: 0.999375; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.999375 --> 0.999375, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_18_best.pth
+*************************
+2024_08_08_07_56_52
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.2; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.9; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 85.5; ap: 92.7; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 84.5; ap: 90.5; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 70.2; ap: 74.6; r_acc: 0.5; f_acc: 0.9
+(7 deepfake    ) acc: 51.2; ap: 84.6; r_acc: 1.0; f_acc: 0.0
+(8 Mean      ) acc: 86.0; ap: 92.8
+*************************
+2024_08_08_07_57_37
+2024_08_08_07_58_33 Train loss: 0.10235738754272461 at step: 94800 lr 0.00018
+2024_08_08_07_59_53 Train loss: 0.0009999123867601156 at step: 95200 lr 0.00018
+2024_08_08_08_01_13 Train loss: 0.00023785117082297802 at step: 95600 lr 0.00018
+2024_08_08_08_02_33 Train loss: 0.00013145303819328547 at step: 96000 lr 0.00018
+2024_08_08_08_03_53 Train loss: 0.001264630351215601 at step: 96400 lr 0.00018
+2024_08_08_08_05_13 Train loss: 1.5257122868206352e-05 at step: 96800 lr 0.00018
+2024_08_08_08_06_33 Train loss: 7.613147317897528e-05 at step: 97200 lr 0.00018
+2024_08_08_08_07_53 Train loss: 5.341615633369656e-06 at step: 97600 lr 0.00018
+2024_08_08_08_09_13 Train loss: 3.3133204851765186e-05 at step: 98000 lr 0.00018
+2024_08_08_08_10_33 Train loss: 6.0825725086033344e-05 at step: 98400 lr 0.00018
+2024_08_08_08_11_53 Train loss: 0.0004884348018094897 at step: 98800 lr 0.00018
+(Val @ epoch 19) acc: 0.999375; ap: 0.9999922360248448
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.999375 --> 0.999375, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_19_best.pth
+*************************
+2024_08_08_08_12_42
+(0 progan      ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.3; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 98.9; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 87.5; ap: 94.2; r_acc: 0.8; f_acc: 1.0
+(4 cyclegan    ) acc: 84.2; ap: 89.6; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 71.5; ap: 72.9; r_acc: 0.6; f_acc: 0.9
+(7 deepfake    ) acc: 58.0; ap: 87.4; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 87.4; ap: 93.0
+*************************
+2024_08_08_08_13_26
+2024_08_08_08_14_02 Train loss: 2.8609108539967565e-06 at step: 99200 lr 0.00018
+2024_08_08_08_15_22 Train loss: 2.24630935008463e-06 at step: 99600 lr 0.00018
+2024_08_08_08_16_42 Train loss: 0.0022001145407557487 at step: 100000 lr 0.00018
+2024_08_08_08_18_02 Train loss: 0.0010956121841445565 at step: 100400 lr 0.00018
+2024_08_08_08_19_22 Train loss: 0.0007351713138632476 at step: 100800 lr 0.00018
+2024_08_08_08_20_42 Train loss: 1.5969242667779326e-05 at step: 101200 lr 0.00018
+2024_08_08_08_22_02 Train loss: 1.1660079053399386e-06 at step: 101600 lr 0.00018
+2024_08_08_08_23_22 Train loss: 0.0021376132499426603 at step: 102000 lr 0.00018
+2024_08_08_08_24_42 Train loss: 0.0011041315738111734 at step: 102400 lr 0.00018
+2024_08_08_08_26_02 Train loss: 0.0008810048457235098 at step: 102800 lr 0.00018
+2024_08_08_08_27_22 Train loss: 5.846958447364159e-05 at step: 103200 lr 0.00018
+2024_08_08_08_28_27 changing lr at the end of epoch 20, iters 103523
+*************************
+Changing lr from 0.00018 to 0.000162
+*************************
+(Val @ epoch 20) acc: 1.0; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+acc increate 0.999375 --> 1.0, saving best model
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_20_best.pth
+*************************
+2024_08_08_08_28_31
+(0 progan      ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 96.0; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 86.8; ap: 92.3; r_acc: 0.9; f_acc: 0.8
+(4 cyclegan    ) acc: 82.4; ap: 92.8; r_acc: 0.9; f_acc: 0.7
+(5 stargan     ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 66.8; ap: 71.4; r_acc: 0.7; f_acc: 0.6
+(7 deepfake    ) acc: 51.7; ap: 84.6; r_acc: 1.0; f_acc: 0.0
+(8 Mean      ) acc: 85.1; ap: 92.6
+*************************
+2024_08_08_08_29_16
+2024_08_08_08_29_31 Train loss: 1.309169329033466e-05 at step: 103600 lr 0.000162
+2024_08_08_08_30_51 Train loss: 0.0006512033869512379 at step: 104000 lr 0.000162
+2024_08_08_08_32_11 Train loss: 5.4730073316022754e-05 at step: 104400 lr 0.000162
+2024_08_08_08_33_31 Train loss: 3.284792182967067e-05 at step: 104800 lr 0.000162
+2024_08_08_08_34_51 Train loss: 7.570260640932247e-05 at step: 105200 lr 0.000162
+2024_08_08_08_36_11 Train loss: 0.04905402660369873 at step: 105600 lr 0.000162
+2024_08_08_08_37_32 Train loss: 2.539856177463662e-05 at step: 106000 lr 0.000162
+2024_08_08_08_38_52 Train loss: 5.313158908393234e-05 at step: 106400 lr 0.000162
+2024_08_08_08_40_12 Train loss: 0.0009261048980988562 at step: 106800 lr 0.000162
+2024_08_08_08_41_32 Train loss: 0.0005104995798319578 at step: 107200 lr 0.000162
+2024_08_08_08_42_52 Train loss: 0.002458232454955578 at step: 107600 lr 0.000162
+2024_08_08_08_44_12 Train loss: 0.00048641051398590207 at step: 108000 lr 0.000162
+(Val @ epoch 21) acc: 0.99875; ap: 0.9999968827930175
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_21.pth
+early stop count 1/15
+*************************
+2024_08_08_08_44_21
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 98.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 86.2; ap: 92.9; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 80.6; ap: 88.4; r_acc: 0.8; f_acc: 0.8
+(5 stargan     ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 69.5; ap: 69.2; r_acc: 0.7; f_acc: 0.7
+(7 deepfake    ) acc: 54.0; ap: 91.3; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 85.9; ap: 92.7
+*************************
+2024_08_08_08_45_05
+2024_08_08_08_46_21 Train loss: 1.4938151480237138e-06 at step: 108400 lr 0.000162
+2024_08_08_08_47_40 Train loss: 3.7511913433263544e-06 at step: 108800 lr 0.000162
+2024_08_08_08_49_00 Train loss: 3.4085760489688255e-06 at step: 109200 lr 0.000162
+2024_08_08_08_50_20 Train loss: 2.3295284336199984e-05 at step: 109600 lr 0.000162
+2024_08_08_08_51_40 Train loss: 0.01109104324132204 at step: 110000 lr 0.000162
+2024_08_08_08_53_00 Train loss: 9.852933544607367e-06 at step: 110400 lr 0.000162
+2024_08_08_08_54_20 Train loss: 1.3122947166266385e-05 at step: 110800 lr 0.000162
+2024_08_08_08_55_40 Train loss: 0.00011429769801907241 at step: 111200 lr 0.000162
+2024_08_08_08_57_00 Train loss: 0.0061376276426017284 at step: 111600 lr 0.000162
+2024_08_08_08_58_20 Train loss: 6.966225782889524e-07 at step: 112000 lr 0.000162
+2024_08_08_08_59_40 Train loss: 0.002452267101034522 at step: 112400 lr 0.000162
+(Val @ epoch 22) acc: 0.99875; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_22.pth
+early stop count 2/15
+*************************
+2024_08_08_09_00_09
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 99.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 98.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(3 biggan      ) acc: 85.0; ap: 92.5; r_acc: 0.7; f_acc: 1.0
+(4 cyclegan    ) acc: 84.8; ap: 90.7; r_acc: 0.8; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 68.0; ap: 68.4; r_acc: 0.5; f_acc: 0.9
+(7 deepfake    ) acc: 61.8; ap: 88.4; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 87.2; ap: 92.5
+*************************
+2024_08_08_09_00_54
+2024_08_08_09_01_49 Train loss: 7.4505797087454084e-09 at step: 112800 lr 0.000162
+2024_08_08_09_03_09 Train loss: 0.00012743940169457346 at step: 113200 lr 0.000162
+2024_08_08_09_04_29 Train loss: 0.00030099169816821814 at step: 113600 lr 0.000162
+2024_08_08_09_05_49 Train loss: 4.10891243518563e-06 at step: 114000 lr 0.000162
+2024_08_08_09_07_09 Train loss: 0.0001522489619674161 at step: 114400 lr 0.000162
+2024_08_08_09_08_29 Train loss: 3.591088443499757e-06 at step: 114800 lr 0.000162
+2024_08_08_09_09_49 Train loss: 0.007819113321602345 at step: 115200 lr 0.000162
+2024_08_08_09_11_09 Train loss: 1.084046402866079e-06 at step: 115600 lr 0.000162
+2024_08_08_09_12_29 Train loss: 7.376057737928932e-07 at step: 116000 lr 0.000162
+2024_08_08_09_13_49 Train loss: 0.0005207734648138285 at step: 116400 lr 0.000162
+2024_08_08_09_15_09 Train loss: 0.00037831036024726927 at step: 116800 lr 0.000162
+(Val @ epoch 23) acc: 0.97625; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_23.pth
+early stop count 3/15
+*************************
+2024_08_08_09_15_58
+(0 progan      ) acc: 97.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.1; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 97.4; ap: 99.9; r_acc: 0.9; f_acc: 1.0
+(3 biggan      ) acc: 72.0; ap: 91.5; r_acc: 0.4; f_acc: 1.0
+(4 cyclegan    ) acc: 75.5; ap: 89.3; r_acc: 0.5; f_acc: 1.0
+(5 stargan     ) acc: 98.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 63.0; ap: 75.1; r_acc: 0.3; f_acc: 1.0
+(7 deepfake    ) acc: 56.2; ap: 82.9; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 82.3; ap: 92.3
+*************************
+2024_08_08_09_16_43
+2024_08_08_09_17_18 Train loss: 9.784951544133946e-05 at step: 117200 lr 0.000162
+2024_08_08_09_18_38 Train loss: 0.08000065386295319 at step: 117600 lr 0.000162
+2024_08_08_09_19_58 Train loss: 0.00010633775673341006 at step: 118000 lr 0.000162
+2024_08_08_09_21_18 Train loss: 7.935358007671311e-05 at step: 118400 lr 0.000162
+2024_08_08_09_22_38 Train loss: 5.698212771676481e-05 at step: 118800 lr 0.000162
+2024_08_08_09_23_58 Train loss: 5.579605931416154e-05 at step: 119200 lr 0.000162
+2024_08_08_09_25_18 Train loss: 0.0020420055370777845 at step: 119600 lr 0.000162
+2024_08_08_09_26_38 Train loss: 6.462846613430884e-06 at step: 120000 lr 0.000162
+2024_08_08_09_27_58 Train loss: 0.0016405382193624973 at step: 120400 lr 0.000162
+2024_08_08_09_29_18 Train loss: 2.6150582925765775e-06 at step: 120800 lr 0.000162
+2024_08_08_09_30_38 Train loss: 5.57649509573821e-05 at step: 121200 lr 0.000162
+(Val @ epoch 24) acc: 0.998125; ap: 0.9999968769506866
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_24.pth
+early stop count 4/15
+*************************
+2024_08_08_09_31_47
+(0 progan      ) acc: 99.5; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.4; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(2 stylegan2   ) acc: 93.9; ap: 99.9; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 89.0; ap: 94.1; r_acc: 0.9; f_acc: 0.9
+(4 cyclegan    ) acc: 84.6; ap: 91.2; r_acc: 0.9; f_acc: 0.8
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 75.8; ap: 79.5; r_acc: 0.7; f_acc: 0.8
+(7 deepfake    ) acc: 56.8; ap: 88.6; r_acc: 1.0; f_acc: 0.1
+(8 Mean      ) acc: 87.1; ap: 94.2
+*************************
+2024_08_08_09_32_32
+2024_08_08_09_32_47 Train loss: 7.159630968089914e-06 at step: 121600 lr 0.000162
+2024_08_08_09_34_06 Train loss: 0.1343049556016922 at step: 122000 lr 0.000162
+2024_08_08_09_35_26 Train loss: 5.639513983624056e-05 at step: 122400 lr 0.000162
+2024_08_08_09_36_46 Train loss: 0.001291017048060894 at step: 122800 lr 0.000162
+2024_08_08_09_38_06 Train loss: 6.98500225553289e-05 at step: 123200 lr 0.000162
+2024_08_08_09_39_26 Train loss: 0.018655110150575638 at step: 123600 lr 0.000162
+2024_08_08_09_40_46 Train loss: 0.0003190868301317096 at step: 124000 lr 0.000162
+2024_08_08_09_42_06 Train loss: 0.00034078583121299744 at step: 124400 lr 0.000162
+2024_08_08_09_43_26 Train loss: 0.0002480312541592866 at step: 124800 lr 0.000162
+2024_08_08_09_44_46 Train loss: 8.578795132052619e-06 at step: 125200 lr 0.000162
+2024_08_08_09_46_06 Train loss: 0.00020904780831187963 at step: 125600 lr 0.000162
+2024_08_08_09_47_26 Train loss: 1.0803334760112193e-07 at step: 126000 lr 0.000162
+(Val @ epoch 25) acc: 0.99875; ap: 0.9999968769506866
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_25.pth
+early stop count 5/15
+*************************
+2024_08_08_09_47_36
+(0 progan      ) acc: 99.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 98.7; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 96.4; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 87.8; ap: 94.8; r_acc: 0.8; f_acc: 0.9
+(4 cyclegan    ) acc: 88.7; ap: 94.1; r_acc: 0.9; f_acc: 0.9
+(5 stargan     ) acc: 100.0; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 74.5; ap: 79.5; r_acc: 0.6; f_acc: 0.8
+(7 deepfake    ) acc: 51.7; ap: 87.4; r_acc: 1.0; f_acc: 0.0
+(8 Mean      ) acc: 87.2; ap: 94.5
+*************************
+2024_08_08_09_48_21
+2024_08_08_09_49_35 Train loss: 0.00013992696767672896 at step: 126400 lr 0.000162
+2024_08_08_09_50_55 Train loss: 3.762529843243101e-07 at step: 126800 lr 0.000162
+2024_08_08_09_52_15 Train loss: 0.0001552980684209615 at step: 127200 lr 0.000162
+2024_08_08_09_53_35 Train loss: 0.00016853766283020377 at step: 127600 lr 0.000162
+2024_08_08_09_54_55 Train loss: 0.0004311919037718326 at step: 128000 lr 0.000162
+2024_08_08_09_56_15 Train loss: 1.7471277260483475e-06 at step: 128400 lr 0.000162
+2024_08_08_09_57_35 Train loss: 0.0018864839803427458 at step: 128800 lr 0.000162
+2024_08_08_09_58_55 Train loss: 0.04150909557938576 at step: 129200 lr 0.000162
+2024_08_08_10_00_14 Train loss: 1.3438323549053166e-05 at step: 129600 lr 0.000162
+2024_08_08_10_01_34 Train loss: 1.7918500816449523e-06 at step: 130000 lr 0.000162
+2024_08_08_10_02_54 Train loss: 6.764417321392102e-06 at step: 130400 lr 0.000162
+(Val @ epoch 26) acc: 0.9975; ap: 1.0
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_last.pth
+Saving model ./checkpoints/resnet-attention-blur0.2-2024_08_08_02_26_49/model_epoch_26.pth
+early stop count 6/15
+*************************
+2024_08_08_10_03_24
+(0 progan      ) acc: 99.4; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(1 stylegan    ) acc: 97.6; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(2 stylegan2   ) acc: 95.1; ap: 100.0; r_acc: 1.0; f_acc: 0.9
+(3 biggan      ) acc: 86.0; ap: 94.3; r_acc: 0.9; f_acc: 0.8
+(4 cyclegan    ) acc: 78.4; ap: 90.9; r_acc: 0.9; f_acc: 0.6
+(5 stargan     ) acc: 99.8; ap: 100.0; r_acc: 1.0; f_acc: 1.0
+(6 gaugan      ) acc: 65.2; ap: 76.4; r_acc: 0.9; f_acc: 0.4
+(7 deepfake    ) acc: 59.5; ap: 91.7; r_acc: 1.0; f_acc: 0.2
+(8 Mean      ) acc: 85.1; ap: 94.2

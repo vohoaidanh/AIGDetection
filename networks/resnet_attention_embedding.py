@@ -141,7 +141,7 @@ class ResNet(nn.Module):
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64 , layers[0])
         
-        self.att1 = Attention(dim=256, heads=8, dim_head=64)
+        #self.att1 = Attention(dim=256, heads=8, dim_head=64)
         #self.pool1 = nn.AdaptiveAvgPool2d((1, 256))
     
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
@@ -186,6 +186,12 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
     
+    def freeze_layers(self):
+    # Đóng băng các lớp cụ thể
+        for layer in [self.conv1, self.bn1, self.maxpool, self.layer1]:
+            for param in layer.parameters():
+                param.requires_grad = False
+        
     def interpolate(self, img, factor):
         return F.interpolate(F.interpolate(img, scale_factor=factor, mode='nearest', recompute_scale_factor=True), scale_factor=1/factor, mode='nearest', recompute_scale_factor=True)
     
@@ -253,6 +259,9 @@ def resnet50_local_grad(pretrained=False, **kwargs):
         state_dict = model_zoo.load_url(model_urls['resnet50'])
         new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['fc', 'layer3', 'layer4'])}
         model.load_state_dict(new_state_dict,strict=False)
+        
+    #model.freeze_layers()
+    #remind remove residual in Bottleneck
     return model
 
 
@@ -293,8 +302,10 @@ if __name__ == '__main__':
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
 
+    model.freeze_layers()
     
-    
+for name, param in model.named_parameters():
+    print(f"{name}: requires_grad={param.requires_grad}")    
     
     
     

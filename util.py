@@ -6,6 +6,8 @@ import torch.nn as nn
 #import torchvision
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
+from networks.resnet_gradient import resnet_gradient
+
 #from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
@@ -110,6 +112,12 @@ def get_model(opt):
         return model
     
     elif opt.detect_method.lower() in ['vit']:
+        print(f'Detect method model {opt.detect_method}')
+        model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
+        #model = pretrain_vit()
+        return model
+    
+    elif opt.detect_method.lower() in ['gradient']:
         print(f'Detect method model {opt.detect_method}')
         model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
         #model = pretrain_vit()
