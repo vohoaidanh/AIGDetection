@@ -68,7 +68,7 @@ if __name__ == '__main__':
             Testopt.dataroot = '{}/{}'.format(Testdataroot, val)
             Testopt.classes = os.listdir(Testopt.dataroot) if multiclass[v_id] else ['']
             Testopt.no_resize = False
-            Testopt.no_crop = True
+            Testopt.no_crop = False
             acc, ap, r_acc, f_acc, _, _ = validate(model.model, Testopt)
             accs.append(acc);aps.append(ap)
             print("({} {:12}) acc: {:.1f}; ap: {:.1f}; r_acc: {:.1f}; f_acc: {:.1f}".format(v_id, val, acc*100, ap*100, r_acc, f_acc))

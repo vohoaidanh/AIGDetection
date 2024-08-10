@@ -16,6 +16,7 @@ model_urls = {
 }
 
 MASK = torch.load('mask.pt')
+MASK = torch.tensor(MASK).to('cuda')
 
 def apply_fourier_filter(image, mask):
     fft_image = torch.fft.fft2(image)
