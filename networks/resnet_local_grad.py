@@ -15,6 +15,16 @@ model_urls = {
     'resnet152': 'https://download.pytorch.org/models/resnet152-b121ed2d.pth',
 }
 
+MASK = torch.load('mask.pt')
+
+def apply_fourier_filter(image, mask):
+    fft_image = torch.fft.fft2(image)
+    fft_image_shifted = torch.fft.fftshift(fft_image)
+    filtered_fft_image = fft_image_shifted * mask
+    filtered_fft_image_shifted_back = torch.fft.ifftshift(filtered_fft_image)
+    ifft_image = torch.fft.ifft2(filtered_fft_image_shifted_back)
+    filtered_image = ifft_image.real
+    return filtered_image
 
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
@@ -101,6 +111,7 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=1, zero_init_residual=False):
         super(ResNet, self).__init__()
         self.gradient_layer = gradient_filter  # Instantiate GradientLayer
+        self.frequency_filter = apply_fourier_filter
         self.unfoldSize = 2
         self.unfoldIndex = 0
         assert self.unfoldSize > 1
@@ -154,6 +165,7 @@ class ResNet(nn.Module):
     
     def forward(self, x):
         #NPR = x.clone()
+        x = self.frequency_filter(x, mask=MASK)
         x = self.gradient_layer(x)
         
         #x = self.conv1(NPR*2.0/3.0)
@@ -271,9 +283,10 @@ if __name__ == '__main__':
 
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
-
     
     
+    
+   # x = model.frequency_filter(intens, MASK)
     
     
     

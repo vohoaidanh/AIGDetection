@@ -6,7 +6,7 @@ import torch.nn as nn
 #import torchvision
 from networks.resnet import resnet50
 from networks.resnet_local_grad import resnet50_local_grad
-from networks.resnet_gradient import resnet_gradient
+from networks.resnet_gradient import resnet50_gradient
 
 #from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
@@ -71,7 +71,7 @@ def get_model(opt):
         
     elif opt.detect_method.lower() in ['local_grad']:
         print(f'Detect method model {opt.detect_method}')
-        model = resnet50_local_grad(pretrained=False, num_classes=1)
+        model = resnet50_local_grad(pretrained=True, num_classes=1)
         #model = inception_local_grad(pretrained=True, num_classes=1)
         return model
     
@@ -119,7 +119,7 @@ def get_model(opt):
     
     elif opt.detect_method.lower() in ['gradient']:
         print(f'Detect method model {opt.detect_method}')
-        model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
+        model = resnet50_gradient(model_A_path='/workspace/AIGDetection/Gaussblur-4class-resnet-car-cat-chair-horse2024_06_20_08_12_39_model_eopch_7_best.pth', pretrainedA=True, pretrainedB=True)
         #model = pretrain_vit()
         return model
 
