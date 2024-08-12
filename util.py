@@ -11,12 +11,14 @@ from networks.resnet_gradient import resnet50_gradient
 #from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
-from networks.resnet_attention import simple_vit, pretrain_vit
+from networks.resnet_attention import simple_vit, pretrain_vit, finetun_vit_lora
 from networks.semi_supervisor import resnet_similarity, resnet_center_loss
 from networks.resnet_kmeans import resnet50_multi_branch
 from networks.inception import inception_local_grad
 from networks.main_models import build_model
 from networks.center_loss import CenterLoss
+from networks.resnet_attention_embedding import resnet50_text_combine
+
 
 def mkdirs(paths):
     if isinstance(paths, list) and not isinstance(paths, str):
@@ -79,7 +81,8 @@ def get_model(opt):
         print(f'Detect method model {opt.detect_method}')
         #model = resnet50_experiment_01(pretrained=False, num_classes=1)
         #Preprocess is contains the experiment configuration
-        model = build_model(backbone_name='vgg16', num_classes=1, layer_to_extract=-1)
+        #model = build_model(backbone_name='vgg16', num_classes=1, layer_to_extract=-1)
+        model = resnet50_text_combine(num_classes=1)
 
         return model
     
@@ -113,8 +116,9 @@ def get_model(opt):
     
     elif opt.detect_method.lower() in ['vit']:
         print(f'Detect method model {opt.detect_method}')
-        model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
+        #model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
         #model = pretrain_vit()
+        model = finetun_vit_lora()
         return model
     
     elif opt.detect_method.lower() in ['gradient']:

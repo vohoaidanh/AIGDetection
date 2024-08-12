@@ -8,6 +8,7 @@ from einops import rearrange
 
 __all__ = ['ResNet', 'resnet50_local_grad']
 
+import torchvision.models as models
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
@@ -34,7 +35,7 @@ class Attention(nn.Module):
         super().__init__()
         inner_dim = dim_head *  heads
         self.heads = heads
-        self.scale = dim_head ** -0.5
+        self.scale = dim_head ** -0.5               
         self.norm = nn.LayerNorm(dim)
 
         self.attend = nn.Softmax(dim = -1)
@@ -42,11 +43,16 @@ class Attention(nn.Module):
         self.to_qkv = nn.Linear(dim, inner_dim * 3, bias = False)
         self.to_out = nn.Linear(inner_dim, dim, bias = False)
 
-    def forward(self, x):
+    def forward(self, x, q=None):
         x = self.norm(x)
 
         qkv = self.to_qkv(x).chunk(3, dim = -1)
-        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h = self.heads), qkv)
+        _, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h = self.heads), qkv)
+                
+        if q is not None:
+            q = rearrange(k, 'b n (h d) -> b h n d', h=self.heads)
+        else:
+            q = k
 
         dots = torch.matmul(q, k.transpose(-1, -2)) * self.scale
 
@@ -55,7 +61,7 @@ class Attention(nn.Module):
         out = torch.matmul(attn, v)
         out = rearrange(out, 'b h n d -> b n (h d)')
         return self.to_out(out)
-        
+    
 class BasicBlock(nn.Module):
     expansion = 1
 
@@ -204,7 +210,7 @@ class ResNet(nn.Module):
         x = self.maxpool(x)
 
         x = self.layer1(x)
-        
+     
         #b, c, h, w = x.shape
         #x = x.view(b, c, -1).permute(0, 2, 1)
            
@@ -224,29 +230,101 @@ class ResNet(nn.Module):
         
         return x
 
+class SimpleAttention(nn.Module):
+    def __init__(self, dim):
+        super(SimpleAttention, self).__init__()
+        self.key_linear = nn.Linear(dim, dim)
+        self.value_linear = nn.Linear(dim, dim)
+        self.scale = dim ** -0.5  # Để thực hiện scale dot-product attention
+    
+    def forward(self, x, q):
+        # Tạo queries, keys và values
+        Q = q  # [batch_size, dim] -> [batch_size, dim]
+        K = self.key_linear(x)    # [batch_size, dim] -> [batch_size, dim]
+        V = self.value_linear(x)  # [batch_size, dim] -> [batch_size, dim]
+        
+        # Tính toán điểm attention
+        Q = Q.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
+        K = K.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
+        V = V.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
+        
+        # Tính toán điểm attention
+        attn_scores = torch.matmul(Q, K.transpose(-1, -2)) * self.scale
+        attn_weights = F.softmax(attn_scores, dim=-1)
+        
+        # Áp dụng trọng số attention
+        out = torch.matmul(attn_weights, V)
+        
+        # Lấy đầu ra
+        return out.squeeze(1)  # Trả về kích thước [batch_size, dim]
+    
+class Head(nn.Module):
+    def __init__(self, num_classes=1):
+        super(Head, self).__init__()
+        self.att = SimpleAttention(dim=2048)
+        self.classifier = nn.Linear(in_features=2048, out_features=num_classes)
+        
 
+    def forward(self, x, q):
+        
+        
+        #b, c, h, w = x.shape
+        #x = x.view(b, c, -1).permute(0, 2, 1)
+        #q = q.view(b, c, -1).permute(0, 2, 1)
+        
+        out = self.att(x, q)
+        
+        #out = rearrange(out, 'b (h w) d -> b d h w', h = h, w=w)
+        
+        out = self.classifier(out)
+                
+        return out
+        
+    
+    
+    
+class MyModel(nn.Module):
+    def __init__(self, num_classes):
+        super(MyModel, self).__init__()
+        self.backbone = models.resnet50(weights='IMAGENET1K_V1')
+        self.backbone.fc = nn.Identity()
+        self.gradient_layer = gradient_filter  # Instantiate GradientLayer
+        # Đóng băng các trọng số của backbone
+        for param in self.backbone.parameters():
+            param.requires_grad = False
+            
+        self.resnet = models.resnet50(weights=None)
+        self.resnet.fc = nn.Identity()
+        self.head = Head(1)
+        
 
-def resnet18(pretrained=False, **kwargs):
-    """Constructs a ResNet-18 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
-    if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
+    def forward(self,x):
+        self.backbone.eval()
+        q = self.backbone(x)
+        v = self.resnet(self.gradient_layer(x))
+        out = self.head(v,q)
+        return out
+    
+    
+
+import functools
+
+def print_function_name(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"Calling function: {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+    
+
+@print_function_name
+def resnet50_text_combine(pretrained=False, **kwargs):
+    model = MyModel(num_classes=1)
+    
     return model
-
-
-def resnet34(pretrained=False, **kwargs):
-    """Constructs a ResNet-34 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = ResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
-    if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet34']))
-    return model
-
+    
+    
+   
 
 def resnet50_local_grad(pretrained=False, **kwargs):
     """Constructs a ResNet-50 model.
@@ -265,29 +343,6 @@ def resnet50_local_grad(pretrained=False, **kwargs):
     return model
 
 
-def resnet101(pretrained=False, **kwargs):
-    """Constructs a ResNet-101 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
-    if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet101']))
-    
- 
-
-    return model
-
-
-def resnet152(pretrained=False, **kwargs):
-    """Constructs a ResNet-152 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = ResNet(Bottleneck, [3, 8, 36, 3], **kwargs)
-    if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet152']))
-    return model
 
 
 if __name__ == '__main__':
@@ -297,17 +352,19 @@ if __name__ == '__main__':
     #opt = TrainOptions().parse()
     #opt.detect_method = 'local_grad'
     #model = get_model(opt)
-    model = resnet50_local_grad(pretrained=True)
+    model = resnet50_text_combine(pretrained=False)
 
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
 
-    model.freeze_layers()
-    
-for name, param in model.named_parameters():
-    print(f"{name}: requires_grad={param.requires_grad}")    
-    
-    
+# =============================================================================
+#     model.freeze_layers()
+#     
+# for name, param in model.named_parameters():
+#     print(f"{name}: requires_grad={param.requires_grad}")    
+#     
+#     
+# =============================================================================
     
     
     
