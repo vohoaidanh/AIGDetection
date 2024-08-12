@@ -231,32 +231,54 @@ class ResNet(nn.Module):
         return x
 
 class SimpleAttention(nn.Module):
-    def __init__(self, dim):
-        super(SimpleAttention, self).__init__()
-        self.key_linear = nn.Linear(dim, dim)
-        self.value_linear = nn.Linear(dim, dim)
-        self.scale = dim ** -0.5  # Để thực hiện scale dot-product attention
-    
-    def forward(self, x, q):
-        # Tạo queries, keys và values
-        Q = q  # [batch_size, dim] -> [batch_size, dim]
-        K = self.key_linear(x)    # [batch_size, dim] -> [batch_size, dim]
-        V = self.value_linear(x)  # [batch_size, dim] -> [batch_size, dim]
+    def __init__(self, dim, heads=8, dim_head=64):
+        super().__init__()
+        inner_dim = dim_head * heads
+        self.heads = heads
+        self.scale = dim_head ** -0.5
+        self.norm = nn.LayerNorm(dim)
+
+        self.attend = nn.Softmax(dim=-1)
+
+        self.to_q = nn.Linear(dim, inner_dim, bias=False)
+        self.to_kv = nn.Linear(dim, inner_dim * 2, bias=False)
+        self.to_out = nn.Linear(inner_dim, dim, bias=False)
+
+    def forward(self, x, q=None):
         
-        # Tính toán điểm attention
-        Q = Q.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
-        K = K.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
-        V = V.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
-        
-        # Tính toán điểm attention
-        attn_scores = torch.matmul(Q, K.transpose(-1, -2)) * self.scale
-        attn_weights = F.softmax(attn_scores, dim=-1)
-        
-        # Áp dụng trọng số attention
-        out = torch.matmul(attn_weights, V)
-        
-        # Lấy đầu ra
-        return out.squeeze(1)  # Trả về kích thước [batch_size, dim]
+        batch_size, dim = x.shape
+        seq_len = 1  # Nếu x là tensor 2D, seq_len sẽ là 1
+  
+        # Thêm chiều seq_len nếu cần thiết
+        if x.dim() == 2:
+            x = x.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
+        if q is not None and q.dim() == 2:
+            q = q.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
+            
+        # Chuẩn hóa x và q (nếu có)
+        x = self.norm(x)
+        if q is not None:
+            q = self.norm(q)
+        else:
+            q = x
+
+        # Tính toán Q từ q, và K, V từ x
+        Q = rearrange(self.to_q(q), 'b n (h d) -> b h n d', h=self.heads)
+        KV = self.to_kv(x).chunk(2, dim=-1)
+        K, V = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.heads), KV)
+
+        # Tính toán attention scores
+        dots = torch.matmul(Q, K.transpose(-1, -2)) * self.scale
+
+        # Áp dụng hàm softmax để tính attention weights
+        attn = self.attend(dots)
+
+        # Tính toán output bằng cách nhân attention weights với V
+        out = torch.matmul(attn, V)
+        out = rearrange(out, 'b h n d -> b n (h d)')
+
+        # Áp dụng linear layer cuối cùng
+        return self.to_out(out)
     
 class Head(nn.Module):
     def __init__(self, num_classes=1):
@@ -303,6 +325,7 @@ class MyModel(nn.Module):
         q = self.backbone(x)
         v = self.resnet(self.gradient_layer(x))
         out = self.head(v,q)
+        out = out.view(-1,1)
         return out
     
     
