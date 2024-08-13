@@ -237,6 +237,7 @@ class SimpleAttention(nn.Module):
         self.heads = heads
         self.scale = dim_head ** -0.5
         self.norm = nn.LayerNorm(dim)
+        self.norm1000 = nn.LayerNorm(1000)
 
         self.attend = nn.Softmax(dim=-1)
 
@@ -252,18 +253,22 @@ class SimpleAttention(nn.Module):
         # Thêm chiều seq_len nếu cần thiết
         if x.dim() == 2:
             x = x.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
+     
         if q is not None and q.dim() == 2:
             q = q.unsqueeze(1)  # [batch_size, dim] -> [batch_size, 1, dim]
             
         # Chuẩn hóa x và q (nếu có)
         x = self.norm(x)
         if q is not None:
-            q = self.norm(q)
+            #q = self.norm(q)
+            q = self.norm1000(q)
         else:
             q = x
 
         # Tính toán Q từ q, và K, V từ x
-        Q = rearrange(self.to_q(q), 'b n (h d) -> b h n d', h=self.heads)
+        
+        #Q = rearrange(self.to_q(q), 'b n (h d) -> b h n d', h=self.heads)
+        Q = rearrange(q, 'b n (h d) -> b h n d', h=self.heads)
         KV = self.to_kv(x).chunk(2, dim=-1)
         K, V = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.heads), KV)
 
@@ -283,7 +288,7 @@ class SimpleAttention(nn.Module):
 class Head(nn.Module):
     def __init__(self, num_classes=1):
         super(Head, self).__init__()
-        self.att = SimpleAttention(dim=2048)
+        self.att = SimpleAttention(dim=2048,heads=8, dim_head=125)
         self.classifier = nn.Linear(in_features=2048, out_features=num_classes)
         
 
@@ -309,7 +314,7 @@ class MyModel(nn.Module):
     def __init__(self, num_classes):
         super(MyModel, self).__init__()
         self.backbone = models.resnet50(weights='IMAGENET1K_V1')
-        self.backbone.fc = nn.Identity()
+        #self.backbone.fc = nn.Identity()
         self.gradient_layer = gradient_filter  # Instantiate GradientLayer
         # Đóng băng các trọng số của backbone
         for param in self.backbone.parameters():
@@ -323,7 +328,10 @@ class MyModel(nn.Module):
     def forward(self,x):
         self.backbone.eval()
         q = self.backbone(x)
+        q = torch.softmax(q, dim=1)
+
         v = self.resnet(self.gradient_layer(x))
+
         out = self.head(v,q)
         out = out.view(-1,1)
         return out
