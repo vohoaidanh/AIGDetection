@@ -52,12 +52,13 @@ def gradient_filter(input_tensor):
     diff_y = F.conv2d(input_tensor, kernel_y, padding=1, groups=channels)
 
     # Add a small value to avoid division by zero
-    diff_x = diff_x + 1e-9
-    diff_y = diff_y + 1e-9
+    #diff_x = diff_x + 1e-9
+    #diff_y = diff_y + 1e-9
 
     # Calculate the final output and normalize to [0..1]
-    output = (torch.arctan(diff_y / diff_x) / (torch.pi / 2) + 1.0) / 2.0
-
+    #output = (torch.arctan(diff_y / diff_x) / (torch.pi / 2) + 1.0) / 2.0
+    #output = (torch.arctan2(diff_y, diff_x) / (torch.pi / 2) + 1.0) / 2.0
+    output = torch.arctan2(diff_y, diff_x)
     return output
 
 def gauss_blur(input_tensor):

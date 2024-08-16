@@ -11,12 +11,12 @@ from networks.resnet_gradient import resnet50_gradient
 #from networks.resnet_experiment import *
 from networks.resnet_fusion import resnet50_fusion
 from networks.resnet_lstm import resnet50_lstm
-from networks.resnet_attention import simple_vit, pretrain_vit, finetun_vit_lora
+#from networks.resnet_attention import simple_vit, pretrain_vit, finetun_vit_lora
 from networks.semi_supervisor import resnet_similarity, resnet_center_loss
 from networks.resnet_kmeans import resnet50_multi_branch
 from networks.inception import inception_local_grad
 from networks.main_models import build_model
-from networks.center_loss import CenterLoss
+#from networks.center_loss import CenterLoss
 from networks.resnet_attention_embedding import resnet50_text_combine
 
 
@@ -106,7 +106,8 @@ def get_model(opt):
     
     elif opt.detect_method.lower() in ['resnet_center_loss']:
         print(f'Detect method model {opt.detect_method}')
-        model = resnet_center_loss(pretrained=True)
+        #model = resnet_center_loss(pretrained=True)
+        model = None
         return model
     
     elif opt.detect_method.lower() in ['resnet_kmeans']:
@@ -118,7 +119,8 @@ def get_model(opt):
         print(f'Detect method model {opt.detect_method}')
         #model = simple_vit(num_classes=1, embedding_dim=256, mlp_dim=256)
         #model = pretrain_vit()
-        model = finetun_vit_lora()
+        #model = finetun_vit_lora()
+        model - None
         return model
     
     elif opt.detect_method.lower() in ['gradient']:

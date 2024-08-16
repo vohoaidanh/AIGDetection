@@ -15,8 +15,9 @@ model_urls = {
     'resnet152': 'https://download.pytorch.org/models/resnet152-b121ed2d.pth',
 }
 
-MASK = torch.load('mask.pt')
-MASK = torch.tensor(MASK).to('cuda')
+MASK = torch.load('networks/mask.pt')
+if torch.cuda.is_available():
+    MASK = torch.tensor(MASK).to('cuda')
 
 def apply_fourier_filter(image, mask):
     fft_image = torch.fft.fft2(image)
@@ -112,13 +113,13 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=1, zero_init_residual=False):
         super(ResNet, self).__init__()
         self.gradient_layer = gradient_filter  # Instantiate GradientLayer
-        self.frequency_filter = apply_fourier_filter
+        #self.frequency_filter = apply_fourier_filter
         self.unfoldSize = 2
         self.unfoldIndex = 0
         assert self.unfoldSize > 1
         assert -1 < self.unfoldIndex and self.unfoldIndex < self.unfoldSize*self.unfoldSize
         self.inplanes = 64
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -166,7 +167,7 @@ class ResNet(nn.Module):
     
     def forward(self, x):
         #NPR = x.clone()
-        x = self.frequency_filter(x, mask=MASK)
+        #x = self.frequency_filter(x, mask=MASK)
         x = self.gradient_layer(x)
         
         #x = self.conv1(NPR*2.0/3.0)
@@ -220,7 +221,7 @@ def resnet50_local_grad(pretrained=False, **kwargs):
 
     if pretrained:
         state_dict = model_zoo.load_url(model_urls['resnet50'])
-        new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['fc', 'layer3', 'layer4'])}
+        new_state_dict = {k: v for k, v in state_dict.items() if not any(layer in k for layer in ['conv1','fc', 'layer3', 'layer4'])}
         model.load_state_dict(new_state_dict,strict=False)
     return model
 
