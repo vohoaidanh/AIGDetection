@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torchvision.transforms.functional as TF
 import torchvision.transforms as transforms
 import cv2
-
+#
 class GradientLayer(nn.Module):
     def __init__(self):
         super(GradientLayer, self).__init__()

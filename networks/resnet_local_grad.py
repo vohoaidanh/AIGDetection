@@ -5,7 +5,7 @@ from typing import Any, cast, Dict, List, Optional, Union
 import numpy as np
 from networks.local_grad import *
 __all__ = ['ResNet', 'resnet50_local_grad']
-
+#
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
