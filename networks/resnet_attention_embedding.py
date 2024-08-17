@@ -288,8 +288,8 @@ class SimpleAttention(nn.Module):
 class Head(nn.Module):
     def __init__(self, num_classes=1):
         super(Head, self).__init__()
-        self.att = SimpleAttention(dim=2048,heads=8, dim_head=125)
-        self.classifier = nn.Linear(in_features=2048, out_features=num_classes)
+        self.att = SimpleAttention(dim=512,heads=8, dim_head=125)
+        self.classifier = nn.Linear(in_features=512, out_features=num_classes)
         
 
     def forward(self, x, q):
@@ -313,15 +313,21 @@ class Head(nn.Module):
 class MyModel(nn.Module):
     def __init__(self, num_classes):
         super(MyModel, self).__init__()
-        self.backbone = models.resnet50(weights='IMAGENET1K_V1')
+        #self.backbone = models.resnet50(weights='IMAGENET1K_V1')
+        self.backbone = models.resnet18(weights='IMAGENET1K_V1')
         #self.backbone.fc = nn.Identity()
         self.gradient_layer = gradient_filter  # Instantiate GradientLayer
         # Đóng băng các trọng số của backbone
         for param in self.backbone.parameters():
             param.requires_grad = False
             
-        self.resnet = models.resnet50(weights=None)
-        self.resnet.fc = nn.Identity()
+        self.resnet = models.resnet50(weights='IMAGENET1K_V1')
+        self.avgpool = self.resnet.avgpool
+
+        #self.resnet.fc = nn.Identity()
+        
+        model_layers = list(resnet.children())[:6]  # Adjust the index based on the desired layers
+        self.resnet = torch.nn.Sequential(*model_layers)
         self.head = Head(1)
         
 
@@ -331,7 +337,8 @@ class MyModel(nn.Module):
         q = torch.softmax(q, dim=1)
 
         v = self.resnet(self.gradient_layer(x))
-
+        v = self.avgpool(v)
+        v = v.view(v.shape[0],-1)
         out = self.head(v,q)
         out = out.view(-1,1)
         return out
@@ -384,10 +391,30 @@ if __name__ == '__main__':
     #opt.detect_method = 'local_grad'
     #model = get_model(opt)
     model = resnet50_text_combine(pretrained=False)
+    
+    resnet = models.resnet50(weights='IMAGENET1K_V1')
+    
 
     intens = torch.rand(2,3,224,224)
     out = model(intens)    
-
+    
+    
+    backbone = models.resnet18(weights='IMAGENET1K_V1')
+    #backbone.fc = nn.Identity()
+    resnet = models.resnet50(weights='IMAGENET1K_V1')
+    model_layers = list(resnet.children())[:6]  # Adjust the index based on the desired layers
+    model_extracted = torch.nn.Sequential(*model_layers)
+    
+    x = torch.rand(2,3,224,224)
+    y = model_extracted(x)
+    y.shape
+    
+    backbone(x).shape
+        
+    model = MyModel(1)
+    
+    o = model(x)
+    
 # =============================================================================
 #     model.freeze_layers()
 #     
